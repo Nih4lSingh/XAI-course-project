@@ -34,7 +34,7 @@ Our replication and extension evaluate ten core research questions:
 - **RQ7 (Target Leakage Analysis)**: What is the empirical consequence of separating vs. including the binary `label` column in UNSW-NB15?
 - **RQ8 (Preprocessing Protocol Sensitivity)**: Does fitting scalers and encoders strictly on the training partition (Mode B) degrade performance compared to global fitting (Mode A)?
 - **RQ9 (Dropout Ambiguity)**: Does introducing dropout ($p=0.01$) stabilize or penalize convergence in dense architectures?
-- **RQ10 (Runtime Comparability)**: How do published millisecond latency figures relate to end-to-end training and inference execution times?
+- **RQ10 (Runtime Comparability)**: How do published paper-reported training time figures relate to measured total wall-clock training durations?
 
 ---
 
@@ -157,7 +157,7 @@ python run_xai.py
 
 ### Verification & Table Generation
 ```bash
-# Run automated test suite (26 tests)
+# Run automated test suite (30 tests)
 python -m unittest discover tests
 
 # Validate results consistency
@@ -171,16 +171,16 @@ python scripts/generate_tables.py
 
 ## 11. Canonical Results (Paper Replication)
 
-| Dataset | Model | Selected Feats | Our Accuracy | Paper Accuracy | Difference | Our Macro-F1 | Our Weighted-F1 | Paper Time (ms) | Our Epoch Time (s) |
+| Dataset | Model | Selected Feats | Our Accuracy | Paper Accuracy | Difference | Our Macro-F1 | Our Weighted-F1 | Paper Training Time (ms) | Our Total Training Time (s) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **NSL-KDD** | DNN | 36 | **0.9970** | 0.9930 | +0.0040 | 0.9242 | 0.9970 | 142.0 | 87.01 |
 | **NSL-KDD** | 1D-CNN | 36 | **0.9944** | 0.9920 | +0.0024 | 0.9188 | 0.9944 | 325.0 | 85.99 |
-| **NSL-KDD** | 2D-CNN | 36 | **0.9967** | 0.9940 | +0.0027 | 0.9035 | 0.9967 | 340.0 | 90.35 |
+| **NSL-KDD** | 2D-CNN | 36 | **0.9950** | 0.9940 | +0.0010 | 0.8699 | 0.9949 | 340.0 | 116.81 |
 | **UNSW-NB15** | DNN | 38 | **0.8089** | 0.8000 | +0.0089 | 0.6599 | 0.7754 | 323.0 | 40.54 |
 | **UNSW-NB15** | 1D-CNN | 38 | **0.8033** | 0.8000 | +0.0033 | 0.6538 | 0.7700 | 442.0 | 91.23 |
-| **UNSW-NB15** | 2D-CNN | 38 | **0.8353** | 0.8100 | +0.0253 | 0.6741 | 0.8139 | 455.0 | 161.35 |
+| **UNSW-NB15** | 2D-CNN | 38 | **0.8097** | 0.8100 | -0.0003 | 0.6600 | 0.7761 | 455.0 | 187.72 |
 
-*Note: Differences are reported as (Our Accuracy - Paper Accuracy). Published paper runtimes reflect per-sample or per-batch inference latency in milliseconds, whereas our runtime reflects end-to-end 20-epoch training duration.*
+*Note: Differences are reported as (Our Accuracy - Paper Accuracy). Paper training times (142/325/340 ms for NSL-KDD; 323/442/455 ms for UNSW-NB15) are labeled by the authors as training time. Our reproduction measures total 20-epoch wall-clock training time in seconds. The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons.*
 
 ---
 
@@ -191,10 +191,10 @@ python scripts/generate_tables.py
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
 | **NSL-KDD** | DNN | 0.9970 | 0.9971 | **0.9242** | 0.8759 | **+4.83%** |
 | **NSL-KDD** | 1D-CNN | 0.9944 | 0.9953 | 0.9188 | 0.9212 | -0.24% |
-| **NSL-KDD** | 2D-CNN | 0.9967 | 0.9865 | **0.9035** | 0.8875 | **+1.60%** |
+| **NSL-KDD** | 2D-CNN | 0.9950 | 0.9865 | 0.8699 | 0.8875 | -1.76% |
 | **UNSW-NB15** | DNN | 0.8089 | 0.8352 | 0.6599 | 0.6694 | -0.95% |
 | **UNSW-NB15** | 1D-CNN | 0.8033 | 0.8321 | 0.6538 | 0.6647 | -1.09% |
-| **UNSW-NB15** | 2D-CNN | 0.8353 | 0.8374 | **0.6741** | 0.6601 | **+1.40%** |
+| **UNSW-NB15** | 2D-CNN | 0.8097 | 0.8374 | **0.6600** | 0.6601 | -0.01% |
 
 *Finding*: On NSL-KDD, Pearson correlation feature filtering produced a **+4.83% increase in Macro-F1** on the DNN by reducing collinear noise that obscured extreme minority classes (`R2L` and `U2R`).
 
@@ -211,15 +211,16 @@ python scripts/generate_tables.py
 1. **Benchmark Age & Representativeness**: NSL-KDD derives from 1999 network traffic, lacking contemporary IoT protocol flows (e.g., MQTT, CoAP).
 2. **2D-CNN Inductive Bias**: Reshaping tabular network attributes into a 2D matrix imposes artificial spatial adjacency between unrelated features that varies under row-major ordering.
 3. **Severe Class Imbalance**: High global accuracy on NSL-KDD (99.7%) is dominated by majority classes (`Normal`, `DoS`), while `U2R` contains only 52 total instances in 125K records.
-4. **Hardware-Dependent Runtime**: Reported paper latencies in milliseconds cannot be directly matched against total training times without identical proprietary hardware profiling.
+4. **Hardware-Dependent Runtime**: Paper-reported training times in milliseconds cannot be directly normalized against our total wall-clock training times executed in different environments.
 
 ---
 
 ## 14. Methodological Ambiguities in Sharma et al. (2024)
-- **1D-CNN Architecture**: The paper did not specify kernel size, pooling dimensions, or filter counts for 1D-CNN. We reconstructed standard parameters ($\text{kernel}=3, \text{pool}=2$) and documented the design choice.
-- **UNSW-NB15 Dropped Features Table**: The paper listed `label` among correlation-removed predictors, which is a ground-truth target. We resolved this by isolating `label` prior to feature selection.
-- **`sloss` / `dloss` Ambiguity**: The paper referenced dropping `loss`, which does not exist in UNSW-NB15. We retained `sloss` and `dloss`, preserving 38 selected predictors.
-- **Dropout Specification**: Section 4 listed dropout=0.01 while other tables omitted dropout. We evaluated both variants in our sensitivity analysis.
+- **1D-CNN Architecture**: The paper did not specify kernel size, pooling dimensions, or filter counts for 1D-CNN. We reconstructed standard parameters ($\text{kernel}=3, \text{pool}=2$, filters $64 \to 32$) and documented the design choice as an inferred parameter.
+- **Feature Count Reconstruction**: Retaining `difficulty_level` (NSL-KDD), isolating `label` to avoid leakage, and retaining `sloss`/`dloss` (UNSW-NB15) to achieve 36 and 38 selected features are project reconstruction decisions to reconcile canonical model dimensions and grids, not mechanical copies of paper procedures or arithmetic.
+- **Dropout Contradiction**: Table 1 listed `dropout = 0` while Section 4.1 text stated `dropout = 0.01`. We evaluated both variants ($p=0.0$ canonical, $p=0.01$ sensitivity).
+- **UNSW-NB15 SHAP 'data' Inconsistency**: The paper cites `data` as the #1 most important feature for UNSW Normal global SHAP, but `data` does not exist in the UNSW-NB15 dataset schema or paper feature table. Our reproduction faithfully reports the empirical top feature (`dttl`).
+- **Non-Causal Disclaimer**: SHAP and LIME explain the model's learned prediction behavior; they do not establish causal relationships between a feature and the underlying network attack. Attribution values reflect how strongly input perturbations shift output activations within the learned decision boundaries.
 
 ---
 

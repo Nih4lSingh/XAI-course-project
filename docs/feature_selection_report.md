@@ -44,7 +44,7 @@ $$PCC(X_i, X_j) = \frac{\sum_{k=1}^N (X_{ik} - \bar{X}_i)(X_{jk} - \bar{X}_j)}{\
 5. `dst_host_srv_serror_rate`: Confirmed ($r = +0.9760$ with `serror_rate`)
 6. `srv_rerror_rate`: Confirmed ($r = +0.9861$ with `rerror_rate`)
 
-**Selected Predictors:** **36 features** ($42 - 6 = 36$ retaining `difficulty_level`, mapping directly to a $6 \times 6$ grid with **0 padding zeros**; in the alternative strict-network-only ablation where `difficulty_level` is discarded, $41 - 6 = 35$ features with 1 zero-padding cell).
+**Selected Predictors:** **36 features** (Retaining `difficulty_level` yields 42 raw predictors; dropping the 6 collinear features yields 36 features, mapping directly to a $6 \times 6$ grid with **0 padding zeros**. Because the paper's feature table omits `difficulty_level`, retaining it to reconcile the 36-feature count is our project reconstruction decision, not a mechanical copy of a published paper procedure. In the alternative strict-network-only ablation where `difficulty_level` is discarded, 41 raw predictors minus 6 yields 35 features, requiring 1 zero padding cell).
 
 ---
 
@@ -73,10 +73,10 @@ $$PCC(X_i, X_j) = \frac{\sum_{k=1}^N (X_{ik} - \bar{X}_i)(X_{jk} - \bar{X}_j)}{\
 2. `dwin`: Confirmed ($r = +0.9788$ with `swin`)
 3. `ct_ftp_cmd`: Confirmed ($r = +0.9989$ with `is_ftp_login`)
 4. `ct_srv_dst`: Confirmed ($r = +0.9801$ with `ct_srv_src`)
-5. `label`: Binary target column, separated into target vector $y$ to prevent target leakage.
-6. `loss` (`sloss` & `dloss`): Both packet loss features are retained in the canonical set to avoid removing active network metrics without explicit naming.
+5. `label`: Binary target column, isolated into target vector $y$ to strictly prevent data leakage.
+6. `loss` (`sloss` & `dloss`): Both packet loss features are retained in the canonical feature set.
 
-**Selected Predictors:** **38 features** (reshaped into a $7 \times 7 = 49$ grid with **exactly 11 trailing zero-padding elements**).
+**Selected Predictors:** **38 features** (reshaped into a $7 \times 7 = 49$ grid with **exactly 11 trailing zero-padding elements**). Note: The paper does not state the arithmetic "42 - 4 = 38"; isolating `label` to avoid leakage and retaining `sloss`/`dloss` to yield 38 selected features are project reconstruction decisions to reconcile the paper's reported 38-feature dimension and $7 \times 7$ grid.
 
 ---
 

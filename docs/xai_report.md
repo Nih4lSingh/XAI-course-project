@@ -52,6 +52,10 @@ Features are ranked by **Mean Absolute SHAP Value** ($mean(|SHAP|)$) for each re
 | 9 | `smean` | 0.01161 |
 | 10 | `service` | 0.00977 |
 
+> [!NOTE]
+> **UNSW-NB15 SHAP Feature Inconsistency in Published Paper**:
+> In Sharma et al. (2024), Figure 7 and text cite `data` as the #1 most important feature for UNSW-NB15 Normal global SHAP attribution. However, a feature named `data` does not exist in the UNSW-NB15 dataset schema or in the paper's own feature table (Table 2). Our empirical replication faithfully calculates and reports SHAP on the actual canonical feature set, identifying `dttl` (destination time to live) as the top feature receiving the largest attribution.
+
 ---
 
 ## 3. LIME Local Explanations
@@ -61,3 +65,13 @@ Representative test instances were audited using LIME TabularExplainer:
 - **UNSW-NB15:** Normal traffic instance and Exploits attack instance.
 
 High-resolution contribution plots and structured JSON explanations are archived in `results/xai/lime/` and `results/xai/shap/`.
+
+---
+
+## 4. Methodological Interpretation & Non-Causal Framing
+
+These features receive the largest model attributions for the target class under study (`DoS` for NSL-KDD, `Normal` for UNSW-NB15). 
+
+> [!IMPORTANT]
+> **Non-Causal Disclaimer**:
+> SHAP and LIME explain the model's learned prediction behavior; they do not establish causal relationships between a feature and the underlying network attack. Attribution values reflect how strongly input perturbations shift output activations within the learned decision boundaries, rather than mechanistic physical causes in network protocol stacks.

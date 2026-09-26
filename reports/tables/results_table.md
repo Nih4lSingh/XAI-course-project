@@ -21,13 +21,13 @@
 
 # Paper Reported vs Reproduction Comparison (Canonical 6 Models)
 
-| Dataset | Model | Paper Accuracy | Our Accuracy | Difference | Paper Reported Time (ms) | Our Training Time (s) | Runtime Note |
+| Dataset | Model | Paper Accuracy | Our Accuracy | Difference | Paper Training Time (ms) | Our Total Training Time (s) | Runtime Note |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| NSL-KDD | DNN | 0.993 | 0.997 | +0.0040 | 142.0 | 87.01 | Paper reports inference/step time in ms; our time is total wall-clock training for 20 epochs |
-| NSL-KDD | 1DCNN | 0.992 | 0.9944 | +0.0024 | 325.0 | 85.99 | Paper reports inference/step time in ms; our time is total wall-clock training for 20 epochs |
-| NSL-KDD | 2DCNN | 0.994 | 0.995 | +0.0010 | 340.0 | 116.81 | Paper reports inference/step time in ms; our time is total wall-clock training for 20 epochs |
-| UNSW-NB15 | DNN | 0.8 | 0.8089 | +0.0089 | 323.0 | 40.54 | Paper reports inference/step time in ms; our time is total wall-clock training for 20 epochs |
-| UNSW-NB15 | 1DCNN | 0.8 | 0.8033 | +0.0033 | 442.0 | 91.23 | Paper reports inference/step time in ms; our time is total wall-clock training for 20 epochs |
-| UNSW-NB15 | 2DCNN | 0.81 | 0.8097 | -0.0003 | 455.0 | 187.72 | Paper reports inference/step time in ms; our time is total wall-clock training for 20 epochs |
+| NSL-KDD | DNN | 0.993 | 0.997 | +0.0040 | 142.0 | 87.01 | The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons. |
+| NSL-KDD | 1DCNN | 0.992 | 0.9944 | +0.0024 | 325.0 | 85.99 | The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons. |
+| NSL-KDD | 2DCNN | 0.994 | 0.995 | +0.0010 | 340.0 | 116.81 | The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons. |
+| UNSW-NB15 | DNN | 0.8 | 0.8089 | +0.0089 | 323.0 | 40.54 | The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons. |
+| UNSW-NB15 | 1DCNN | 0.8 | 0.8033 | +0.0033 | 442.0 | 91.23 | The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons. |
+| UNSW-NB15 | 2DCNN | 0.81 | 0.8097 | -0.0003 | 455.0 | 187.72 | The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons. |
 
-*Note: Differences are reported as (Our Accuracy - Paper Accuracy). Runtime comparison reflects distinct quantities: the paper's table presents per-sample or per-batch inference latency in milliseconds, whereas our reproduction records end-to-end training epoch duration on GPU/CPU.*
+*Note: Differences are reported as (Our Accuracy - Paper Accuracy). Paper training times (142/325/340 ms for NSL-KDD; 323/442/455 ms for UNSW-NB15) are labeled by the authors as training time. Our reproduction measures total 20-epoch wall-clock training time in seconds. The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons.*

@@ -96,7 +96,7 @@ Identified 10 highly collinear pairs ($|PCC| > 0.95$). All 6 paper-specified rem
 4. `dst_host_serror_rate` ($r = +0.9747$ with `serror_rate`)
 5. `dst_host_srv_serror_rate` ($r = +0.9760$ with `serror_rate`)
 6. `srv_rerror_rate` ($r = +0.9861$ with `rerror_rate`)
-- **Selected Predictor Count:** **36 features** ($42 - 6 = 36$). Maps directly into a $6 \times 6$ grid with **0 padding zeros**.
+- **Selected Predictor Count:** **36 features** (Retaining `difficulty_level` yields 42 raw predictors; dropping the 6 collinear features yields 36 features, mapping directly to a $6 \times 6$ grid with **0 padding zeros**. Because the paper's feature table omits `difficulty_level`, retaining it to reconcile the 36-feature count is our project reconstruction decision, not a mechanical copy of a published paper procedure. In the alternative strict-network-only ablation where `difficulty_level` is discarded, 41 raw predictors minus 6 yields 35 features, requiring 1 zero padding cell).
 
 #### UNSW-NB15 Confirmation:
 Identified 12 highly collinear pairs. All paper-reported redundant predictors were **100% mathematically confirmed**:
@@ -104,7 +104,7 @@ Identified 12 highly collinear pairs. All paper-reported redundant predictors we
 2. `dwin` ($r = +0.9788$ with `swin`)
 3. `ct_ftp_cmd` ($r = +0.9989$ with `is_ftp_login`)
 4. `ct_srv_dst` ($r = +0.9801$ with `ct_srv_src`)
-- **Selected Predictor Count:** **38 features** ($42 - 4 = 38$, retaining `sloss` and `dloss`). Padded with **exactly 11 trailing zeros** to produce the $7 \times 7 = 49$ input grid for 2D-CNN.
+- **Selected Predictor Count:** **38 features** (Padded with **exactly 11 trailing zeros** to produce the $7 \times 7 = 49$ input grid for 2D-CNN. Note: The paper does not state the arithmetic "$42 - 4 = 38$"; isolating `label` to avoid leakage and retaining `sloss`/`dloss` to yield 38 selected features are project reconstruction decisions to reconcile the paper's reported 38-feature dimension and $7 \times 7$ grid).
 
 ---
 
@@ -134,24 +134,26 @@ Identified 12 highly collinear pairs. All paper-reported redundant predictors we
 
 ### 5.3 Paper Reported vs. Reproduced Performance Comparison
 
-| Dataset | Model | Paper Reported Acc | Our Reproduced Acc | Difference ($\Delta$) | Replication Assessment |
-| :--- | :--- | :---: | :---: | :---: | :--- |
-| **NSL-KDD** | **DNN** | 0.9930 (99.3%) | **0.9970 (99.70%)** | $+0.0040$ | **Faithfully Reproduced** ($\Delta \le 0.0040$) |
-| **NSL-KDD** | **1D-CNN** | 0.9920 (99.2%) | **0.9944 (99.44%)** | $+0.0024$ | **Faithfully Reproduced** ($\Delta \le 0.0024$) |
-| **NSL-KDD** | **2D-CNN** | 0.9940 (99.4%) | **0.9950 (99.50%)** | $+0.0010$ | **Faithfully Reproduced** ($\Delta \le 0.0010$) |
-| **UNSW-NB15** | **DNN** | 0.8000 (80.0%) | **0.8089 (80.89%)** | $+0.0089$ | **Faithfully Reproduced** ($\Delta \le 0.0089$) |
-| **UNSW-NB15** | **1D-CNN** | 0.8000 (80.0%) | **0.8033 (80.33%)** | $+0.0033$ | **Faithfully Reproduced** ($\Delta \le 0.0033$) |
-| **UNSW-NB15** | **2D-CNN** | 0.8100 (81.0%) | **0.8097 (80.97%)** | $-0.0003$ | **Faithfully Reproduced** ($\Delta \le 0.0003$) |
+| Dataset | Model | Paper Accuracy | Our Accuracy | Difference ($\Delta$) | Paper Training Time (ms) | Our Total Training Time (s) | Replication Assessment |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **NSL-KDD** | **DNN** | 0.9930 (99.3%) | **0.9970 (99.70%)** | $+0.0040$ | 142.0 | 87.01 | **Faithfully Reproduced** ($\Delta \le 0.0040$) |
+| **NSL-KDD** | **1D-CNN** | 0.9920 (99.2%) | **0.9944 (99.44%)** | $+0.0024$ | 325.0 | 85.99 | **Faithfully Reproduced** ($\Delta \le 0.0024$) |
+| **NSL-KDD** | **2D-CNN** | 0.9940 (99.4%) | **0.9950 (99.50%)** | $+0.0010$ | 340.0 | 116.81 | **Faithfully Reproduced** ($\Delta \le 0.0010$) |
+| **UNSW-NB15** | **DNN** | 0.8000 (80.0%) | **0.8089 (80.89%)** | $+0.0089$ | 323.0 | 40.54 | **Faithfully Reproduced** ($\Delta \le 0.0089$) |
+| **UNSW-NB15** | **1D-CNN** | 0.8000 (80.0%) | **0.8033 (80.33%)** | $+0.0033$ | 442.0 | 91.23 | **Faithfully Reproduced** ($\Delta \le 0.0033$) |
+| **UNSW-NB15** | **2D-CNN** | 0.8100 (81.0%) | **0.8097 (80.97%)** | $-0.0003$ | 455.0 | 187.72 | **Faithfully Reproduced** ($\Delta \le 0.0003$) |
+
+*Runtime Note: The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons.*
 
 ---
 
 ## 6. Sensitivity Analysis: Dropout Contradiction (0.00 vs 0.01)
 
-Evaluating the contradiction between Table 1 (`dropout=0`) and the Section 4.1 text (`dropout=0.01`):
-- **NSL-KDD DNN (Dropout=0.00):** Accuracy = 0.9970, F1 (Macro) = 0.9242, F1 (Weighted) = 0.9970.
-- **NSL-KDD DNN (Dropout=0.01):** Accuracy = 0.9971, F1 (Macro) = 0.9015, F1 (Weighted) = 0.9971.
-- **UNSW-NB15 DNN (Dropout=0.00):** Accuracy = 0.8089, F1 (Macro) = 0.6599, F1 (Weighted) = 0.7754.
-- **UNSW-NB15 DNN (Dropout=0.01):** Accuracy = 0.8095, F1 (Macro) = 0.6619, F1 (Weighted) = 0.7771.
+The paper exhibits an internal inconsistency between Table 1 (which lists `dropout = 0`) and Section 4.1 text (which states `dropout rate of 0.01 is used`). In our replication:
+- **NSL-KDD DNN (Dropout=0.00, canonical Table 1):** Accuracy = 0.9970, F1 (Macro) = 0.9242, F1 (Weighted) = 0.9970.
+- **NSL-KDD DNN (Dropout=0.01, Section 4.1 text):** Accuracy = 0.9971, F1 (Macro) = 0.9015, F1 (Weighted) = 0.9971.
+- **UNSW-NB15 DNN (Dropout=0.00, canonical Table 1):** Accuracy = 0.8089, F1 (Macro) = 0.6599, F1 (Weighted) = 0.7754.
+- **UNSW-NB15 DNN (Dropout=0.01, Section 4.1 text):** Accuracy = 0.8095, F1 (Macro) = 0.6619, F1 (Weighted) = 0.7771.
 
 **Finding:** Adding a 0.01 dropout rate produces marginal variation ($|\Delta \text{Acc}| \le 0.0006$), confirming that model convergence and performance are largely stable across this reporting inconsistency.
 
@@ -160,14 +162,19 @@ Evaluating the contradiction between Table 1 (`dropout=0`) and the Section 4.1 t
 ## 7. Explainable AI (XAI) Synthesis: LIME & SHAP
 
 ### 7.1 NSL-KDD Interpretability Findings
-- **SHAP Global Importance (Seed-controlled random sample of 50 test instances; Target Class: DoS):** Top features ranked by $mean(|SHAP|)$ were `same_srv_rate`, `dst_host_srv_count`, `serror_rate`, `flag`, and `dst_host_count`.
-- **LIME Local Attribution:** For DoS attacks (e.g. `neptune`), high values of `serror_rate` ($> 0.8$) and low values of `same_srv_rate` ($< 0.1$) positively contributed over $80\%$ of the model's malicious prediction confidence.
-- **Alignment:** 8 out of the top 9 features identified in our SHAP/LIME pipeline correspond directly to the influential features cited by Sharma et al.
+- **SHAP Global Importance (Seed-controlled random sample of 50 test instances; Target Class: DoS):** Top features ranked by class-specific $mean(|SHAP|)$ were `serror_rate` (0.14447), `logged_in` (0.05023), `dst_host_same_src_port_rate` (0.03798), `count` (0.02916), and `dst_host_srv_count` (0.02378).
+- **Attribution Interpretation:** These features receive the largest model attributions for the DoS target class. In particular, elevated SYN error rates (`serror_rate`) and unauthenticated session state (`logged_in = 0`) yield the strongest positive attributions toward DoS classifications.
+- **LIME Local Attribution:** For DoS attack instances, flag state (`flag = S0`) and `serror_rate > 0.8` yield positive attributions contributing over 90% of malicious prediction probability.
 
 ### 7.2 UNSW-NB15 Interpretability Findings
-- **SHAP Global Importance (Seed-controlled random sample of 50 test instances; Target Class: Normal):** Top features ranked were `dttl` (destination time-to-live), `sttl` (source time-to-live), `ct_srv_src`, `swin`, and `smean`.
-- **LIME Local Attribution:** In Normal connections, canonical TTL values (`sttl = 64` or `255`, `dttl = 252`) and standard window sizes heavily drove normal classifications. For `Exploits`, elevated packet sizes (`smean > 800`) and atypical TTL transitions contributed strongly toward attack classification.
-- **Alignment:** Strongly matches the paper's reported feature attribution set (`dttl`, `state`, `spkts`, `sttl`, `swin`).
+- **SHAP Global Importance (Seed-controlled random sample of 50 test instances; Target Class: Normal):** Top features ranked by class-specific $mean(|SHAP|)$ were `dttl` (0.15098), `swin` (0.11924), `sttl` (0.07591), `ct_dst_sport_ltm` (0.05688), and `ct_state_ttl` (0.02169).
+- **Attribution Interpretation:** These features receive the largest model attributions for the Normal target class. Canonical TTL thresholds (`sttl = 64` or `255`, `dttl = 252`) and standard TCP window advertisements (`swin = 255`) yield positive attribution toward Normal predictions.
+- **Note on Published Feature Inconsistency:** In Sharma et al. (2024), Figure 7 and Section 5.2 cite `data` as the #1 most important feature for UNSW-NB15 Normal global SHAP attribution. However, a feature named `data` does not exist in the UNSW-NB15 dataset schema or in the paper's own feature table (Table 2). Our reproduction therefore reports the feature ranking obtained from the actual canonical feature set (top feature: `dttl`).
+
+### 7.3 Non-Causal Disclaimer
+> [!IMPORTANT]
+> **Non-Causal Disclaimer**:
+> SHAP and LIME explain the model's learned prediction behavior; they do not establish causal relationships between a feature and the underlying network attack. Attribution values reflect how strongly input perturbations shift output activations within the learned decision boundaries, rather than mechanistic physical causes in network protocol stacks.
 
 ---
 
@@ -186,22 +193,23 @@ Removing highly collinear predictors ($|PCC| > 0.95$) does not degrade detection
 - **NSL-KDD:** Predictors reduced from 42 to 36 ($14.29\%$ reduction). Maps into a $6 \times 6$ grid with 0 zero-padding.
 - **UNSW-NB15:** Predictors reduced from 42 to 38 ($9.52\%$ reduction). Reshaped into a $7 \times 7$ grid with exactly 11 trailing zero-padding elements.
 
-### RQ5: What effect does feature selection have on training/inference cost?
-Feature reduction decreased training duration significantly (e.g. from 149.69 s down to 40.54 s on UNSW-NB15 DNN, a 73% reduction) due to smaller input matrices and fewer first-layer parameters.
+### RQ5: What effect does feature selection have on model training duration?
+Feature reduction decreased training duration significantly (e.g. from 149.69 s down to 40.54 s on UNSW-NB15 DNN, a 73% reduction) due to smaller input matrices and fewer first-layer parameters. Note: The paper reports training times of 142–340 ms for NSL-KDD and 323–455 ms for UNSW-NB15 ("Paper-reported training time"). Our reproduction measures total 20-epoch wall-clock training time (85–117 s and 40–188 s, respectively). The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons.
 
 ### RQ6: How do DNN, 1D-CNN, and 2D-CNN compare under identical preprocessing?
 DNN achieved the highest Macro-F1 on NSL-KDD (0.9242) and lowest training duration on UNSW-NB15 (40.54 s). 2D-CNN achieved 0.9950 accuracy on NSL-KDD and 0.8097 on UNSW-NB15, matching the paper's 0.8100 within 0.0003, while requiring higher training overhead due to 2D convolutions.
 
 ### RQ7: Do SHAP and LIME identify interpretable features driving the DNN decisions?
-**Yes.** Both explainers consistently highlighted domain-critical network features. In NSL-KDD, connection error rates and server counts governed DoS detection. In UNSW-NB15, packet TTL and TCP window size drove normal traffic identification.
+**Yes.** Both explainers consistently identified domain-critical network flow attributes receiving the largest model attributions for the target classes. In NSL-KDD, connection error rates and authentication status received the highest attribution for DoS. In UNSW-NB15, packet TTL and TCP window size received the highest attribution for Normal traffic. SHAP and LIME explain the model's learned prediction behavior; they do not establish causal relationships between a feature and the underlying network attack.
 
 ### RQ8: Where does the reproduction differ from the original paper, and what are the methodological reasons?
 1. **Target Separation:** The paper listed `label` among dropped features for UNSW-NB15. We strictly excluded `label` and `attack_cat` from predictor matrix $X$ to eliminate target leakage.
-2. **NSL-KDD Feature Alignment (42 raw $\to$ 36 selected):** Retaining `difficulty_level` yields 42 raw predictors minus 6 collinear features = 36 selected features, mapping to a $6 \times 6$ grid with 0 padding.
-3. **UNSW-NB15 Feature Alignment (42 raw $\to$ 38 selected):** Retaining `sloss` and `dloss` while dropping the 4 redundant traffic predictors yields 38 selected features + 11 trailing zeros padding into a $7 \times 7 = 49$ grid.
+2. **NSL-KDD Feature Alignment (42 raw $\to$ 36 selected):** Retaining `difficulty_level` yields 42 raw predictors minus 6 collinear features = 36 selected features, mapping to a $6 \times 6$ grid with 0 padding. Because the paper's feature table omits `difficulty_level`, retaining it is our project reconstruction decision, not a mechanical copy of paper procedures.
+3. **UNSW-NB15 Feature Alignment (42 raw $\to$ 38 selected):** The paper does not state the arithmetic "42 - 4 = 38". Isolating `label` to avoid leakage and retaining `sloss`/`dloss` while dropping the 4 redundant traffic predictors yields 38 selected features + 11 trailing zeros padding into a $7 \times 7 = 49$ grid. These are project reconstruction decisions to reconcile the paper's reported 38 features and $7 \times 7$ grid.
 4. **2D-CNN Topology (Fig. 5):** Reconstructed exact 3 Conv / 3 MaxPool topology with `padding='same'` on convolutions and pooling to support $6 \times 6$ and $7 \times 7$ grids without spatial collapse.
 5. **1D-CNN Filter Architecture:** Inferred a 64 $\to$ 32 filter sequence and documented it as an `INFERRED PARAMETER`.
 6. **Dropout Contradiction:** Evaluated both 0.00 and 0.01; both confirmed minimal sensitivity ($|\Delta \text{Acc}| \le 0.0006$).
+7. **UNSW SHAP 'data' Inconsistency:** The paper cites `data` as the #1 feature for UNSW Normal global SHAP, but `data` does not exist in the UNSW-NB15 dataset. Our reproduction faithfully reports the empirical top feature (`dttl`).
 
 ---
 
