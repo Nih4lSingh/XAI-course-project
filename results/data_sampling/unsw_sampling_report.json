@@ -1,0 +1,21 @@
+{
+  "dataset": "UNSW-NB15",
+  "total_records_before": 236995,
+  "total_records_after": 185124,
+  "sampling_policy": "Cap Generic and Normal at 50,000; retain all DoS, Exploits, and Fuzzers",
+  "random_seed": 42,
+  "counts_before": {
+    "normal": 93000,
+    "generic": 58871,
+    "exploits": 44525,
+    "fuzzers": 24246,
+    "dos": 16353
+  },
+  "counts_after": {
+    "normal": 50000,
+    "generic": 50000,
+    "exploits": 44525,
+    "fuzzers": 24246,
+    "dos": 16353
+  }
+}
