@@ -74,31 +74,48 @@ def run_experiment(
 
     # Select input representations
     if model_type == "2DCNN":
+        from models.feature_to_grid import FeatureGridMapper
+
         if dataset_name == "nsl_kdd":
             if feature_mode == "selected":
-                X_train = data["X_selected_36_train"].reshape((-1, 6, 6, 1))
-                X_val = data["X_selected_36_val"].reshape((-1, 6, 6, 1))
-                X_test = data["X_selected_36_test"].reshape((-1, 6, 6, 1))
+                if "X_selected_36_train" in data and data["X_selected_36_train"].shape[1] == 36:
+                    X_train = data["X_selected_36_train"].reshape((-1, 6, 6, 1))
+                    X_val = data["X_selected_36_val"].reshape((-1, 6, 6, 1))
+                    X_test = data["X_selected_36_test"].reshape((-1, 6, 6, 1))
+                else:
+                    mapper = FeatureGridMapper([str(i) for i in range(data["X_selected_train"].shape[1])], grid_size=6)
+                    X_train = mapper.transform(data["X_selected_train"])
+                    X_val = mapper.transform(data["X_selected_val"])
+                    X_test = mapper.transform(data["X_selected_test"])
                 grid_shape = (6, 6, 1)
             else:
-                # Pad 41 features to 49 (7x7)
-                pad = np.zeros((len(data["X_all_train"]), 8), dtype=np.float32)
-                X_train = np.hstack([data["X_all_train"], pad]).reshape((-1, 7, 7, 1))
-                pad_val = np.zeros((len(data["X_all_val"]), 8), dtype=np.float32)
-                X_val = np.hstack([data["X_all_val"], pad_val]).reshape((-1, 7, 7, 1))
-                pad_test = np.zeros((len(data["X_all_test"]), 8), dtype=np.float32)
-                X_test = np.hstack([data["X_all_test"], pad_test]).reshape((-1, 7, 7, 1))
+                mapper = FeatureGridMapper([str(i) for i in range(data["X_all_train"].shape[1])], grid_size=7)
+                X_train = mapper.transform(data["X_all_train"])
+                X_val = mapper.transform(data["X_all_val"])
+                X_test = mapper.transform(data["X_all_test"])
                 grid_shape = (7, 7, 1)
         else:
             # UNSW-NB15
             if feature_mode == "selected":
-                X_train = data["X_selected_49_train"].reshape((-1, 7, 7, 1))
-                X_val = data["X_selected_49_val"].reshape((-1, 7, 7, 1))
-                X_test = data["X_selected_49_test"].reshape((-1, 7, 7, 1))
+                if "X_selected_49_train" in data and data["X_selected_49_train"].shape[1] == 49:
+                    X_train = data["X_selected_49_train"].reshape((-1, 7, 7, 1))
+                    X_val = data["X_selected_49_val"].reshape((-1, 7, 7, 1))
+                    X_test = data["X_selected_49_test"].reshape((-1, 7, 7, 1))
+                else:
+                    mapper = FeatureGridMapper([str(i) for i in range(data["X_selected_train"].shape[1])], grid_size=7)
+                    X_train = mapper.transform(data["X_selected_train"])
+                    X_val = mapper.transform(data["X_selected_val"])
+                    X_test = mapper.transform(data["X_selected_test"])
             else:
-                X_train = data["X_all_49_train"].reshape((-1, 7, 7, 1))
-                X_val = data["X_all_49_val"].reshape((-1, 7, 7, 1))
-                X_test = data["X_all_49_test"].reshape((-1, 7, 7, 1))
+                if "X_all_49_train" in data and data["X_all_49_train"].shape[1] == 49:
+                    X_train = data["X_all_49_train"].reshape((-1, 7, 7, 1))
+                    X_val = data["X_all_49_val"].reshape((-1, 7, 7, 1))
+                    X_test = data["X_all_49_test"].reshape((-1, 7, 7, 1))
+                else:
+                    mapper = FeatureGridMapper([str(i) for i in range(data["X_all_train"].shape[1])], grid_size=7)
+                    X_train = mapper.transform(data["X_all_train"])
+                    X_val = mapper.transform(data["X_all_val"])
+                    X_test = mapper.transform(data["X_all_test"])
             grid_shape = (7, 7, 1)
 
         model = build_cnn2d_model(
