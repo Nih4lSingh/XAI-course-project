@@ -5,62 +5,62 @@
   "predicted_class": 4,
   "predicted_class_name": "Normal",
   "probabilities": {
-    "DoS": 0.03542102500796318,
-    "Exploits": 0.06385016441345215,
-    "Fuzzers": 0.005725100636482239,
-    "Generic": 0.0007090619183145463,
-    "Normal": 0.8942946195602417
+    "DoS": 1.1764433338612434e-06,
+    "Exploits": 1.0323765309294686e-06,
+    "Fuzzers": 2.3084321583155543e-05,
+    "Generic": 1.016993451230519e-06,
+    "Normal": 0.9999736547470093
   },
   "top_features": [
     {
       "feature_condition": "0.00 < swin <= 1.00",
-      "weight": 0.5189506502413569,
-      "direction": "positive"
-    },
-    {
-      "feature_condition": "0.11 < dttl <= 0.99",
-      "weight": -0.4071223707609878,
-      "direction": "negative"
-    },
-    {
-      "feature_condition": "0.12 < sttl <= 1.00",
-      "weight": -0.163405756685439,
-      "direction": "negative"
-    },
-    {
-      "feature_condition": "ct_dst_sport_ltm <= 0.00",
-      "weight": 0.1513052252392409,
+      "weight": 0.3789837899841917,
       "direction": "positive"
     },
     {
       "feature_condition": "is_sm_ips_ports <= 0.00",
-      "weight": -0.13743915738180235,
+      "weight": -0.29934917944316725,
       "direction": "negative"
     },
     {
-      "feature_condition": "dmean > 0.06",
-      "weight": -0.11064477118139115,
+      "feature_condition": "sttl <= 0.24",
+      "weight": 0.23727099876741886,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "0.00 < dttl <= 0.99",
+      "weight": -0.21999647109991954,
       "direction": "negative"
+    },
+    {
+      "feature_condition": "dmean > 0.05",
+      "weight": -0.1579791107181014,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "ct_dst_sport_ltm <= 0.00",
+      "weight": 0.1152298638698648,
+      "direction": "positive"
     },
     {
       "feature_condition": "ct_state_ttl <= 0.17",
-      "weight": 0.08869625505906303,
+      "weight": 0.08069686847428072,
       "direction": "positive"
     },
     {
-      "feature_condition": "ct_srv_src <= 0.02",
-      "weight": -0.0645500358883773,
-      "direction": "negative"
-    },
-    {
-      "feature_condition": "service > 0.17",
-      "weight": -0.06344109854791859,
-      "direction": "negative"
-    },
-    {
-      "feature_condition": "sinpkt > 0.00",
-      "weight": 0.05109117487952135,
+      "feature_condition": "state <= 0.38",
+      "weight": 0.06312737699702319,
       "direction": "positive"
+    },
+    {
+      "feature_condition": "is_ftp_login <= 0.00",
+      "weight": -0.03540815324062446,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "proto <= 0.85",
+      "weight": -0.03342411499481309,
+      "direction": "negative"
     }
   ]
 }

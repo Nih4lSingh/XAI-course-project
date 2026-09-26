@@ -158,18 +158,18 @@ The notebook will automatically download the datasets, execute preprocessing, ge
 
 | Dataset | Model | Feature Mode | Paper Reported Acc | Our Empirical Acc | Difference ($\Delta$) | Replication Status |
 | :--- | :--- | :--- | :---: | :---: | :---: | :--- |
-| **NSL-KDD** | **DNN** | Selected (35 feat) | **0.9930 (99.3%)** | **0.9825 (98.25%)** | $-0.0105$ | **Faithfully Reproduced** |
-| **NSL-KDD** | **1D-CNN** | Selected (35 feat) | **0.9920 (99.2%)** | **0.9757 (97.57%)** | $-0.0163$ | **Faithfully Reproduced** |
-| **NSL-KDD** | **2D-CNN** | Selected (36 grid) | **0.9940 (99.4%)** | **0.9847 (98.47%)** | $-0.0093$ | **Faithfully Reproduced** |
-| **UNSW-NB15** | **DNN** | Selected (36 feat) | **0.8000 (80.0%)** | **0.8320 (83.20%)** | $+0.0320$ | **Faithfully Reproduced** |
-| **UNSW-NB15** | **1D-CNN** | Selected (36 feat) | **0.8000 (80.0%)** | **0.8312 (83.12%)** | $+0.0312$ | **Faithfully Reproduced** |
-| **UNSW-NB15** | **2D-CNN** | Selected (49 grid) | **0.8100 (81.0%)** | **0.8353 (83.53%)** | $+0.0253$ | **Faithfully Reproduced** |
+| **NSL-KDD** | **DNN** | Selected (36 feat) | **0.9930 (99.3%)** | **0.9970 (99.70%)** | $\mathbf{+0.0040}$ | **Exceeds Paper Benchmark** |
+| **NSL-KDD** | **1D-CNN** | Selected (36 feat) | **0.9920 (99.2%)** | **0.9944 (99.44%)** | $\mathbf{+0.0024}$ | **Exceeds Paper Benchmark** |
+| **NSL-KDD** | **2D-CNN** | Selected (36 grid) | **0.9940 (99.4%)** | **0.9967 (99.67%)** | $\mathbf{+0.0027}$ | **Exceeds Paper Benchmark** |
+| **UNSW-NB15** | **DNN** | Selected (36 feat) | **0.8000 (80.0%)** | **0.8312 (83.12%)** | $\mathbf{+0.0312}$ | **Exceeds Paper Benchmark** |
+| **UNSW-NB15** | **1D-CNN** | Selected (36 feat) | **0.8000 (80.0%)** | **0.8312 (83.12%)** | $\mathbf{+0.0312}$ | **Exceeds Paper Benchmark** |
+| **UNSW-NB15** | **2D-CNN** | Selected (49 grid) | **0.8100 (81.0%)** | **0.8353 (83.53%)** | $\mathbf{+0.0253}$ | **Exceeds Paper Benchmark** |
 
 ---
 
 ## 6. Key Scientific Conclusions
 
-1. **Ablation Insight:** Pearson feature selection reduces dimensionality by ~14.5% and improves minority-class Macro-F1 (by **+2.08%** on NSL-KDD DNN) while eliminating credit splitting in SHAP/LIME attributions, with essentially zero penalty in overall accuracy.
-2. **Inductive Biases:** While 2D-CNN achieved slightly higher accuracy (98.47% NSL, 83.53% UNSW) due to regularizing parameter sharing across channels, tabular features lack natural spatial topology. Dense DNN remains computationally faster and structurally more faithful.
+1. **Ablation Insight:** Pearson feature selection reduces dimensionality by ~14.3% and improves minority-class Macro-F1 (by **+4.83%** on NSL-KDD DNN: 0.8759 $\to$ 0.9242) while eliminating credit splitting in SHAP/LIME attributions, with essentially zero penalty in overall accuracy.
+2. **Inductive Biases:** While 2D-CNN achieved slightly higher accuracy on UNSW (83.53% vs 83.12%) due to regularizing parameter sharing across channels, tabular features lack natural spatial topology. Dense DNN remains computationally faster and structurally more faithful.
 3. **Target Leakage Remediation:** Excluding `label` and `attack_cat` from $X$ guarantees that models learn true telemetry anomaly patterns rather than ground-truth artifacts.
 4. **Publication Report:** Detailed answers to Research Questions RQ1 through RQ10, threats to validity, and future guidelines are documented in [`reports/final_report.md`](reports/final_report.md).

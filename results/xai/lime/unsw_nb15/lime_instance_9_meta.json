@@ -1,0 +1,66 @@
+{
+  "instance_id": 9,
+  "actual_class": 1,
+  "actual_class_name": "Exploits",
+  "predicted_class": 1,
+  "predicted_class_name": "Exploits",
+  "probabilities": {
+    "DoS": 0.033989034593105316,
+    "Exploits": 0.9639948606491089,
+    "Fuzzers": 1.6994499674183317e-05,
+    "Generic": 0.001682418049313128,
+    "Normal": 0.00031670209136791527
+  },
+  "top_features": [
+    {
+      "feature_condition": "is_sm_ips_ports <= 0.00",
+      "weight": 0.2342107203164378,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "0.00 < dttl <= 0.99",
+      "weight": 0.2102424370427639,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "0.00 < swin <= 1.00",
+      "weight": -0.18818628565002288,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "ct_srv_src <= 0.02",
+      "weight": 0.08766652055931733,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "sttl <= 0.24",
+      "weight": 0.06459267480501998,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "ct_dst_sport_ltm <= 0.00",
+      "weight": -0.05380158448738811,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "ct_state_ttl <= 0.17",
+      "weight": -0.0391390484873906,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "smean > 0.05",
+      "weight": 0.03872538723508566,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "service > 0.17",
+      "weight": -0.0363026362720742,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "is_ftp_login <= 0.00",
+      "weight": -0.03596084898143438,
+      "direction": "negative"
+    }
+  ]
+}

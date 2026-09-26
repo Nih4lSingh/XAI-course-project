@@ -1,40 +1,40 @@
 {
-  "accuracy": 0.8311701463315837,
-  "precision_macro": 0.7484866559406079,
-  "recall_macro": 0.6561862132334589,
-  "f1_macro": 0.6447224603925834,
-  "precision_weighted": 0.8173590846188556,
-  "recall_weighted": 0.8311701463315837,
-  "f1_weighted": 0.8010916860605427,
+  "accuracy": 0.8093169983362503,
+  "precision_macro": 0.765014882805618,
+  "recall_macro": 0.6920153558630431,
+  "f1_macro": 0.6664062793396688,
+  "precision_weighted": 0.8131268150128802,
+  "recall_weighted": 0.8093169983362503,
+  "f1_weighted": 0.7792294978717547,
   "per_class": {
     "DoS": {
-      "precision": 0.5853658536585366,
-      "recall": 0.029354207436399216,
-      "f1_score": 0.055904961565338925
+      "precision": 0.6074766355140186,
+      "recall": 0.015900195694716242,
+      "f1_score": 0.03098927294398093
     },
     "Exploits": {
-      "precision": 0.6785545103877648,
-      "recall": 0.9008175366094691,
-      "f1_score": 0.7740466265246256
+      "precision": 0.6575308641975308,
+      "recall": 0.9569670290180576,
+      "f1_score": 0.7794811752222751
     },
     "Fuzzers": {
-      "precision": 0.6181862035697058,
-      "recall": 0.4227977565160013,
-      "f1_score": 0.5021551724137931
+      "precision": 0.6478494623655914,
+      "recall": 0.6758495546024414,
+      "f1_score": 0.6615533667043436
     },
     "Generic": {
-      "precision": 0.9983940790392404,
-      "recall": 0.9715314580785432,
-      "f1_score": 0.9847796143250689
+      "precision": 0.9985220461450037,
+      "recall": 0.97288,
+      "f1_score": 0.9855342598970784
     },
     "Normal": {
-      "precision": 0.8619326330477926,
-      "recall": 0.9564301075268817,
-      "f1_score": 0.9067259271340904
+      "precision": 0.9136954058059454,
+      "recall": 0.83848,
+      "f1_score": 0.8744733219306662
     }
   },
   "experiment_id": "UNSW_SELECTED_DNN",
-  "training_time_seconds": 153.10658341499993,
-  "training_time_ms": 153106.58341499994,
-  "num_features": 36
+  "training_time_seconds": 122.32424777099982,
+  "training_time_ms": 122324.24777099982,
+  "num_features": 38
 }

@@ -1,40 +1,40 @@
 {
-  "accuracy": 0.9756800430918395,
-  "precision_macro": 0.8952766979839527,
-  "recall_macro": 0.8448969095386406,
-  "f1_macro": 0.8660020455675973,
-  "precision_weighted": 0.9754796905127074,
-  "recall_weighted": 0.9756800430918395,
-  "f1_weighted": 0.975553728289066,
+  "accuracy": 0.9944116339620245,
+  "precision_macro": 0.9736358046053232,
+  "recall_macro": 0.8920802335293512,
+  "f1_macro": 0.9188340146643922,
+  "precision_weighted": 0.9944670868281795,
+  "recall_weighted": 0.9944116339620245,
+  "f1_weighted": 0.9944033961146318,
   "per_class": {
     "DoS": {
-      "precision": 0.992480637641928,
-      "recall": 0.9889854638093811,
-      "f1_score": 0.9907299680990805
+      "precision": 0.9973840251133589,
+      "recall": 0.9961679149973872,
+      "f1_score": 0.9967755991285403
     },
     "Normal": {
-      "precision": 0.9764219234746639,
-      "recall": 0.9802740863787376,
-      "f1_score": 0.9783442130349187
+      "precision": 0.9950142450142451,
+      "recall": 0.9957234497505346,
+      "f1_score": 0.9953687210545066
     },
     "Probe": {
-      "precision": 0.9600905745825078,
-      "recall": 0.9639102017618641,
-      "f1_score": 0.9619965967101531
+      "precision": 0.9889883000688231,
+      "recall": 0.9862731640356898,
+      "f1_score": 0.9876288659793815
     },
     "R2L": {
-      "precision": 0.7854855923159018,
-      "recall": 0.7579814624098867,
-      "f1_score": 0.7714884696016772
+      "precision": 0.8867924528301887,
+      "recall": 0.9437751004016064,
+      "f1_score": 0.914396887159533
     },
     "U2R": {
-      "precision": 0.7619047619047619,
-      "recall": 0.5333333333333333,
-      "f1_score": 0.6274509803921569
+      "precision": 1.0,
+      "recall": 0.5384615384615384,
+      "f1_score": 0.7
     }
   },
   "experiment_id": "NSL_SELECTED_1DCNN",
-  "training_time_seconds": 99.95765027600004,
-  "training_time_ms": 99957.65027600004,
-  "num_features": 35
+  "training_time_seconds": 85.99280947700004,
+  "training_time_ms": 85992.80947700003,
+  "num_features": 36
 }
