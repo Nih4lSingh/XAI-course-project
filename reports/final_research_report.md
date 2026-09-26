@@ -18,7 +18,7 @@ The replication implements:
    - **Experiment Group A (Paper Replication):** Pearson correlation feature selection ($|PCC| > 0.95$) followed by DNN, 1D-CNN, and 2D-CNN.
    - **Experiment Group B (Our Additional Ablation):** All-feature baseline to isolate and quantify the exact empirical contribution of feature selection.
 4. **Explainable AI (XAI):** Local explanations via LIME and global/local explanations via SHAP (over 50 test samples) for the DNN.
-5. **Zero Data Leakage:** Strict separation of train, validation, and test splits (60% / 15% / 25%), and complete isolation of target labels from the input feature set $X$.
+5. **No Target Leakage:** Train/validation/test partitions are mutually exclusive; target labels are completely isolated from the input feature set $X$. A separate leakage-safe sensitivity experiment (dropout=0.01) was conducted with an independently fitted scaler on that partition.
 
 ---
 

@@ -36,5 +36,13 @@
   "experiment_id": "UNSW_ALL_2DCNN",
   "training_time_seconds": 166.297344674,
   "training_time_ms": 166297.344674,
-  "num_features": 49
+  "num_features": 49,
+  "num_real_features": 42,
+  "padding_zeros": 11,
+  "input_shape": [
+    7,
+    7,
+    1
+  ],
+  "input_size": 49
 }

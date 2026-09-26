@@ -36,5 +36,7 @@
   "experiment_id": "NSL_ALL_1DCNN",
   "training_time_seconds": 86.57428252399995,
   "training_time_ms": 86574.28252399995,
-  "num_features": 42
+  "num_features": 42,
+  "num_real_features": 42,
+  "padding_zeros": 0
 }

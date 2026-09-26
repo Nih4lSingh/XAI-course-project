@@ -36,5 +36,7 @@
   "experiment_id": "UNSW_ALL_DNN",
   "training_time_seconds": 149.68819890400005,
   "training_time_ms": 149688.19890400005,
-  "num_features": 42
+  "num_features": 42,
+  "num_real_features": 42,
+  "padding_zeros": 0
 }
