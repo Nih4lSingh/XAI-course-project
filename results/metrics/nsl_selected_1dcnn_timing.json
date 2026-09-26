@@ -1,7 +1,7 @@
 {
   "experiment_id": "NSL_SELECTED_1DCNN",
-  "total_training_time_seconds": 99.9577,
-  "total_training_time_ms": 99957.65,
+  "total_training_time_seconds": 85.9928,
+  "total_training_time_ms": 85992.81,
   "num_epochs_recorded": 0,
   "avg_epoch_time_seconds": null,
   "hardware_environment": {

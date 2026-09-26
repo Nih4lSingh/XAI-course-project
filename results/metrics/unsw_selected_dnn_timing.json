@@ -1,7 +1,7 @@
 {
   "experiment_id": "UNSW_SELECTED_DNN",
-  "total_training_time_seconds": 153.1066,
-  "total_training_time_ms": 153106.58,
+  "total_training_time_seconds": 122.3242,
+  "total_training_time_ms": 122324.25,
   "num_epochs_recorded": 0,
   "avg_epoch_time_seconds": null,
   "hardware_environment": {

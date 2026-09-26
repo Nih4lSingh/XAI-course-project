@@ -3,8 +3,8 @@ Script to generate the master Google Colab notebook:
 notebooks/Sharma_et_al_2024_Replication.ipynb
 
 Generates an end-to-end, runnable, interactive notebook complete with:
-- Markdown documentation citing Sharma et al. (2024)
-- Google Colab GPU configuration
+- Automatic GitHub repository cloning in Colab
+- GPU verification and setup
 - Automatic dataset downloading
 - Preprocessing and validation with zero leakage and 50K capping
 - Pearson feature selection & inline heatmaps
@@ -12,6 +12,7 @@ Generates an end-to-end, runnable, interactive notebook complete with:
 - Evaluation tables, confusion matrices, training curves
 - LIME and SHAP interactive explainability
 - Complete synthesis answering RQ1 - RQ10
+- Automatic zipping and download of final artifacts
 """
 
 import json
@@ -68,25 +69,29 @@ This notebook provides a 100% self-contained, reproducible replication of the ex
 5. **Zero Data Leakage:** Strict separation of test partitions and ground-truth target columns."""))
 
     # Section 1: Environment Setup
-    cells.append(create_markdown_cell("""## 1. Environment Setup & GPU Verification"""))
-    cells.append(create_code_cell("""# Verify GPU acceleration and install required libraries
+    cells.append(create_markdown_cell("""## 1. Environment Setup, Repository Sync & GPU Verification"""))
+    cells.append(create_code_cell("""# 1. Clone repository branch if running directly in a fresh Google Colab session
 import os, sys, platform, time
 from pathlib import Path
-import tensorflow as tf
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
+if not os.path.exists("training"):
+    print("Cloning repository from GitHub fork (full-replication branch)...")
+    !git clone -b full-replication https://github.com/Srr28/XAI-course-project.git
+    %cd XAI-course-project
+
+print(f"Current Working Directory: {os.getcwd()}")
 print(f"Python Version: {platform.python_version()}")
+
+# 2. Verify GPU Hardware Acceleration
+import tensorflow as tf
 print(f"TensorFlow Version: {tf.__version__}")
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
     print(f"GPU Detected: {gpus[0].name} (Hardware Acceleration ACTIVE)")
 else:
-    print("No GPU detected. Running on CPU.")
+    print("WARNING: No GPU detected! Go to Runtime -> Change runtime type -> T4 GPU for fast training.")
 
-# Install SHAP and LIME
+# 3. Install SHAP and LIME
 !pip install -q shap lime"""))
 
     # Section 2: Data Acquisition
@@ -248,6 +253,18 @@ Including `difficulty_level` yields exactly **36 selected features** ($42 - 6 = 
 
 ### RQ10: What are the overarching threats to validity and reproducibility in deep learning and XAI intrusion detection literature as exemplified by this replication?
 Target leakage in feature selection, preprocessing contamination prior to splitting, arbitrary 2D grid mapping without permutation checks, and undocumented majority class capping policies represent significant validity threats in modern ML/NIDS literature."""))
+
+    # Section 9: Packaging and Download
+    cells.append(create_markdown_cell("""## 9. Package & Download Replication Results
+Zips all trained model checkpoints, evaluation metrics, confusion matrices, training curves, and XAI outputs for archiving."""))
+    cells.append(create_code_cell("""# Bundle results for download
+!zip -rq final_replication_results.zip results/ reports/ splits/
+try:
+    from google.colab import files
+    files.download("final_replication_results.zip")
+    print("Download initiated for final_replication_results.zip!")
+except Exception as e:
+    print("Not running in interactive Colab or download blocked. Archive saved at final_replication_results.zip")"""))
 
     notebook_dict = {
         "cells": cells,

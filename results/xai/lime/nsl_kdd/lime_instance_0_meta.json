@@ -1,0 +1,66 @@
+{
+  "instance_id": 0,
+  "actual_class": 0,
+  "actual_class_name": "DoS",
+  "predicted_class": 0,
+  "predicted_class_name": "DoS",
+  "probabilities": {
+    "DoS": 0.9999891519546509,
+    "Normal": 3.119906182291743e-07,
+    "Probe": 9.772989869816229e-06,
+    "R2L": 7.256261937982345e-07,
+    "U2R": 3.191692954374048e-08
+  },
+  "top_features": [
+    {
+      "feature_condition": "wrong_fragment <= 0.00",
+      "weight": -0.5612775056650946,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "0.00 < serror_rate <= 1.00",
+      "weight": 0.3950212090958372,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "logged_in <= 0.00",
+      "weight": 0.20853273607042683,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "root_shell <= 0.00",
+      "weight": -0.18041729344429008,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "land <= 0.00",
+      "weight": -0.17039021141637806,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "num_shells <= 0.00",
+      "weight": -0.16966410199928753,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "count > 0.28",
+      "weight": 0.1369629336830997,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "is_guest_login <= 0.00",
+      "weight": 0.10557720973622661,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "dst_host_rerror_rate <= 0.00",
+      "weight": -0.09203329299915838,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "urgent <= 0.00",
+      "weight": 0.0515519421710279,
+      "direction": "positive"
+    }
+  ]
+}

@@ -159,10 +159,30 @@ def run_unsw_nb15_xai(output_base: Path):
     return shap_global_meta
 
 
+def generate_xai_comparison_report(nsl_meta: dict, unsw_meta: dict, output_path: Path):
+    """Generates summary XAI markdown comparison."""
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    content = f"""# XAI Explainability Analysis Report
+Sharma et al. (2024) Replication
+
+## 1. NSL-KDD Feature Importance (SHAP Top 5)
+{nsl_meta}
+
+## 2. UNSW-NB15 Feature Importance (SHAP Top 5)
+{unsw_meta}
+"""
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(content)
+    print(f"[XAI] Generated comparison report at {output_path}")
+
+
 def run_all_xai():
     output_base = PROJECT_ROOT / "results" / "xai"
-    run_nsl_kdd_xai(output_base)
-    run_unsw_nb15_xai(output_base)
+    nsl_meta = run_nsl_kdd_xai(output_base)
+    unsw_meta = run_unsw_nb15_xai(output_base)
+    if nsl_meta and unsw_meta:
+        generate_xai_comparison_report(nsl_meta, unsw_meta, PROJECT_ROOT / "xai_report.md")
 
 
 if __name__ == "__main__":

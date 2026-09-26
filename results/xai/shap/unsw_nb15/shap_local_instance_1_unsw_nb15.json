@@ -3,67 +3,67 @@
   "dataset": "unsw_nb15",
   "actual_class": "Normal",
   "predicted_class": "Normal",
-  "base_value": 0.42222120233621496,
-  "prediction_probability": 0.8942946195602417,
+  "base_value": 0.24300643570479508,
+  "prediction_probability": 0.9999736547470093,
   "feature_contributions": [
     {
+      "feature": "sttl",
+      "value": 0.12156862765550613,
+      "shap_contribution": 0.311821739047074,
+      "direction": "positive"
+    },
+    {
       "feature": "dttl",
-      "value": 0.9921259880065918,
-      "shap_contribution": -0.4166434425664835,
-      "direction": "negative"
+      "value": 0.11417322605848312,
+      "shap_contribution": 0.2703183668166379,
+      "direction": "positive"
     },
     {
       "feature": "swin",
       "value": 1.0,
-      "shap_contribution": 0.27902121847781897,
+      "shap_contribution": 0.14401999035605614,
       "direction": "positive"
     },
     {
-      "feature": "service",
-      "value": 0.4166666567325592,
-      "shap_contribution": 0.21451318990636198,
+      "feature": "dmean",
+      "value": 0.5379999876022339,
+      "shap_contribution": -0.08326238684418184,
+      "direction": "negative"
+    },
+    {
+      "feature": "ct_state_ttl",
+      "value": 0.0,
+      "shap_contribution": 0.08262045689008946,
       "direction": "positive"
     },
     {
-      "feature": "sttl",
-      "value": 0.24313725531101227,
-      "shap_contribution": 0.15440489091464285,
+      "feature": "sload",
+      "value": 0.00018210335110779852,
+      "shap_contribution": 0.04444976035048975,
+      "direction": "positive"
+    },
+    {
+      "feature": "sloss",
+      "value": 0.0013160367961972952,
+      "shap_contribution": -0.041167049785668985,
+      "direction": "negative"
+    },
+    {
+      "feature": "dinpkt",
+      "value": 7.938087037473451e-06,
+      "shap_contribution": 0.02258231900509937,
       "direction": "positive"
     },
     {
       "feature": "ct_dst_sport_ltm",
       "value": 0.0,
-      "shap_contribution": 0.08618041352726666,
-      "direction": "positive"
-    },
-    {
-      "feature": "tcprtt",
-      "value": 0.03838920593261719,
-      "shap_contribution": 0.07596853186889457,
-      "direction": "positive"
-    },
-    {
-      "feature": "dmean",
-      "value": 0.09200000017881393,
-      "shap_contribution": 0.03969641483083908,
-      "direction": "positive"
-    },
-    {
-      "feature": "ct_flw_http_mthd",
-      "value": 0.0625,
-      "shap_contribution": 0.03629303833113998,
+      "shap_contribution": 0.00924061834031305,
       "direction": "positive"
     },
     {
       "feature": "dbytes",
-      "value": 7.545608968939632e-05,
-      "shap_contribution": 0.01090164904700158,
-      "direction": "positive"
-    },
-    {
-      "feature": "ct_dst_ltm",
-      "value": 0.0,
-      "shap_contribution": -0.008262487113455348,
+      "value": 0.003413671860471368,
+      "shap_contribution": -0.0036565951336946486,
       "direction": "negative"
     }
   ]

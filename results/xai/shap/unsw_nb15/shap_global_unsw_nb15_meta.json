@@ -2,237 +2,247 @@
   "dataset": "unsw_nb15",
   "num_test_samples": 50,
   "test_sample_indices": [
-    6933,
-    2349,
-    21041,
-    17016,
-    273,
-    28010,
-    17452,
-    51704,
-    42710,
-    37072,
-    17713,
-    24742,
-    39149,
-    57047,
-    57989,
-    31722,
-    24381,
-    30906,
-    42068,
-    5137,
-    16358,
-    22460,
-    26412,
-    14529,
-    1856,
-    45191,
-    32700,
-    27851,
-    58956,
-    53836,
-    36517,
-    46939,
-    5394,
-    24438,
-    37894,
-    25869,
-    21255,
-    42275,
-    36084,
-    24699,
-    52831,
-    3789,
-    4264,
-    6936,
-    33834,
-    4448,
-    54474,
-    38064,
-    34703,
-    15632
+    9830,
+    28081,
+    1866,
+    3085,
+    27261,
+    39863,
+    37399,
+    19486,
+    2624,
+    34677,
+    44498,
+    39909,
+    17817,
+    37526,
+    4421,
+    4630,
+    26593,
+    3570,
+    2740,
+    44084,
+    28171,
+    39152,
+    30658,
+    14148,
+    32941,
+    11713,
+    6808,
+    12845,
+    24316,
+    11660,
+    16694,
+    26833,
+    2514,
+    45644,
+    9793,
+    26533,
+    32200,
+    26276,
+    8525,
+    2757,
+    32719,
+    32462,
+    8091,
+    5227,
+    12431,
+    40856,
+    3184,
+    28759,
+    7070,
+    25603
   ],
   "feature_importance_ranking": [
     {
       "rank": 1,
-      "feature": "swin",
-      "mean_abs_shap": 0.09929201947776958
+      "feature": "dttl",
+      "mean_abs_shap": 0.09421345431361157
     },
     {
       "rank": 2,
-      "feature": "dttl",
-      "mean_abs_shap": 0.08721664371692882
+      "feature": "swin",
+      "mean_abs_shap": 0.06474467311803549
     },
     {
       "rank": 3,
-      "feature": "sttl",
-      "mean_abs_shap": 0.06006948185239765
+      "feature": "ct_srv_src",
+      "mean_abs_shap": 0.05085354583494023
     },
     {
       "rank": 4,
-      "feature": "service",
-      "mean_abs_shap": 0.03414997332075098
+      "feature": "sttl",
+      "mean_abs_shap": 0.045455813051313555
     },
     {
       "rank": 5,
-      "feature": "ct_srv_src",
-      "mean_abs_shap": 0.03370959634572607
+      "feature": "service",
+      "mean_abs_shap": 0.03367718281175853
     },
     {
       "rank": 6,
       "feature": "ct_dst_sport_ltm",
-      "mean_abs_shap": 0.021014605355872025
+      "mean_abs_shap": 0.03244001401103855
     },
     {
       "rank": 7,
       "feature": "ct_dst_src_ltm",
-      "mean_abs_shap": 0.01862609381684841
+      "mean_abs_shap": 0.0203345323651131
     },
     {
       "rank": 8,
       "feature": "smean",
-      "mean_abs_shap": 0.015940578608693266
+      "mean_abs_shap": 0.01868085818203962
     },
     {
       "rank": 9,
-      "feature": "ct_state_ttl",
-      "mean_abs_shap": 0.011154425993830739
+      "feature": "dmean",
+      "mean_abs_shap": 0.013266614265166994
     },
     {
       "rank": 10,
-      "feature": "dmean",
-      "mean_abs_shap": 0.007428627474208486
+      "feature": "ct_dst_ltm",
+      "mean_abs_shap": 0.010064139404473302
     },
     {
       "rank": 11,
-      "feature": "ct_dst_ltm",
-      "mean_abs_shap": 0.007041356505317674
+      "feature": "ct_state_ttl",
+      "mean_abs_shap": 0.007421968802161722
     },
     {
       "rank": 12,
-      "feature": "dur",
-      "mean_abs_shap": 0.005527189782123181
+      "feature": "proto",
+      "mean_abs_shap": 0.00442813375227952
     },
     {
       "rank": 13,
-      "feature": "is_sm_ips_ports",
-      "mean_abs_shap": 0.0037902966327693416
+      "feature": "rate",
+      "mean_abs_shap": 0.004256428276617832
     },
     {
       "rank": 14,
-      "feature": "sinpkt",
-      "mean_abs_shap": 0.003570670954908959
+      "feature": "tcprtt",
+      "mean_abs_shap": 0.00407543013134596
     },
     {
       "rank": 15,
-      "feature": "tcprtt",
-      "mean_abs_shap": 0.0035207695353701596
+      "feature": "dur",
+      "mean_abs_shap": 0.004054177401058409
     },
     {
       "rank": 16,
-      "feature": "proto",
-      "mean_abs_shap": 0.0034042164767986573
+      "feature": "synack",
+      "mean_abs_shap": 0.003934499061981315
     },
     {
       "rank": 17,
-      "feature": "ct_src_ltm",
-      "mean_abs_shap": 0.003258485751973171
+      "feature": "state",
+      "mean_abs_shap": 0.0038262684205087037
     },
     {
       "rank": 18,
-      "feature": "state",
-      "mean_abs_shap": 0.0031323670322645765
+      "feature": "sjit",
+      "mean_abs_shap": 0.0031973573947423986
     },
     {
       "rank": 19,
-      "feature": "ct_flw_http_mthd",
-      "mean_abs_shap": 0.003114093434627978
+      "feature": "dtcpb",
+      "mean_abs_shap": 0.0031315776326345107
     },
     {
       "rank": 20,
-      "feature": "stcpb",
-      "mean_abs_shap": 0.0030212649353906647
+      "feature": "dpkts",
+      "mean_abs_shap": 0.002846039234958269
     },
     {
       "rank": 21,
-      "feature": "ackdat",
-      "mean_abs_shap": 0.0029232227033656705
+      "feature": "spkts",
+      "mean_abs_shap": 0.002776572009508095
     },
     {
       "rank": 22,
-      "feature": "synack",
-      "mean_abs_shap": 0.0028568353946518002
+      "feature": "dloss",
+      "mean_abs_shap": 0.002737846704611953
     },
     {
       "rank": 23,
-      "feature": "dinpkt",
-      "mean_abs_shap": 0.002694389438357902
+      "feature": "trans_depth",
+      "mean_abs_shap": 0.002476146875228302
     },
     {
       "rank": 24,
-      "feature": "rate",
-      "mean_abs_shap": 0.0026524281312371497
+      "feature": "stcpb",
+      "mean_abs_shap": 0.0024682451588805606
     },
     {
       "rank": 25,
-      "feature": "dtcpb",
-      "mean_abs_shap": 0.0026209446938642612
+      "feature": "dbytes",
+      "mean_abs_shap": 0.0023340793386071295
     },
     {
       "rank": 26,
-      "feature": "spkts",
-      "mean_abs_shap": 0.002559586218723902
+      "feature": "ackdat",
+      "mean_abs_shap": 0.002255432304422203
     },
     {
       "rank": 27,
-      "feature": "trans_depth",
-      "mean_abs_shap": 0.0024326159692626727
+      "feature": "sbytes",
+      "mean_abs_shap": 0.002212562986181981
     },
     {
       "rank": 28,
-      "feature": "sbytes",
-      "mean_abs_shap": 0.002339602934325663
+      "feature": "ct_flw_http_mthd",
+      "mean_abs_shap": 0.0021895755572728195
     },
     {
       "rank": 29,
       "feature": "is_ftp_login",
-      "mean_abs_shap": 0.002333242667788285
+      "mean_abs_shap": 0.0020284122228079846
     },
     {
       "rank": 30,
-      "feature": "djit",
-      "mean_abs_shap": 0.002258043381472208
+      "feature": "sload",
+      "mean_abs_shap": 0.0020273078327798493
     },
     {
       "rank": 31,
-      "feature": "sload",
-      "mean_abs_shap": 0.002229740023603931
+      "feature": "dload",
+      "mean_abs_shap": 0.0019277914256138682
     },
     {
       "rank": 32,
-      "feature": "dload",
-      "mean_abs_shap": 0.002216362802918907
+      "feature": "sloss",
+      "mean_abs_shap": 0.0018764355111500761
     },
     {
       "rank": 33,
-      "feature": "sjit",
-      "mean_abs_shap": 0.0021921492327744018
+      "feature": "response_body_len",
+      "mean_abs_shap": 0.001774154875621322
     },
     {
       "rank": 34,
-      "feature": "dbytes",
-      "mean_abs_shap": 0.0018915409215718609
+      "feature": "djit",
+      "mean_abs_shap": 0.0017344428152414398
     },
     {
       "rank": 35,
-      "feature": "dpkts",
-      "mean_abs_shap": 0.00176397840879289
+      "feature": "dinpkt",
+      "mean_abs_shap": 0.0016322631101095472
     },
     {
       "rank": 36,
-      "feature": "response_body_len",
-      "mean_abs_shap": 0.0012740278502577861
+      "feature": "sinpkt",
+      "mean_abs_shap": 0.001486336246331203
+    },
+    {
+      "rank": 37,
+      "feature": "is_sm_ips_ports",
+      "mean_abs_shap": 0.0013839758614113667
+    },
+    {
+      "rank": 38,
+      "feature": "ct_src_ltm",
+      "mean_abs_shap": 0.001379259480864067
     }
   ]
 }
