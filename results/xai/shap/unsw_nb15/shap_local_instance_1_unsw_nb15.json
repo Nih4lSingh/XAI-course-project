@@ -1,0 +1,70 @@
+{
+  "instance_id": 1,
+  "dataset": "unsw_nb15",
+  "actual_class": "Normal",
+  "predicted_class": "Normal",
+  "base_value": 0.42222120233621496,
+  "prediction_probability": 0.8942946195602417,
+  "feature_contributions": [
+    {
+      "feature": "dttl",
+      "value": 0.9921259880065918,
+      "shap_contribution": -0.4166434425664835,
+      "direction": "negative"
+    },
+    {
+      "feature": "swin",
+      "value": 1.0,
+      "shap_contribution": 0.27902121847781897,
+      "direction": "positive"
+    },
+    {
+      "feature": "service",
+      "value": 0.4166666567325592,
+      "shap_contribution": 0.21451318990636198,
+      "direction": "positive"
+    },
+    {
+      "feature": "sttl",
+      "value": 0.24313725531101227,
+      "shap_contribution": 0.15440489091464285,
+      "direction": "positive"
+    },
+    {
+      "feature": "ct_dst_sport_ltm",
+      "value": 0.0,
+      "shap_contribution": 0.08618041352726666,
+      "direction": "positive"
+    },
+    {
+      "feature": "tcprtt",
+      "value": 0.03838920593261719,
+      "shap_contribution": 0.07596853186889457,
+      "direction": "positive"
+    },
+    {
+      "feature": "dmean",
+      "value": 0.09200000017881393,
+      "shap_contribution": 0.03969641483083908,
+      "direction": "positive"
+    },
+    {
+      "feature": "ct_flw_http_mthd",
+      "value": 0.0625,
+      "shap_contribution": 0.03629303833113998,
+      "direction": "positive"
+    },
+    {
+      "feature": "dbytes",
+      "value": 7.545608968939632e-05,
+      "shap_contribution": 0.01090164904700158,
+      "direction": "positive"
+    },
+    {
+      "feature": "ct_dst_ltm",
+      "value": 0.0,
+      "shap_contribution": -0.008262487113455348,
+      "direction": "negative"
+    }
+  ]
+}

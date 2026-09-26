@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large Raw Datasets (downloadable via python data/download_datasets.py)
+data/raw/
+
+# Zip Archives
+*.zip
+*.tar.gz
+
+# Environment & IDE
+.venv/
+venv/
+ENV/
+.idea/
+.vscode/
+.ipynb_checkpoints/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+desktop.ini

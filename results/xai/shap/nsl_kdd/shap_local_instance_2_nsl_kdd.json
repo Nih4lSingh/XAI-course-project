@@ -1,0 +1,70 @@
+{
+  "instance_id": 2,
+  "dataset": "nsl_kdd",
+  "actual_class": "Normal",
+  "predicted_class": "Normal",
+  "base_value": 0.45017704981275786,
+  "prediction_probability": 0.999995231628418,
+  "feature_contributions": [
+    {
+      "feature": "dst_host_srv_count",
+      "value": 1.0,
+      "shap_contribution": 0.18753640974021374,
+      "direction": "positive"
+    },
+    {
+      "feature": "logged_in",
+      "value": 1.0,
+      "shap_contribution": 0.1297315298657972,
+      "direction": "positive"
+    },
+    {
+      "feature": "serror_rate",
+      "value": 0.0,
+      "shap_contribution": 0.08850599421848872,
+      "direction": "positive"
+    },
+    {
+      "feature": "flag",
+      "value": 0.8999999761581421,
+      "shap_contribution": 0.03501992477626804,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_count",
+      "value": 0.2078431397676468,
+      "shap_contribution": 0.03477373030693621,
+      "direction": "positive"
+    },
+    {
+      "feature": "protocol_type",
+      "value": 0.5,
+      "shap_contribution": 0.020529967427458527,
+      "direction": "positive"
+    },
+    {
+      "feature": "rerror_rate",
+      "value": 0.0,
+      "shap_contribution": 0.01688153274728786,
+      "direction": "positive"
+    },
+    {
+      "feature": "srv_count",
+      "value": 0.00978473573923111,
+      "shap_contribution": 0.01623458643755328,
+      "direction": "positive"
+    },
+    {
+      "feature": "srv_diff_host_rate",
+      "value": 0.0,
+      "shap_contribution": 0.01050239618536267,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_bytes",
+      "value": 1.4153348274703603e-05,
+      "shap_contribution": 0.010102110110293827,
+      "direction": "positive"
+    }
+  ]
+}

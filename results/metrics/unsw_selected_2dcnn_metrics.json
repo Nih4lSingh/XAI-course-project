@@ -1,0 +1,40 @@
+{
+  "accuracy": 0.8352714813752131,
+  "precision_macro": 0.7366162783860053,
+  "recall_macro": 0.67639217860762,
+  "f1_macro": 0.6741129080951457,
+  "precision_weighted": 0.8193987109646783,
+  "recall_weighted": 0.8352714813752131,
+  "f1_weighted": 0.8139488040686923,
+  "per_class": {
+    "DoS": {
+      "precision": 0.4966711051930759,
+      "recall": 0.0912426614481409,
+      "f1_score": 0.15416408348832403
+    },
+    "Exploits": {
+      "precision": 0.6853195646106615,
+      "recall": 0.882400503099452,
+      "f1_score": 0.7714723324038801
+    },
+    "Fuzzers": {
+      "precision": 0.6249473240623683,
+      "recall": 0.48927746618277795,
+      "f1_score": 0.5488527017024426
+    },
+    "Generic": {
+      "precision": 0.9984639016897081,
+      "recall": 0.9715994020926756,
+      "f1_score": 0.9848484848484849
+    },
+    "Normal": {
+      "precision": 0.877679496374213,
+      "recall": 0.9474408602150538,
+      "f1_score": 0.911226938032597
+    }
+  },
+  "experiment_id": "UNSW_SELECTED_2DCNN",
+  "training_time_seconds": 161.34561188599992,
+  "training_time_ms": 161345.6118859999,
+  "num_features": 49
+}

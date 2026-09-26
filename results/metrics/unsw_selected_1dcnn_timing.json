@@ -1,0 +1,18 @@
+{
+  "experiment_id": "UNSW_SELECTED_1DCNN",
+  "total_training_time_seconds": 156.941,
+  "total_training_time_ms": 156941.03,
+  "num_epochs_recorded": 0,
+  "avg_epoch_time_seconds": null,
+  "hardware_environment": {
+    "os": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "cpu_count": 2,
+    "python_version": "3.13.15",
+    "tensorflow_version": "2.20.0",
+    "gpu_devices": [
+      "/physical_device:GPU:0"
+    ],
+    "has_gpu": true
+  }
+}

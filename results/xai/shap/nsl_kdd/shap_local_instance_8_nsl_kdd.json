@@ -1,0 +1,70 @@
+{
+  "instance_id": 8,
+  "dataset": "nsl_kdd",
+  "actual_class": "DoS",
+  "predicted_class": "DoS",
+  "base_value": 0.37031148117848905,
+  "prediction_probability": 0.9999849796295166,
+  "feature_contributions": [
+    {
+      "feature": "serror_rate",
+      "value": 1.0,
+      "shap_contribution": 0.2929090370705466,
+      "direction": "positive"
+    },
+    {
+      "feature": "logged_in",
+      "value": 0.0,
+      "shap_contribution": 0.11168992456470715,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_same_src_port_rate",
+      "value": 0.0,
+      "shap_contribution": 0.05412210569568704,
+      "direction": "positive"
+    },
+    {
+      "feature": "diff_srv_rate",
+      "value": 0.05999999865889549,
+      "shap_contribution": 0.03836918626776821,
+      "direction": "positive"
+    },
+    {
+      "feature": "flag",
+      "value": 0.5,
+      "shap_contribution": 0.03183810799594936,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_count",
+      "value": 1.0,
+      "shap_contribution": 0.029810819198318295,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_srv_diff_host_rate",
+      "value": 0.0,
+      "shap_contribution": 0.02731511676318127,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_diff_srv_rate",
+      "value": 0.05000000074505806,
+      "shap_contribution": 0.019973071136820515,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_srv_count",
+      "value": 0.0313725508749485,
+      "shap_contribution": 0.01615134754275368,
+      "direction": "positive"
+    },
+    {
+      "feature": "duration",
+      "value": 0.0,
+      "shap_contribution": 0.007494782215295315,
+      "direction": "positive"
+    }
+  ]
+}

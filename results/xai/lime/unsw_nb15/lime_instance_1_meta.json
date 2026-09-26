@@ -1,0 +1,66 @@
+{
+  "instance_id": 1,
+  "actual_class": 4,
+  "actual_class_name": "Normal",
+  "predicted_class": 4,
+  "predicted_class_name": "Normal",
+  "probabilities": {
+    "DoS": 0.03542102500796318,
+    "Exploits": 0.06385016441345215,
+    "Fuzzers": 0.005725100636482239,
+    "Generic": 0.0007090619183145463,
+    "Normal": 0.8942946195602417
+  },
+  "top_features": [
+    {
+      "feature_condition": "0.00 < swin <= 1.00",
+      "weight": 0.5189506502413569,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "0.11 < dttl <= 0.99",
+      "weight": -0.4071223707609878,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "0.12 < sttl <= 1.00",
+      "weight": -0.163405756685439,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "ct_dst_sport_ltm <= 0.00",
+      "weight": 0.1513052252392409,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "is_sm_ips_ports <= 0.00",
+      "weight": -0.13743915738180235,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "dmean > 0.06",
+      "weight": -0.11064477118139115,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "ct_state_ttl <= 0.17",
+      "weight": 0.08869625505906303,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "ct_srv_src <= 0.02",
+      "weight": -0.0645500358883773,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "service > 0.17",
+      "weight": -0.06344109854791859,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "sinpkt > 0.00",
+      "weight": 0.05109117487952135,
+      "direction": "positive"
+    }
+  ]
+}
