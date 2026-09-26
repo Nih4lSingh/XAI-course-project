@@ -89,9 +89,9 @@ Collinear redundancy filtering with threshold $|PCC| > 0.95$:
 ---
 
 ## 7. Model Architectures
-- **DNN**: Input Layer (36 or 38 units) $\to$ Dense(128, ReLU) $\to$ Dense(64, ReLU) $\to$ Dense(32, ReLU) $\to$ Dense(5, Softmax). Evaluated with $p=0.0$ (canonical) and $p=0.01$ (sensitivity).
-- **1D-CNN**: Input Layer $(D, 1)$ $\to$ Conv1D(32, kernel=3, ReLU) $\to$ MaxPool1D(2) $\to$ Conv1D(64, kernel=3, ReLU) $\to$ MaxPool1D(2) $\to$ Flatten $\to$ Dense(64, ReLU) $\to$ Dense(5, Softmax).
-- **2D-CNN**: Input Layer $(H, W, 1)$ $\to$ Conv2D(32, kernel=3, ReLU, same padding) $\to$ MaxPool2D(2) $\to$ Conv2D(64, kernel=3, ReLU, same padding) $\to$ MaxPool2D(2) $\to$ Flatten $\to$ Dense(64, ReLU) $\to$ Dense(5, Softmax).
+- **DNN**: Input Layer (36 or 38 units) $\to$ Dense(64, ReLU) $\to$ Dense(64, ReLU) $\to$ Dense(64, ReLU) $\to$ Dense(5, Softmax). In strict accordance with Section 4.1. Evaluated with $p=0.0$ (canonical Table 1) and $p=0.01$ (sensitivity).
+- **1D-CNN**: Input Layer $(D, 1)$ $\to$ Conv1D(64, kernel=3, ReLU, same padding) $\to$ MaxPool1D(2) $\to$ Conv1D(32, kernel=3, ReLU, same padding) $\to$ Flatten $\to$ Dense(5, Softmax). Filter counts 64 $\to$ 32 are an inferred parameter aligning with 2D-CNN filter scale.
+- **2D-CNN (Paper Fig. 5 Topology)**: Input Layer $(H, W, 1)$ $\to$ Conv2D(64, 3x3, ReLU, same padding) $\to$ MaxPool2D(2x2, same padding) $\to$ Conv2D(32, 3x3, ReLU, same padding) $\to$ MaxPool2D(2x2, same padding) $\to$ Conv2D(32, 3x3, ReLU, same padding) $\to$ MaxPool2D(2x2, same padding) $\to$ Flatten $\to$ Dense(5, Softmax). Implements exact 3-Conv / 3-Pool layer topology of Figure 5 with deterministic `padding='same'`.
 
 ---
 

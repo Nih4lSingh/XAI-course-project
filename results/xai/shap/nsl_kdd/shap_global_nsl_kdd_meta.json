@@ -1,5 +1,8 @@
 {
   "dataset": "nsl_kdd",
+  "target_class_index": 0,
+  "target_class_name": "DoS",
+  "sampling_strategy": "seed-controlled random sample of 50 test instances",
   "num_test_samples": 50,
   "test_sample_indices": [
     15645,
@@ -57,132 +60,132 @@
     {
       "rank": 1,
       "feature": "serror_rate",
-      "mean_abs_shap": 0.058567087713711365
+      "mean_abs_shap": 0.14446743225499115
     },
     {
       "rank": 2,
       "feature": "logged_in",
-      "mean_abs_shap": 0.027507272280623964
+      "mean_abs_shap": 0.05022596073851497
     },
     {
       "rank": 3,
       "feature": "dst_host_same_src_port_rate",
-      "mean_abs_shap": 0.023163332362142793
+      "mean_abs_shap": 0.037981629776691686
     },
     {
       "rank": 4,
-      "feature": "protocol_type",
-      "mean_abs_shap": 0.01739281287304721
+      "feature": "count",
+      "mean_abs_shap": 0.029162362704108734
     },
     {
       "rank": 5,
-      "feature": "dst_host_same_srv_rate",
-      "mean_abs_shap": 0.014903311425832184
+      "feature": "dst_host_srv_count",
+      "mean_abs_shap": 0.0237818883486246
     },
     {
       "rank": 6,
-      "feature": "difficulty_level",
-      "mean_abs_shap": 0.013315834523834967
+      "feature": "protocol_type",
+      "mean_abs_shap": 0.020897224686089805
     },
     {
       "rank": 7,
-      "feature": "count",
-      "mean_abs_shap": 0.011708229077099277
+      "feature": "difficulty_level",
+      "mean_abs_shap": 0.018676604356143277
     },
     {
       "rank": 8,
-      "feature": "dst_host_srv_count",
-      "mean_abs_shap": 0.011469478805938306
+      "feature": "dst_host_rerror_rate",
+      "mean_abs_shap": 0.01660772612042525
     },
     {
       "rank": 9,
-      "feature": "dst_host_count",
-      "mean_abs_shap": 0.00951919951512899
+      "feature": "wrong_fragment",
+      "mean_abs_shap": 0.014140675215030938
     },
     {
       "rank": 10,
-      "feature": "dst_host_rerror_rate",
-      "mean_abs_shap": 0.008141881651163837
+      "feature": "flag",
+      "mean_abs_shap": 0.01273481941419335
     },
     {
       "rank": 11,
-      "feature": "rerror_rate",
-      "mean_abs_shap": 0.006814114396211173
+      "feature": "same_srv_rate",
+      "mean_abs_shap": 0.011741782575164873
     },
     {
       "rank": 12,
-      "feature": "same_srv_rate",
-      "mean_abs_shap": 0.006431953569971545
+      "feature": "srv_count",
+      "mean_abs_shap": 0.011384007907283717
     },
     {
       "rank": 13,
-      "feature": "wrong_fragment",
-      "mean_abs_shap": 0.00557747242112511
+      "feature": "dst_host_same_srv_rate",
+      "mean_abs_shap": 0.009108471467125453
     },
     {
       "rank": 14,
-      "feature": "flag",
-      "mean_abs_shap": 0.0051552896969939595
+      "feature": "dst_host_count",
+      "mean_abs_shap": 0.008810659428118723
     },
     {
       "rank": 15,
-      "feature": "srv_count",
-      "mean_abs_shap": 0.0050446784551048144
+      "feature": "src_bytes",
+      "mean_abs_shap": 0.008167927218120201
     },
     {
       "rank": 16,
       "feature": "service",
-      "mean_abs_shap": 0.004906970233793221
+      "mean_abs_shap": 0.006097142353243225
     },
     {
       "rank": 17,
-      "feature": "src_bytes",
-      "mean_abs_shap": 0.003672213749322209
+      "feature": "rerror_rate",
+      "mean_abs_shap": 0.006001711157471771
     },
     {
       "rank": 18,
       "feature": "dst_host_srv_diff_host_rate",
-      "mean_abs_shap": 0.003557448769701752
+      "mean_abs_shap": 0.005135243333230634
     },
     {
       "rank": 19,
       "feature": "dst_host_diff_srv_rate",
-      "mean_abs_shap": 0.00325564018329563
+      "mean_abs_shap": 0.004831231028221768
     },
     {
       "rank": 20,
-      "feature": "srv_diff_host_rate",
-      "mean_abs_shap": 0.0029820840419942972
+      "feature": "num_file_creations",
+      "mean_abs_shap": 0.00422213229447591
     },
     {
       "rank": 21,
       "feature": "num_compromised",
-      "mean_abs_shap": 0.0025836388692963533
+      "mean_abs_shap": 0.004181622621185689
     },
     {
       "rank": 22,
-      "feature": "diff_srv_rate",
-      "mean_abs_shap": 0.0025314480511017005
+      "feature": "dst_bytes",
+      "mean_abs_shap": 0.0034394089240208214
     },
     {
       "rank": 23,
       "feature": "duration",
-      "mean_abs_shap": 0.002299065394048435
+      "mean_abs_shap": 0.003276185536984319
     },
     {
       "rank": 24,
-      "feature": "dst_bytes",
-      "mean_abs_shap": 0.0020710103992842826
+      "feature": "srv_diff_host_rate",
+      "mean_abs_shap": 0.002958439318030668
     },
     {
       "rank": 25,
-      "feature": "num_file_creations",
-      "mean_abs_shap": 0.0019761413738858483
+      "feature": "land",
+      "mean_abs_shap": 0.002898763947148408
     },
     {
       "rank": 26,
-      "feature": "land",
-      "mean_abs_shap": 0.001882210486030978
+      "feature": "diff_srv_rate",
+      "mean_abs_shap": 0.001935570512370112
     },
     {
       "rank": 27,

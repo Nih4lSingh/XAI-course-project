@@ -3,67 +3,67 @@
   "dataset": "nsl_kdd",
   "actual_class": "DoS",
   "predicted_class": "DoS",
-  "base_value": 0.26319523186580823,
+  "base_value": 0.26319523181103865,
   "prediction_probability": 0.9999891519546509,
   "feature_contributions": [
     {
       "feature": "serror_rate",
       "value": 1.0,
-      "shap_contribution": 0.2653073156036181,
+      "shap_contribution": 0.2653073103014187,
       "direction": "positive"
     },
     {
       "feature": "logged_in",
       "value": 0.0,
-      "shap_contribution": 0.13660774161913422,
+      "shap_contribution": 0.13660775057450644,
       "direction": "positive"
     },
     {
       "feature": "src_bytes",
       "value": 0.0,
-      "shap_contribution": 0.09279843948785169,
+      "shap_contribution": 0.09279844523473228,
       "direction": "positive"
     },
     {
       "feature": "dst_host_same_src_port_rate",
       "value": 0.0,
-      "shap_contribution": 0.059645241339823234,
+      "shap_contribution": 0.05964523370943974,
       "direction": "positive"
     },
     {
       "feature": "dst_host_same_srv_rate",
       "value": 0.05999999865889549,
-      "shap_contribution": 0.047081643437434297,
+      "shap_contribution": 0.04708163357602144,
       "direction": "positive"
     },
     {
       "feature": "dst_host_count",
       "value": 1.0,
-      "shap_contribution": 0.038906374167576946,
+      "shap_contribution": 0.038906380281342426,
       "direction": "positive"
     },
     {
       "feature": "srv_count",
       "value": 0.03131115436553955,
-      "shap_contribution": 0.036915505539717036,
+      "shap_contribution": 0.036915508604968915,
       "direction": "positive"
     },
     {
       "feature": "service",
       "value": 0.15942029654979706,
-      "shap_contribution": 0.028768299964494704,
+      "shap_contribution": 0.028768303165465133,
       "direction": "positive"
     },
     {
       "feature": "flag",
       "value": 0.5,
-      "shap_contribution": 0.01904223994314682,
+      "shap_contribution": 0.019042235939102373,
       "direction": "positive"
     },
     {
       "feature": "count",
       "value": 0.3855185806751251,
-      "shap_contribution": 0.011721118986045775,
+      "shap_contribution": 0.011721118756614857,
       "direction": "positive"
     }
   ]

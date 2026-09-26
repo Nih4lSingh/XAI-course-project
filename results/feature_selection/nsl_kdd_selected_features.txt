@@ -33,3 +33,4 @@ dst_host_diff_srv_rate
 dst_host_same_src_port_rate
 dst_host_srv_diff_host_rate
 dst_host_rerror_rate
+difficulty_level

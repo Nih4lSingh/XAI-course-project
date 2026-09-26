@@ -2,20 +2,22 @@
 2D Convolutional Neural Network (2D-CNN) Architecture
 Replication of Sharma et al. (2024)
 
-Paper Specification (Section 4.3):
-- 3 Convolution Layers (EXPLICIT)
-- Filters: 64 -> 32 -> 32 (EXPLICIT)
-- Kernel Size: 3 x 3 (EXPLICIT)
-- Activation: ReLU (EXPLICIT)
-- Pooling: 2 x 2 Max Pooling (EXPLICIT)
-- Output Layer: Dense(5, activation='softmax') (EXPLICIT)
-- Optimizer: Adam(learning_rate=0.001) (EXPLICIT)
-- Weight Decay: 0.0001 (EXPLICIT)
-- Epochs: 20 (EXPLICIT)
+Paper Specification (Fig. 5 & Section 4.3):
+- Input: 2D feature grid ((6, 6, 1) for NSL-KDD, (7, 7, 1) for UNSW-NB15)
+- Conv2D Layer 1: 64 filters, 3x3 kernel, ReLU activation
+- MaxPool2D Layer 1: 2x2 pooling (padding='same' to preserve spatial dimensions)
+- Conv2D Layer 2: 32 filters, 3x3 kernel, ReLU activation
+- MaxPool2D Layer 2: 2x2 pooling (padding='same')
+- Conv2D Layer 3: 32 filters, 3x3 kernel, ReLU activation
+- MaxPool2D Layer 3: 2x2 pooling (padding='same')
+- Flatten
+- Output Layer: Dense(5, activation='softmax')
 
-Input Grid Shapes:
-- NSL-KDD: (6, 6, 1)
-- UNSW-NB15: (7, 7, 1)
+Implementation Note on Pooling Padding:
+Because the paper does not specify the pooling padding boundary behavior for small
+grids (6x6 and 7x7), padding='same' is used deterministically on Conv2D and MaxPooling2D
+so that both 6x6 (NSL-KDD) and 7x7 (UNSW-NB15) are valid and fully executable without
+silently removing any of the 3 pooling layers shown in Fig. 5.
 """
 
 from typing import Tuple
@@ -32,13 +34,13 @@ def build_cnn2d_model(
     name: str = "Sharma_2DCNN"
 ) -> keras.Model:
     """
-    Constructs and compiles the paper-faithful 3-layer 2D-CNN.
+    Constructs and compiles the paper-faithful 3-conv / 3-pooling 2D-CNN (Fig. 5).
     """
     l2_reg = regularizers.l2(weight_decay) if weight_decay > 0 else None
 
     inputs = keras.Input(shape=input_shape, name="grid_input")
     
-    # Conv2D Layer 1: 64 filters, 3x3 kernel
+    # Block 1: Conv2D(64, 3x3) -> MaxPool2D(2x2)
     x = layers.Conv2D(
         filters=64,
         kernel_size=(3, 3),
@@ -47,11 +49,9 @@ def build_cnn2d_model(
         kernel_regularizer=l2_reg,
         name="conv2d_1"
     )(inputs)
+    x = layers.MaxPooling2D(pool_size=(2, 2), padding="same", name="maxpool2d_1")(x)
     
-    # Max Pooling: 2x2
-    x = layers.MaxPooling2D(pool_size=(2, 2), name="maxpool2d_1")(x)
-    
-    # Conv2D Layer 2: 32 filters, 3x3 kernel
+    # Block 2: Conv2D(32, 3x3) -> MaxPool2D(2x2)
     x = layers.Conv2D(
         filters=32,
         kernel_size=(3, 3),
@@ -60,8 +60,9 @@ def build_cnn2d_model(
         kernel_regularizer=l2_reg,
         name="conv2d_2"
     )(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2), padding="same", name="maxpool2d_2")(x)
     
-    # Conv2D Layer 3: 32 filters, 3x3 kernel
+    # Block 3: Conv2D(32, 3x3) -> MaxPool2D(2x2)
     x = layers.Conv2D(
         filters=32,
         kernel_size=(3, 3),
@@ -70,6 +71,7 @@ def build_cnn2d_model(
         kernel_regularizer=l2_reg,
         name="conv2d_3"
     )(x)
+    x = layers.MaxPooling2D(pool_size=(2, 2), padding="same", name="maxpool2d_3")(x)
     
     # Flatten
     x = layers.Flatten(name="flatten")(x)
@@ -88,3 +90,10 @@ def build_cnn2d_model(
     )
     
     return model
+
+
+if __name__ == "__main__":
+    m6 = build_cnn2d_model((6, 6, 1))
+    m7 = build_cnn2d_model((7, 7, 1))
+    print("6x6 model output:", m6.output_shape)
+    print("7x7 model output:", m7.output_shape)

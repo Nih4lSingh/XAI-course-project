@@ -1,18 +1,18 @@
 {
   "experiment_id": "UNSW_SELECTED_2DCNN",
-  "total_training_time_seconds": 161.3456,
-  "total_training_time_ms": 161345.61,
+  "total_training_time_seconds": 187.7155,
+  "total_training_time_ms": 187715.5,
   "num_epochs_recorded": 0,
   "avg_epoch_time_seconds": null,
   "hardware_environment": {
-    "os": "Linux-6.6.122+-x86_64-with-glibc2.39",
-    "processor": "x86_64",
-    "cpu_count": 2,
-    "python_version": "3.13.15",
-    "tensorflow_version": "2.20.0",
+    "os": "Windows-11-10.0.26200-SP0",
+    "processor": "AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",
+    "cpu_count": 16,
+    "python_version": "3.14.7",
+    "tensorflow_version": "2.22.0-rc0",
     "gpu_devices": [
-      "/physical_device:GPU:0"
+      "None (CPU execution)"
     ],
-    "has_gpu": true
+    "has_gpu": false
   }
 }

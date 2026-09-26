@@ -2,8 +2,8 @@
   "dataset": "unsw_nb15",
   "grid_size": "7x7",
   "grid_capacity": 49,
-  "num_features": 36,
-  "num_padding": 13,
+  "num_features": 38,
+  "num_padding": 11,
   "feature_coordinates": {
     "dur": {
       "row": 0,
@@ -70,182 +70,182 @@
       "col": 5,
       "grid_index": 12
     },
-    "sinpkt": {
+    "sloss": {
       "row": 1,
       "col": 6,
       "grid_index": 13
     },
-    "dinpkt": {
+    "dloss": {
       "row": 2,
       "col": 0,
       "grid_index": 14
     },
-    "sjit": {
+    "sinpkt": {
       "row": 2,
       "col": 1,
       "grid_index": 15
     },
-    "djit": {
+    "dinpkt": {
       "row": 2,
       "col": 2,
       "grid_index": 16
     },
-    "swin": {
+    "sjit": {
       "row": 2,
       "col": 3,
       "grid_index": 17
     },
-    "stcpb": {
+    "djit": {
       "row": 2,
       "col": 4,
       "grid_index": 18
     },
-    "dtcpb": {
+    "swin": {
       "row": 2,
       "col": 5,
       "grid_index": 19
     },
-    "tcprtt": {
+    "stcpb": {
       "row": 2,
       "col": 6,
       "grid_index": 20
     },
-    "synack": {
+    "dtcpb": {
       "row": 3,
       "col": 0,
       "grid_index": 21
     },
-    "ackdat": {
+    "tcprtt": {
       "row": 3,
       "col": 1,
       "grid_index": 22
     },
-    "smean": {
+    "synack": {
       "row": 3,
       "col": 2,
       "grid_index": 23
     },
-    "dmean": {
+    "ackdat": {
       "row": 3,
       "col": 3,
       "grid_index": 24
     },
-    "trans_depth": {
+    "smean": {
       "row": 3,
       "col": 4,
       "grid_index": 25
     },
-    "response_body_len": {
+    "dmean": {
       "row": 3,
       "col": 5,
       "grid_index": 26
     },
-    "ct_srv_src": {
+    "trans_depth": {
       "row": 3,
       "col": 6,
       "grid_index": 27
     },
-    "ct_state_ttl": {
+    "response_body_len": {
       "row": 4,
       "col": 0,
       "grid_index": 28
     },
-    "ct_dst_ltm": {
+    "ct_srv_src": {
       "row": 4,
       "col": 1,
       "grid_index": 29
     },
-    "ct_dst_sport_ltm": {
+    "ct_state_ttl": {
       "row": 4,
       "col": 2,
       "grid_index": 30
     },
-    "ct_dst_src_ltm": {
+    "ct_dst_ltm": {
       "row": 4,
       "col": 3,
       "grid_index": 31
     },
-    "is_ftp_login": {
+    "ct_dst_sport_ltm": {
       "row": 4,
       "col": 4,
       "grid_index": 32
     },
-    "ct_flw_http_mthd": {
+    "ct_dst_src_ltm": {
       "row": 4,
       "col": 5,
       "grid_index": 33
     },
-    "ct_src_ltm": {
+    "is_ftp_login": {
       "row": 4,
       "col": 6,
       "grid_index": 34
     },
-    "is_sm_ips_ports": {
+    "ct_flw_http_mthd": {
       "row": 5,
       "col": 0,
       "grid_index": 35
     },
-    "zero_pad_0": {
+    "ct_src_ltm": {
       "row": 5,
       "col": 1,
       "grid_index": 36
     },
-    "zero_pad_1": {
+    "is_sm_ips_ports": {
       "row": 5,
       "col": 2,
       "grid_index": 37
     },
-    "zero_pad_2": {
+    "zero_pad_0": {
       "row": 5,
       "col": 3,
       "grid_index": 38
     },
-    "zero_pad_3": {
+    "zero_pad_1": {
       "row": 5,
       "col": 4,
       "grid_index": 39
     },
-    "zero_pad_4": {
+    "zero_pad_2": {
       "row": 5,
       "col": 5,
       "grid_index": 40
     },
-    "zero_pad_5": {
+    "zero_pad_3": {
       "row": 5,
       "col": 6,
       "grid_index": 41
     },
-    "zero_pad_6": {
+    "zero_pad_4": {
       "row": 6,
       "col": 0,
       "grid_index": 42
     },
-    "zero_pad_7": {
+    "zero_pad_5": {
       "row": 6,
       "col": 1,
       "grid_index": 43
     },
-    "zero_pad_8": {
+    "zero_pad_6": {
       "row": 6,
       "col": 2,
       "grid_index": 44
     },
-    "zero_pad_9": {
+    "zero_pad_7": {
       "row": 6,
       "col": 3,
       "grid_index": 45
     },
-    "zero_pad_10": {
+    "zero_pad_8": {
       "row": 6,
       "col": 4,
       "grid_index": 46
     },
-    "zero_pad_11": {
+    "zero_pad_9": {
       "row": 6,
       "col": 5,
       "grid_index": 47
     },
-    "zero_pad_12": {
+    "zero_pad_10": {
       "row": 6,
       "col": 6,
       "grid_index": 48

@@ -3,67 +3,67 @@
   "dataset": "nsl_kdd",
   "actual_class": "Normal",
   "predicted_class": "Normal",
-  "base_value": 0.6269659238203189,
+  "base_value": 0.6269659261794953,
   "prediction_probability": 0.9999995231628418,
   "feature_contributions": [
     {
       "feature": "serror_rate",
       "value": 0.0,
-      "shap_contribution": 0.07810401702532896,
+      "shap_contribution": 0.07810401783940177,
       "direction": "positive"
     },
     {
       "feature": "count",
       "value": 0.003913894295692444,
-      "shap_contribution": 0.05926018063289508,
+      "shap_contribution": 0.05926017817145379,
       "direction": "positive"
     },
     {
       "feature": "logged_in",
       "value": 1.0,
-      "shap_contribution": 0.05463396305123295,
+      "shap_contribution": 0.05463396155676036,
       "direction": "positive"
     },
     {
       "feature": "dst_host_srv_count",
       "value": 1.0,
-      "shap_contribution": 0.039288302757788975,
+      "shap_contribution": 0.03928830224932472,
       "direction": "positive"
     },
     {
       "feature": "dst_host_diff_srv_rate",
       "value": 0.0,
-      "shap_contribution": 0.0349269778735175,
+      "shap_contribution": 0.03492697913084591,
       "direction": "positive"
     },
     {
       "feature": "difficulty_level",
       "value": 1.0,
-      "shap_contribution": 0.031925018567584784,
+      "shap_contribution": 0.03192501845460188,
       "direction": "positive"
     },
     {
       "feature": "dst_host_same_srv_rate",
       "value": 1.0,
-      "shap_contribution": 0.031052196860633634,
+      "shap_contribution": 0.031052199561177427,
       "direction": "positive"
     },
     {
       "feature": "dst_host_same_src_port_rate",
       "value": 0.5,
-      "shap_contribution": 0.018473017121737354,
+      "shap_contribution": 0.018473016259391743,
       "direction": "positive"
     },
     {
       "feature": "num_file_creations",
       "value": 0.0,
-      "shap_contribution": 0.014295505663194224,
+      "shap_contribution": 0.014295503220090152,
       "direction": "positive"
     },
     {
       "feature": "protocol_type",
       "value": 0.5,
-      "shap_contribution": 0.011074419788609437,
+      "shap_contribution": 0.01107442054029874,
       "direction": "positive"
     }
   ]

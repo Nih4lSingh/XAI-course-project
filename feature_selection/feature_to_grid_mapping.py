@@ -4,8 +4,8 @@ Replication of Sharma et al. (2024)
 
 Rules:
 - Transforms 1D network feature vectors into 2D grid tensors for Conv2D.
-- NSL-KDD: 6 x 6 x 1 (36 elements, with 1 zero-padding element if 35 features).
-- UNSW-NB15: 7 x 7 x 1 (49 elements, zero-padded up to 49).
+- NSL-KDD: 6 x 6 x 1 (36 elements, exactly 0 padding elements in canonical 36-feature setup; 1 zero-padding if 35 features).
+- UNSW-NB15: 7 x 7 x 1 (49 elements, exactly 11 zero-padding elements for 38 selected features; 7 for 42 features).
 - Row-major deterministic mapping; never randomly shuffle features.
 - Saves the exact mapping coordinates: feature # -> (row, col).
 """

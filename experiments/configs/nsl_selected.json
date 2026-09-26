@@ -1,8 +1,10 @@
 {
   "dataset": "nsl_kdd",
   "feature_mode": "selected",
-  "num_features": 35,
-  "grid_shape": [6, 6, 1],
+  "num_real_features": 36,
+  "input_size": 36,
+  "input_shape": [6, 6, 1],
+  "padding_zeros": 0,
   "num_classes": 5,
   "class_mapping": {
     "0": "DoS",

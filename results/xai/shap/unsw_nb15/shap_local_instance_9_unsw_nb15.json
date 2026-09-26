@@ -3,67 +3,67 @@
   "dataset": "unsw_nb15",
   "actual_class": "Exploits",
   "predicted_class": "Exploits",
-  "base_value": 0.26977068187085407,
-  "prediction_probability": 0.9639948606491089,
+  "base_value": 0.2749634262844536,
+  "prediction_probability": 0.9787991046905518,
   "feature_contributions": [
-    {
-      "feature": "dttl",
-      "value": 0.9921259880065918,
-      "shap_contribution": 0.2600745074327769,
-      "direction": "positive"
-    },
     {
       "feature": "sttl",
       "value": 0.24313725531101227,
-      "shap_contribution": 0.2065920957096723,
+      "shap_contribution": 0.23975646733572753,
+      "direction": "positive"
+    },
+    {
+      "feature": "dttl",
+      "value": 0.9921259880065918,
+      "shap_contribution": 0.19105041305057116,
       "direction": "positive"
     },
     {
       "feature": "service",
       "value": 0.75,
-      "shap_contribution": 0.13781591174617136,
+      "shap_contribution": 0.0926087509956587,
       "direction": "positive"
     },
     {
       "feature": "ct_srv_src",
       "value": 0.0,
-      "shap_contribution": 0.10419794635174476,
-      "direction": "positive"
-    },
-    {
-      "feature": "swin",
-      "value": 1.0,
-      "shap_contribution": -0.09944630714204145,
-      "direction": "negative"
-    },
-    {
-      "feature": "ct_dst_src_ltm",
-      "value": 0.0,
-      "shap_contribution": 0.026236893433778725,
-      "direction": "positive"
-    },
-    {
-      "feature": "sload",
-      "value": 6.91421955707483e-05,
-      "shap_contribution": 0.02103379025553699,
-      "direction": "positive"
-    },
-    {
-      "feature": "ct_flw_http_mthd",
-      "value": 0.0,
-      "shap_contribution": 0.01987532424723703,
+      "shap_contribution": 0.06874248623200915,
       "direction": "positive"
     },
     {
       "feature": "rate",
       "value": 7.29825915186666e-05,
-      "shap_contribution": 0.010669796111940308,
+      "shap_contribution": 0.031658064246180014,
+      "direction": "positive"
+    },
+    {
+      "feature": "ct_dst_sport_ltm",
+      "value": 0.0,
+      "shap_contribution": 0.02083641515557605,
+      "direction": "positive"
+    },
+    {
+      "feature": "ct_dst_src_ltm",
+      "value": 0.0,
+      "shap_contribution": 0.019376406041627645,
+      "direction": "positive"
+    },
+    {
+      "feature": "sload",
+      "value": 6.91421955707483e-05,
+      "shap_contribution": 0.017817905187512147,
+      "direction": "positive"
+    },
+    {
+      "feature": "response_body_len",
+      "value": 0.0,
+      "shap_contribution": 0.012369479114455928,
       "direction": "positive"
     },
     {
       "feature": "ct_dst_ltm",
       "value": 0.0,
-      "shap_contribution": 0.007174220631437911,
+      "shap_contribution": 0.009619291046779943,
       "direction": "positive"
     }
   ]

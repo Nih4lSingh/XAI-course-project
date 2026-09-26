@@ -44,23 +44,23 @@ $$PCC(X_i, X_j) = \frac{\sum_{k=1}^N (X_{ik} - \bar{X}_i)(X_{jk} - \bar{X}_j)}{\
 5. `dst_host_srv_serror_rate`: Confirmed ($r = +0.9760$ with `serror_rate`)
 6. `srv_rerror_rate`: Confirmed ($r = +0.9861$ with `rerror_rate`)
 
-**Selected Predictors:** 35 features (plus 1 deterministic zero-padding feature to produce the $6 \times 6 = 36$ input tensor for 2D-CNN).
+**Selected Predictors:** **36 features** ($42 - 6 = 36$ retaining `difficulty_level`, mapping directly to a $6 \times 6$ grid with **0 padding zeros**; in the alternative strict-network-only ablation where `difficulty_level` is discarded, $41 - 6 = 35$ features with 1 zero-padding cell).
 
 ---
 
 ## 3. UNSW-NB15 Feature Selection Verification
 
-- **Total input predictors:** 42 eligible traffic features (excluding `id`, `attack_cat`, and `label`)
+- **Total input predictors:** 42 eligible traffic features (excluding `id`, `attack_cat`, and ground-truth `label`)
 - **Highly correlated pairs identified ($|PCC| > 0.95$):** 12 pairs
 
 | Feature 1 | Feature 2 | Pearson Correlation ($r$) | Redundant Predictor (Paper) | Status |
 | :--- | :--- | :---: | :--- | :--- |
 | `spkts` | `sbytes` | +0.9648 | — | Retained |
-| `spkts` | `sloss` | +0.9723 | `sloss` | **CONFIRMED** |
+| `spkts` | `sloss` | +0.9723 | `sloss` | Ambiguous (`loss`) |
 | `dpkts` | `dbytes` | +0.9729 | — | Retained |
-| `dpkts` | `dloss` | +0.9791 | `dloss` | **CONFIRMED** |
-| `sbytes` | `sloss` | +0.9959 | `sloss` | **CONFIRMED** |
-| `dbytes` | `dloss` | +0.9966 | `dloss` | **CONFIRMED** |
+| `dpkts` | `dloss` | +0.9791 | `dloss` | Ambiguous (`loss`) |
+| `sbytes` | `sloss` | +0.9959 | `sloss` | Ambiguous (`loss`) |
+| `dbytes` | `dloss` | +0.9966 | `dloss` | Ambiguous (`loss`) |
 | `swin` | `dwin` | +0.9788 | `dwin` | **CONFIRMED** |
 | `ct_srv_src` | `ct_dst_src_ltm` | +0.9569 | — | Retained |
 | `ct_srv_src` | `ct_srv_dst` | +0.9801 | `ct_srv_dst` | **CONFIRMED** |
@@ -70,13 +70,13 @@ $$PCC(X_i, X_j) = \frac{\sum_{k=1}^N (X_{ik} - \bar{X}_i)(X_{jk} - \bar{X}_j)}{\
 
 ### Verification of Sharma et al. Removed Features:
 1. `ct_src_dport_ltm`: Confirmed ($r = +0.9637$ with `ct_dst_ltm`)
-2. `loss` (`sloss` & `dloss`): Confirmed ($r = +0.9959$ with `sbytes`, $+0.9966$ with `dbytes`)
-3. `dwin`: Confirmed ($r = +0.9788$ with `swin`)
-4. `ct_ftp_cmd`: Confirmed ($r = +0.9989$ with `is_ftp_login`)
-5. `ct_srv_dst`: Confirmed ($r = +0.9801$ with `ct_srv_src`)
-6. `label`: Binary target column, separated into target vector $y$ to prevent target leakage.
+2. `dwin`: Confirmed ($r = +0.9788$ with `swin`)
+3. `ct_ftp_cmd`: Confirmed ($r = +0.9989$ with `is_ftp_login`)
+4. `ct_srv_dst`: Confirmed ($r = +0.9801$ with `ct_srv_src`)
+5. `label`: Binary target column, separated into target vector $y$ to prevent target leakage.
+6. `loss` (`sloss` & `dloss`): Both packet loss features are retained in the canonical set to avoid removing active network metrics without explicit naming.
 
-**Selected Predictors:** 36 features (zero-padded to 49 for the $7 \times 7 = 49$ 2D-CNN grid).
+**Selected Predictors:** **38 features** (reshaped into a $7 \times 7 = 49$ grid with **exactly 11 trailing zero-padding elements**).
 
 ---
 
@@ -84,5 +84,6 @@ $$PCC(X_i, X_j) = \frac{\sum_{k=1}^N (X_{ik} - \bar{X}_i)(X_{jk} - \bar{X}_j)}{\
 
 | Dataset | Original Predictors | Redundant Removed | Selected Features | 2D-CNN Grid Shape | Zero-Padding Count |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **NSL-KDD** | 41 | 6 | 35 | $6 \times 6 \times 1$ (36) | 1 |
-| **UNSW-NB15** | 42 | 6 | 36 | $7 \times 7 \times 1$ (49) | 13 |
+| **NSL-KDD (Canonical)** | 42 | 6 | 36 | $6 \times 6 \times 1$ (36) | 0 |
+| **NSL-KDD (Strict-Traffic)** | 41 | 6 | 35 | $6 \times 6 \times 1$ (36) | 1 |
+| **UNSW-NB15 (Canonical)** | 42 | 4 | 38 | $7 \times 7 \times 1$ (49) | 11 |

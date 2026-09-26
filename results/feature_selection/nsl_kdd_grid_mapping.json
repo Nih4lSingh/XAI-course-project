@@ -2,8 +2,8 @@
   "dataset": "nsl_kdd",
   "grid_size": "6x6",
   "grid_capacity": 36,
-  "num_features": 35,
-  "num_padding": 1,
+  "num_features": 36,
+  "num_padding": 0,
   "feature_coordinates": {
     "duration": {
       "row": 0,
@@ -180,7 +180,7 @@
       "col": 4,
       "grid_index": 34
     },
-    "zero_pad_0": {
+    "difficulty_level": {
       "row": 5,
       "col": 5,
       "grid_index": 35

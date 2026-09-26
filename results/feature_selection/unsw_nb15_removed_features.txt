@@ -1,9 +1,4 @@
-ct_dst_src_ltm
-ct_ftp_cmd
 ct_src_dport_ltm
-ct_srv_dst
-dbytes
-dloss
 dwin
-sbytes
-sloss
+ct_ftp_cmd
+ct_srv_dst

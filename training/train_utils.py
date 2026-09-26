@@ -81,6 +81,11 @@ def train_and_evaluate_model(
     class_names: List[str],
     epochs: int = 20,
     batch_size: int = 64,
+    learning_rate: float = 0.001,
+    weight_decay: float = 0.0001,
+    dropout_rate: float = 0.0,
+    num_real_features: Optional[int] = None,
+    padding_zeros: int = 0,
     results_base: Optional[Path] = None,
     verbose: int = 1
 ) -> Dict:
@@ -119,7 +124,9 @@ def train_and_evaluate_model(
     )
 
     elapsed_ms = timer.stop()
-    print(f"[TIMING] Completed {epochs} epochs in {timer.total_seconds:.2f} s ({elapsed_ms:.1f} ms)")
+    total_sec = float(timer.total_seconds)
+    total_ms = float(elapsed_ms if elapsed_ms > 0 else total_sec * 1000.0)
+    print(f"[TIMING] Completed {epochs} epochs in {total_sec:.2f} s ({total_ms:.1f} ms)")
 
     # Save model weights/architecture
     model_save_path = models_dir / f"{experiment_id.lower()}.keras"
@@ -130,12 +137,27 @@ def train_and_evaluate_model(
     y_prob = model.predict(X_test, batch_size=batch_size, verbose=0)
     y_pred = np.argmax(y_prob, axis=1)
 
+    input_shape = list(X_train.shape[1:])
+    input_size = int(np.prod(input_shape))
+    if num_real_features is None:
+        num_real_features = input_size - padding_zeros
+
     # Compute metrics
     metrics = compute_all_metrics(y_test, y_pred, class_names=class_names)
     metrics["experiment_id"] = experiment_id
-    metrics["training_time_seconds"] = timer.total_seconds
-    metrics["training_time_ms"] = timer.total_ms
-    metrics["num_features"] = int(np.prod(X_train.shape[1:]))
+    metrics["num_real_features"] = int(num_real_features)
+    metrics["num_features"] = int(num_real_features)  # Backward compatible alias
+    metrics["input_size"] = int(input_size)
+    metrics["input_shape"] = input_shape
+    metrics["padding_zeros"] = int(padding_zeros)
+    metrics["seed"] = 42
+    metrics["epochs"] = int(epochs)
+    metrics["batch_size"] = int(batch_size)
+    metrics["learning_rate"] = float(learning_rate)
+    metrics["weight_decay"] = float(weight_decay)
+    metrics["dropout_rate"] = float(dropout_rate)
+    metrics["training_time_seconds"] = total_sec
+    metrics["training_time_ms"] = total_ms
 
     print(f"[RESULTS] Test Accuracy: {metrics['accuracy']:.4f} | F1 (Macro): {metrics['f1_macro']:.4f} | F1 (Weighted): {metrics['f1_weighted']:.4f}")
 

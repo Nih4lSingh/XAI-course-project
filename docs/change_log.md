@@ -39,9 +39,9 @@ This document records all methodological audits, codebase corrections, architect
 ---
 
 ### 4. Architectural Reconstruction
-- **DNN**: Fully reconstructed matching paper specifications: 3 Hidden Layers (128 $\to$ 64 $\to$ 32 units, ReLU activation), Output Layer (5 units, Softmax). Evaluated with canonical `dropout=0.0` and sensitivity `dropout=0.01`.
-- **2D-CNN**: Reconstructed matching paper specifications: Conv2D(32, 3x3) $\to$ MaxPool(2x2) $\to$ Conv2D(64, 3x3) $\to$ MaxPool(2x2) $\to$ Flatten $\to$ Dense(64) $\to$ Dense(5, Softmax). Dynamic feature grid mapping (`FeatureGridMapper`).
-- **1D-CNN**: Reconstructed matching standard 1D convolutional intrusion detection topology: Conv1D(32, kernel=3) $\to$ MaxPool1D(2) $\to$ Conv1D(64, kernel=3) $\to$ MaxPool1D(2) $\to$ Flatten $\to$ Dense(64) $\to$ Dense(5, Softmax).
+- **DNN**: Fully reconstructed matching paper Section 4.1 specifications: 3 Dense Hidden Layers with 64 units each and ReLU activation, Output Layer (5 units, Softmax): Dense(64, ReLU) $\to$ Dense(64, ReLU) $\to$ Dense(64, ReLU) $\to$ Dense(5, Softmax). Evaluated with canonical Table 1 `dropout=0.0` and sensitivity `dropout=0.01`. All legacy 128 $\to$ 64 $\to$ 32 references were audited and purged.
+- **2D-CNN**: Reconstructed matching paper Figure 5 topology: 3 Conv2D layers and 3 MaxPooling2D layers: Conv2D(64, 3x3) $\to$ MaxPool2D(2x2) $\to$ Conv2D(32, 3x3) $\to$ MaxPool2D(2x2) $\to$ Conv2D(32, 3x3) $\to$ MaxPool2D(2x2) $\to$ Flatten $\to$ Dense(5, Softmax). Configured with deterministic `padding='same'` on all convolutions and pooling layers to prevent spatial collapse on small $6 \times 6$ and $7 \times 7$ grids without dropping layers.
+- **1D-CNN**: Reconstructed matching the inferred 1D convolutional filter progression: Conv1D(64, kernel=3, padding='same', ReLU) $\to$ MaxPool1D(2) $\to$ Conv1D(32, kernel=3, padding='same', ReLU) $\to$ Flatten $\to$ Dense(5, Softmax). Filter counts 64 $\to$ 32 are explicitly documented as an `INFERRED PARAMETER`.
 
 ---
 

@@ -1,8 +1,10 @@
 {
   "dataset": "unsw_nb15",
   "feature_mode": "all",
-  "num_features": 42,
-  "grid_shape": [7, 7, 1],
+  "num_real_features": 42,
+  "input_size": 49,
+  "input_shape": [7, 7, 1],
+  "padding_zeros": 7,
   "num_classes": 5,
   "class_mapping": {
     "0": "DoS",

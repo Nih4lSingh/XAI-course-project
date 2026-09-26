@@ -5,61 +5,61 @@
   "predicted_class": 1,
   "predicted_class_name": "Exploits",
   "probabilities": {
-    "DoS": 0.033989034593105316,
-    "Exploits": 0.9639948606491089,
-    "Fuzzers": 1.6994499674183317e-05,
-    "Generic": 0.001682418049313128,
-    "Normal": 0.00031670209136791527
+    "DoS": 0.020399313420057297,
+    "Exploits": 0.9787991046905518,
+    "Fuzzers": 0.00011371833534212783,
+    "Generic": 0.0006265541887842119,
+    "Normal": 6.129701796453446e-05
   },
   "top_features": [
     {
-      "feature_condition": "is_sm_ips_ports <= 0.00",
-      "weight": 0.2342107203164378,
-      "direction": "positive"
-    },
-    {
       "feature_condition": "0.00 < dttl <= 0.99",
-      "weight": 0.2102424370427639,
+      "weight": 0.28913292157734993,
       "direction": "positive"
     },
     {
-      "feature_condition": "0.00 < swin <= 1.00",
-      "weight": -0.18818628565002288,
-      "direction": "negative"
-    },
-    {
-      "feature_condition": "ct_srv_src <= 0.02",
-      "weight": 0.08766652055931733,
+      "feature_condition": "is_sm_ips_ports <= 0.00",
+      "weight": 0.19437732350812373,
       "direction": "positive"
     },
     {
       "feature_condition": "sttl <= 0.24",
-      "weight": 0.06459267480501998,
+      "weight": 0.15254419310701559,
       "direction": "positive"
     },
     {
-      "feature_condition": "ct_dst_sport_ltm <= 0.00",
-      "weight": -0.05380158448738811,
+      "feature_condition": "0.00 < swin <= 1.00",
+      "weight": -0.12016401877070883,
       "direction": "negative"
     },
     {
-      "feature_condition": "ct_state_ttl <= 0.17",
-      "weight": -0.0391390484873906,
-      "direction": "negative"
-    },
-    {
-      "feature_condition": "smean > 0.05",
-      "weight": 0.03872538723508566,
+      "feature_condition": "ct_srv_src <= 0.02",
+      "weight": 0.10635199958662331,
       "direction": "positive"
     },
     {
       "feature_condition": "service > 0.17",
-      "weight": -0.0363026362720742,
+      "weight": -0.06544289560502635,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "dur > 0.01",
+      "weight": -0.058301407502490174,
       "direction": "negative"
     },
     {
       "feature_condition": "is_ftp_login <= 0.00",
-      "weight": -0.03596084898143438,
+      "weight": -0.05318024087864832,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "ct_dst_ltm <= 0.00",
+      "weight": 0.03784889798834242,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "dload > 0.00",
+      "weight": -0.036610632294355086,
       "direction": "negative"
     }
   ]
