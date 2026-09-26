@@ -136,7 +136,7 @@ def run_all_experiments(epochs: int = 20, batch_size: int = 64, run_sensitivity:
             else:
                 print(f"\n>>> Running Sensitivity Experiment: {exp_label}")
                 metrics = run_experiment(
-                    experiment_id=base_exp,
+                    experiment_id=exp_label,
                     epochs=epochs,
                     batch_size=batch_size,
                     dropout_rate=d_rate,
