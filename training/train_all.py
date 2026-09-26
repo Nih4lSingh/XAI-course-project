@@ -69,11 +69,13 @@ PAPER_REPORTED_METRICS = {
 }
 
 
-def run_all_experiments(epochs: int = 20, batch_size: int = 64, run_sensitivity: bool = True) -> pd.DataFrame:
+def run_all_experiments(epochs: int = 20, batch_size: int = 64, run_sensitivity: bool = True, skip_existing: bool = True) -> pd.DataFrame:
     results_dir = PROJECT_ROOT / "results"
     reports_dir = PROJECT_ROOT / "reports" / "tables"
+    metrics_dir = results_dir / "metrics"
     results_dir.mkdir(parents=True, exist_ok=True)
     reports_dir.mkdir(parents=True, exist_ok=True)
+    metrics_dir.mkdir(parents=True, exist_ok=True)
 
     summary_records = []
 
@@ -82,14 +84,20 @@ def run_all_experiments(epochs: int = 20, batch_size: int = 64, run_sensitivity:
     print("=" * 75)
 
     for idx, exp_id in enumerate(PRIMARY_12_EXPERIMENTS, 1):
-        print(f"\n>>> Running Experiment [{idx}/{len(PRIMARY_12_EXPERIMENTS)}]: {exp_id}")
-        metrics = run_experiment(
-            experiment_id=exp_id,
-            epochs=epochs,
-            batch_size=batch_size,
-            dropout_rate=0.0,
-            verbose=1
-        )
+        metric_file = metrics_dir / f"{exp_id.lower()}_metrics.json"
+        if skip_existing and metric_file.exists():
+            print(f"\n>>> [RESUME] Skipping already trained experiment [{idx}/{len(PRIMARY_12_EXPERIMENTS)}]: {exp_id}")
+            with open(metric_file, "r", encoding="utf-8") as f:
+                metrics = json.load(f)
+        else:
+            print(f"\n>>> Running Experiment [{idx}/{len(PRIMARY_12_EXPERIMENTS)}]: {exp_id}")
+            metrics = run_experiment(
+                experiment_id=exp_id,
+                epochs=epochs,
+                batch_size=batch_size,
+                dropout_rate=0.0,
+                verbose=1
+            )
         
         parts = exp_id.split("_")
         dataset_label = "NSL-KDD" if "NSL" in parts[0] else "UNSW-NB15"
@@ -120,14 +128,20 @@ def run_all_experiments(epochs: int = 20, batch_size: int = 64, run_sensitivity:
         print("RUNNING DROPOUT SENSITIVITY EXPERIMENTS (DROPOUT = 0.01)")
         print("=" * 75)
         for exp_label, base_exp, d_rate in SENSITIVITY_EXPERIMENTS:
-            print(f"\n>>> Running Sensitivity Experiment: {exp_label}")
-            metrics = run_experiment(
-                experiment_id=base_exp,
-                epochs=epochs,
-                batch_size=batch_size,
-                dropout_rate=d_rate,
-                verbose=1
-            )
+            metric_file = metrics_dir / f"{exp_label.lower()}_metrics.json"
+            if skip_existing and metric_file.exists():
+                print(f"\n>>> [RESUME] Skipping already trained sensitivity experiment: {exp_label}")
+                with open(metric_file, "r", encoding="utf-8") as f:
+                    metrics = json.load(f)
+            else:
+                print(f"\n>>> Running Sensitivity Experiment: {exp_label}")
+                metrics = run_experiment(
+                    experiment_id=base_exp,
+                    epochs=epochs,
+                    batch_size=batch_size,
+                    dropout_rate=d_rate,
+                    verbose=1
+                )
             parts = base_exp.split("_")
             dataset_label = "NSL-KDD" if "NSL" in parts[0] else "UNSW-NB15"
             record = {
