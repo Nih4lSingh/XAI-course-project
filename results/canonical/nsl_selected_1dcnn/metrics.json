@@ -1,0 +1,40 @@
+{
+  "accuracy": 0.9944116339620245,
+  "precision_macro": 0.9736358046053232,
+  "recall_macro": 0.8920802335293512,
+  "f1_macro": 0.9188340146643922,
+  "precision_weighted": 0.9944670868281795,
+  "recall_weighted": 0.9944116339620245,
+  "f1_weighted": 0.9944033961146318,
+  "per_class": {
+    "DoS": {
+      "precision": 0.9973840251133589,
+      "recall": 0.9961679149973872,
+      "f1_score": 0.9967755991285403
+    },
+    "Normal": {
+      "precision": 0.9950142450142451,
+      "recall": 0.9957234497505346,
+      "f1_score": 0.9953687210545066
+    },
+    "Probe": {
+      "precision": 0.9889883000688231,
+      "recall": 0.9862731640356898,
+      "f1_score": 0.9876288659793815
+    },
+    "R2L": {
+      "precision": 0.8867924528301887,
+      "recall": 0.9437751004016064,
+      "f1_score": 0.914396887159533
+    },
+    "U2R": {
+      "precision": 1.0,
+      "recall": 0.5384615384615384,
+      "f1_score": 0.7
+    }
+  },
+  "experiment_id": "NSL_SELECTED_1DCNN",
+  "training_time_seconds": 85.99280947700004,
+  "training_time_ms": 85992.80947700003,
+  "num_features": 36
+}

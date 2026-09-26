@@ -1,0 +1,25 @@
+{
+  "random_seed": 42,
+  "hardware": "NVIDIA Tesla T4 GPU (Google Colab) & Intel CPU Validation",
+  "software_environment": {
+    "python_version": "3.10.12",
+    "tensorflow_version": "2.17.0",
+    "keras_version": "3.5.0",
+    "scikit_learn_version": "1.5.2",
+    "numpy_version": "1.26.4",
+    "shap_version": "0.46.0",
+    "lime_version": "0.2.0.1"
+  },
+  "deterministic_controls": {
+    "python_hash_seed": 42,
+    "numpy_seed": 42,
+    "tensorflow_seed": 42,
+    "stratified_splits_seed": 42
+  },
+  "gpu_nondeterminism_notice": "Exact bitwise floating-point reproducibility across different GPU architectures or cuDNN versions cannot be guaranteed due to atomic add parallelism in backpropagation. All metrics remain statistically robust and consistent across runs.",
+  "experiment_id": "UNSW_SELECTED_DNN",
+  "reported_accuracy": 0.8089064626952746,
+  "reported_f1_macro": 0.6599434064749014,
+  "num_features": 38,
+  "training_time_s": 40.542224800010445
+}
