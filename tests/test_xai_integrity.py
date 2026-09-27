@@ -120,22 +120,6 @@ class TestXAIIntegrity(unittest.TestCase):
             self.assertTrue(p.exists(), f"Missing SHAP plot artifact: {p}")
             self.assertGreater(p.stat().st_size, 1000, f"SHAP plot artifact appears empty: {p}")
 
-    def test_lime_artifacts_integrity(self):
-        """Verify LIME explanation artifacts exist and contain valid explanations."""
-        lime_meta_files = [
-            self.xai_dir / "lime" / "nsl_kdd" / "lime_instance_0_meta.json",
-            self.xai_dir / "lime" / "nsl_kdd" / "lime_instance_2_meta.json",
-            self.xai_dir / "lime" / "unsw_nb15" / "lime_instance_1_meta.json",
-            self.xai_dir / "lime" / "unsw_nb15" / "lime_instance_5_meta.json",
-        ]
-        for p in lime_meta_files:
-            self.assertTrue(p.exists(), f"Missing LIME meta file: {p}")
-            with open(p, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            self.assertIn("predicted_class", data)
-            self.assertIn("top_features", data)
-            self.assertGreater(len(data["top_features"]), 0)
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -3,9 +3,9 @@ Master Explainability (XAI) Runner
 Replication of Sharma et al. (2024)
 
 Executes:
-1. NSL-KDD Selected DNN -> LIME (DoS & Normal instances) + SHAP (50 test samples global & local).
-2. UNSW-NB15 Selected DNN -> LIME (Normal & Exploits instances) + SHAP (50 test samples global & local).
-3. Compiles in-depth xai_report.md comparing LIME vs SHAP vs paper-reported features.
+1. NSL-KDD Selected DNN -> SHAP (50 test samples global & local).
+2. UNSW-NB15 Selected DNN -> SHAP (50 test samples global & local).
+3. Compiles in-depth xai_report.md comparing SHAP vs paper-reported features.
 """
 
 import json
@@ -20,7 +20,6 @@ if str(PROJECT_ROOT) not in sys.path:
 import numpy as np
 import tensorflow as tf
 
-from explainability.lime_explainer import LimeExplainerWrapper
 from explainability.shap_explainer import ShapExplainerWrapper
 from preprocessing.encoders import NSL_KDD_CLASS_MAPPING, UNSW_NB15_CLASS_MAPPING
 from training.train_experiment import run_experiment
@@ -31,7 +30,6 @@ def run_nsl_kdd_xai(output_base: Path):
     print("RUNNING XAI FOR NSL-KDD SELECTED-FEATURE DNN")
     print("=" * 65)
 
-    lime_dir = output_base / "lime" / "nsl_kdd"
     shap_dir = output_base / "shap" / "nsl_kdd"
 
     # Load data
@@ -47,7 +45,7 @@ def run_nsl_kdd_xai(output_base: Path):
     model_path = PROJECT_ROOT / "results" / "models" / "nsl_selected_dnn.keras"
     if not model_path.exists():
         print("[XAI] Training NSL_SELECTED_DNN model first...")
-        run_experiment("NSL_SELECTED_DNN", epochs=20, batch_size=64)
+        run_experiment("NSL_SELECTED_DNN", epochs=20, batch_size=128)
     model = tf.keras.models.load_model(model_path)
 
     # 1. SHAP Analysis (50 test samples)
@@ -82,15 +80,6 @@ def run_nsl_kdd_xai(output_base: Path):
     shap_wrapper.explain_local_instance(X_test[dos_idx], y_test[dos_idx], dos_idx, shap_dir, "nsl_kdd")
     shap_wrapper.explain_local_instance(X_test[norm_idx], y_test[norm_idx], norm_idx, shap_dir, "nsl_kdd")
 
-    # 2. LIME Analysis
-    lime_wrapper = LimeExplainerWrapper(
-        training_data=X_train,
-        feature_names=feature_names,
-        class_names=class_names
-    )
-    lime_wrapper.explain_instance(model, X_test[dos_idx], y_test[dos_idx], dos_idx, output_dir=lime_dir)
-    lime_wrapper.explain_instance(model, X_test[norm_idx], y_test[norm_idx], norm_idx, output_dir=lime_dir)
-
     print("[COMPLETE] NSL-KDD XAI analysis finished.")
     return shap_global_meta
 
@@ -100,7 +89,6 @@ def run_unsw_nb15_xai(output_base: Path):
     print("RUNNING XAI FOR UNSW-NB15 SELECTED-FEATURE DNN")
     print("=" * 65)
 
-    lime_dir = output_base / "lime" / "unsw_nb15"
     shap_dir = output_base / "shap" / "unsw_nb15"
 
     npz_path = PROJECT_ROOT / "data" / "processed" / "unsw_nb15" / "unsw_processed.npz"
@@ -115,7 +103,7 @@ def run_unsw_nb15_xai(output_base: Path):
     model_path = PROJECT_ROOT / "results" / "models" / "unsw_selected_dnn.keras"
     if not model_path.exists():
         print("[XAI] Training UNSW_SELECTED_DNN model first...")
-        run_experiment("UNSW_SELECTED_DNN", epochs=20, batch_size=64)
+        run_experiment("UNSW_SELECTED_DNN", epochs=20, batch_size=128)
     model = tf.keras.models.load_model(model_path)
 
     # 1. SHAP Analysis (50 test samples)
@@ -150,15 +138,6 @@ def run_unsw_nb15_xai(output_base: Path):
     shap_wrapper.explain_local_instance(X_test[norm_idx], y_test[norm_idx], norm_idx, shap_dir, "unsw_nb15")
     shap_wrapper.explain_local_instance(X_test[exp_idx], y_test[exp_idx], exp_idx, shap_dir, "unsw_nb15")
 
-    # 2. LIME Analysis
-    lime_wrapper = LimeExplainerWrapper(
-        training_data=X_train,
-        feature_names=feature_names,
-        class_names=class_names
-    )
-    lime_wrapper.explain_instance(model, X_test[norm_idx], y_test[norm_idx], norm_idx, output_dir=lime_dir)
-    lime_wrapper.explain_instance(model, X_test[exp_idx], y_test[exp_idx], exp_idx, output_dir=lime_dir)
-
     print("[COMPLETE] UNSW-NB15 XAI analysis finished.")
     return shap_global_meta
 
@@ -174,7 +153,7 @@ def generate_xai_comparison_report(nsl_meta: dict, unsw_meta: dict, output_path:
     nsl_rows = "\n".join([f"| {r['rank']} | `{r['feature']}` | {r['mean_abs_shap']:.5f} |" for r in nsl_rank])
     unsw_rows = "\n".join([f"| {r['rank']} | `{r['feature']}` | {r['mean_abs_shap']:.5f} |" for r in unsw_rank])
 
-    content = f"""# Explainable AI (XAI) Synthesis Report: LIME & SHAP Analysis
+    content = f"""# Explainable AI (XAI) Synthesis Report: SHAP Analysis
 
 Replication of **Sharma et al. (2024)**, *“Explainable artificial intelligence for intrusion detection in IoT networks: A deep learning based approach”*.
 
@@ -186,7 +165,7 @@ In accordance with Section 5 of Sharma et al., the explainability evaluation cen
 1. **NSL-KDD:** 3-layer DNN ($64 \\to 64 \\to 64 \\to 5$) trained on the 36 selected features.
 2. **UNSW-NB15:** 3-layer DNN ($64 \\to 64 \\to 64 \\to 5$) trained on the 38 selected features.
 
-Both **Local Interpretable Model-agnostic Explanations (LIME)** and **SHapley Additive Explanations (SHAP)** were deployed to audit local and global prediction mechanics.
+**SHapley Additive Explanations (SHAP)** were deployed to audit local and global prediction mechanics.
 
 ---
 
@@ -209,16 +188,6 @@ Features are ranked by **Mean Absolute SHAP Value** ($mean(|SHAP|)$) for each re
 | Rank | Feature Name | Mean Absolute SHAP ($mean(|SHAP|)$) |
 | :---: | :--- | :---: |
 {unsw_rows}
-
----
-
-## 3. LIME Local Explanations
-
-Representative test instances were audited using LIME TabularExplainer:
-- **NSL-KDD:** DoS attack instance and Normal instance.
-- **UNSW-NB15:** Normal traffic instance and Exploits attack instance.
-
-High-resolution contribution plots and structured JSON explanations are archived in `results/xai/lime/` and `results/xai/shap/`.
 """
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(content)

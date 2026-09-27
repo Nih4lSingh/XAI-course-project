@@ -19,20 +19,6 @@ CANONICAL_EXPS = [
     "unsw_selected_2dcnn"
 ]
 
-ABLATION_EXPS = [
-    "nsl_all_dnn",
-    "nsl_all_1dcnn",
-    "nsl_all_2dcnn",
-    "unsw_all_dnn",
-    "unsw_all_1dcnn",
-    "unsw_all_2dcnn"
-]
-
-SENSITIVITY_EXPS = [
-    "nsl_selected_dnn_dropout_001",
-    "unsw_selected_dnn_dropout_001"
-]
-
 REPRODUCIBILITY_TEMPLATE = {
     "random_seed": 42,
     "hardware": "NVIDIA Tesla T4 GPU (Google Colab) & Intel CPU Validation",
@@ -105,10 +91,8 @@ def organize_group(exp_list, target_subfolder):
             json.dump(repro, f, indent=2)
 
 def main():
-    print("[ORGANIZER] Organizing results into canonical, ablations, and sensitivity...")
+    print("[ORGANIZER] Organizing results into canonical directory...")
     organize_group(CANONICAL_EXPS, "canonical")
-    organize_group(ABLATION_EXPS, "ablations")
-    organize_group(SENSITIVITY_EXPS, "sensitivity")
     print("[ORGANIZER] Results organized successfully.")
 
 if __name__ == "__main__":

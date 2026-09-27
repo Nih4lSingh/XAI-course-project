@@ -2,9 +2,9 @@
 Unified Explainability (XAI) CLI Runner
 Sharma et al. (2024) Replication Master Pipeline
 
-Generates LIME and SHAP explanations for trained DNN models:
-- NSL-KDD: Global SHAP (50 test samples) + Local LIME/SHAP (DoS & Normal instances)
-- UNSW-NB15: Global SHAP (50 test samples) + Local LIME/SHAP (Exploits & Normal instances)
+Generates SHAP explanations for trained DNN models:
+- NSL-KDD: Global SHAP (50 test samples) + Local SHAP (DoS & Normal instances)
+- UNSW-NB15: Global SHAP (50 test samples) + Local SHAP (Exploits & Normal instances)
 
 Usage:
   python run_xai.py
@@ -24,7 +24,7 @@ from explainability.run_xai import run_nsl_kdd_xai, run_unsw_nb15_xai, generate_
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Run LIME and SHAP explainability pipelines.")
+    parser = argparse.ArgumentParser(description="Run SHAP explainability pipeline.")
     parser.add_argument(
         "--dataset",
         type=str,
