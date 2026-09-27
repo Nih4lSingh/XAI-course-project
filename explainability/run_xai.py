@@ -65,7 +65,9 @@ def run_nsl_kdd_xai(output_base: Path):
         X_test_50=X_test_50,
         test_indices_50=sample_indices,
         output_dir=shap_dir,
-        dataset_name="nsl_kdd"
+        dataset_name="nsl_kdd",
+        target_class_index=0,
+        target_class_name="DoS"
     )
 
     # Find representative test samples: one DoS (class 0) and one Normal (class 1)
@@ -131,7 +133,9 @@ def run_unsw_nb15_xai(output_base: Path):
         X_test_50=X_test_50,
         test_indices_50=sample_indices,
         output_dir=shap_dir,
-        dataset_name="unsw_nb15"
+        dataset_name="unsw_nb15",
+        target_class_index=4,
+        target_class_name="Normal"
     )
 
     # Find representative samples: Normal (class 4) and Exploits (class 1)
@@ -163,14 +167,58 @@ def generate_xai_comparison_report(nsl_meta: dict, unsw_meta: dict, output_path:
     """Generates summary XAI markdown comparison."""
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    content = f"""# XAI Explainability Analysis Report
-Sharma et al. (2024) Replication
+    
+    nsl_rank = nsl_meta.get("feature_importance_ranking", [])[:10]
+    unsw_rank = unsw_meta.get("feature_importance_ranking", [])[:10]
 
-## 1. NSL-KDD Feature Importance (SHAP Top 5)
-{nsl_meta}
+    nsl_rows = "\n".join([f"| {r['rank']} | `{r['feature']}` | {r['mean_abs_shap']:.5f} |" for r in nsl_rank])
+    unsw_rows = "\n".join([f"| {r['rank']} | `{r['feature']}` | {r['mean_abs_shap']:.5f} |" for r in unsw_rank])
 
-## 2. UNSW-NB15 Feature Importance (SHAP Top 5)
-{unsw_meta}
+    content = f"""# Explainable AI (XAI) Synthesis Report: LIME & SHAP Analysis
+
+Replication of **Sharma et al. (2024)**, *“Explainable artificial intelligence for intrusion detection in IoT networks: A deep learning based approach”*.
+
+---
+
+## 1. Scope & Primary Target Model
+
+In accordance with Section 5 of Sharma et al., the explainability evaluation centers on the **Deep Neural Network (DNN)** trained on the **selected features**:
+1. **NSL-KDD:** 3-layer DNN ($64 \\to 64 \\to 64 \\to 5$) trained on the 36 selected features.
+2. **UNSW-NB15:** 3-layer DNN ($64 \\to 64 \\to 64 \\to 5$) trained on the 38 selected features.
+
+Both **Local Interpretable Model-agnostic Explanations (LIME)** and **SHapley Additive Explanations (SHAP)** were deployed to audit local and global prediction mechanics.
+
+---
+
+## 2. SHAP Global Explainability (Seed-Controlled Random Sample of 50 Test Instances)
+
+Adhering strictly to Section 5.2 of Sharma et al. (2024), a seed-controlled random sample of **50 test instances** was evaluated to compute class-specific SHAP attributions:
+- **NSL-KDD:** Target Class = **`{nsl_meta.get('target_class_name', 'DoS')}`** (Class index {nsl_meta.get('target_class_index', 0)}).
+- **UNSW-NB15:** Target Class = **`{unsw_meta.get('target_class_name', 'Normal')}`** (Class index {unsw_meta.get('target_class_index', 4)}).
+
+Features are ranked by **Mean Absolute SHAP Value** ($mean(|SHAP|)$) for each respective target class.
+
+### 2.1 NSL-KDD SHAP Global Importance Ranking (Target Class: DoS)
+
+| Rank | Feature Name | Mean Absolute SHAP ($mean(|SHAP|)$) |
+| :---: | :--- | :---: |
+{nsl_rows}
+
+### 2.2 UNSW-NB15 SHAP Global Importance Ranking (Target Class: Normal)
+
+| Rank | Feature Name | Mean Absolute SHAP ($mean(|SHAP|)$) |
+| :---: | :--- | :---: |
+{unsw_rows}
+
+---
+
+## 3. LIME Local Explanations
+
+Representative test instances were audited using LIME TabularExplainer:
+- **NSL-KDD:** DoS attack instance and Normal instance.
+- **UNSW-NB15:** Normal traffic instance and Exploits attack instance.
+
+High-resolution contribution plots and structured JSON explanations are archived in `results/xai/lime/` and `results/xai/shap/`.
 """
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(content)

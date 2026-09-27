@@ -114,9 +114,9 @@ def generate_tables():
             "Paper Accuracy": paper_acc,
             "Our Accuracy": our_acc,
             "Difference": f"{diff:+.4f}",
-            "Paper Reported Time (ms)": pdata["paper_time_ms"],
-            "Our Training Time (s)": row["training_time_s"],
-            "Runtime Note": "Paper reports inference/step time in ms; our time is total wall-clock training for 20 epochs"
+            "Paper Training Time (ms)": pdata["paper_time_ms"],
+            "Our Total Training Time (s)": row["training_time_s"],
+            "Runtime Note": "The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons."
         })
 
     df_comp = pd.DataFrame(comp_records)
@@ -142,7 +142,7 @@ def generate_tables():
         f.write("\n\n---\n\n")
         f.write("# Paper Reported vs Reproduction Comparison (Canonical 6 Models)\n\n")
         f.write(df_to_markdown(df_comp))
-        f.write("\n\n*Note: Differences are reported as (Our Accuracy - Paper Accuracy). Runtime comparison reflects distinct quantities: the paper's table presents per-sample or per-batch inference latency in milliseconds, whereas our reproduction records end-to-end training epoch duration on GPU/CPU.*\n")
+        f.write("\n\n*Note: Differences are reported as (Our Accuracy - Paper Accuracy). Paper training times (142/325/340 ms for NSL-KDD; 323/442/455 ms for UNSW-NB15) are labeled by the authors as training time. Our reproduction measures total 20-epoch wall-clock training time in seconds. The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons.*\n")
     print(f"[SAVED] {md_file}")
 
     return df_summary, df_comp

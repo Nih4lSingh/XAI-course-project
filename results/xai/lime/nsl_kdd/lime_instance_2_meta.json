@@ -5,61 +5,61 @@
   "predicted_class": 1,
   "predicted_class_name": "Normal",
   "probabilities": {
-    "DoS": 4.3892995904570853e-07,
+    "DoS": 4.38930783275282e-07,
     "Normal": 0.9999995231628418,
-    "Probe": 2.3590263964479163e-08,
-    "R2L": 4.0386925803659324e-08,
-    "U2R": 1.1976136748970134e-09
+    "Probe": 2.3590352782321133e-08,
+    "R2L": 4.038700396336026e-08,
+    "U2R": 1.1976158953430627e-09
   },
   "top_features": [
     {
       "feature_condition": "wrong_fragment <= 0.00",
-      "weight": 0.5086978985443913,
+      "weight": 0.5086979171942798,
       "direction": "positive"
     },
     {
       "feature_condition": "serror_rate <= 0.00",
-      "weight": 0.4328626009543531,
+      "weight": 0.4328626118637057,
       "direction": "positive"
     },
     {
       "feature_condition": "root_shell <= 0.00",
-      "weight": 0.256661644775758,
+      "weight": 0.25666168078070734,
       "direction": "positive"
     },
     {
       "feature_condition": "0.00 < logged_in <= 1.00",
-      "weight": 0.2438122265124762,
+      "weight": 0.24381222889048856,
       "direction": "positive"
     },
     {
       "feature_condition": "rerror_rate <= 0.00",
-      "weight": 0.1586952779416252,
+      "weight": 0.15869527397173552,
       "direction": "positive"
     },
     {
       "feature_condition": "dst_host_rerror_rate <= 0.00",
-      "weight": 0.15297621218467194,
+      "weight": 0.1529762114250331,
       "direction": "positive"
     },
     {
       "feature_condition": "is_guest_login <= 0.00",
-      "weight": -0.1481544457623203,
+      "weight": -0.14815444588517246,
       "direction": "negative"
     },
     {
       "feature_condition": "num_file_creations <= 0.00",
-      "weight": 0.1429701187013115,
+      "weight": 0.14297007769086495,
       "direction": "positive"
     },
     {
       "feature_condition": "0.51 < dst_host_same_srv_rate <= 1.00",
-      "weight": 0.09627496624732045,
+      "weight": 0.09627498061776182,
       "direction": "positive"
     },
     {
       "feature_condition": "num_shells <= 0.00",
-      "weight": -0.05483698600732363,
+      "weight": -0.054837002204252965,
       "direction": "negative"
     }
   ]

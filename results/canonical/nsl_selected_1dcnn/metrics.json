@@ -36,5 +36,7 @@
   "experiment_id": "NSL_SELECTED_1DCNN",
   "training_time_seconds": 85.99280947700004,
   "training_time_ms": 85992.80947700003,
-  "num_features": 36
+  "num_features": 36,
+  "num_real_features": 36,
+  "padding_zeros": 0
 }

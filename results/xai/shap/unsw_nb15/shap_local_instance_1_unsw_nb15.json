@@ -3,68 +3,68 @@
   "dataset": "unsw_nb15",
   "actual_class": "Normal",
   "predicted_class": "Normal",
-  "base_value": 0.24300643570479508,
-  "prediction_probability": 0.9999736547470093,
+  "base_value": 0.2519693521808784,
+  "prediction_probability": 0.9999696016311646,
   "feature_contributions": [
-    {
-      "feature": "sttl",
-      "value": 0.12156862765550613,
-      "shap_contribution": 0.311821739047074,
-      "direction": "positive"
-    },
     {
       "feature": "dttl",
       "value": 0.11417322605848312,
-      "shap_contribution": 0.2703183668166379,
+      "shap_contribution": 0.2466956323799154,
+      "direction": "positive"
+    },
+    {
+      "feature": "sttl",
+      "value": 0.12156862765550613,
+      "shap_contribution": 0.2408783474008398,
+      "direction": "positive"
+    },
+    {
+      "feature": "ct_state_ttl",
+      "value": 0.0,
+      "shap_contribution": 0.07156013523433005,
       "direction": "positive"
     },
     {
       "feature": "swin",
       "value": 1.0,
-      "shap_contribution": 0.14401999035605614,
+      "shap_contribution": 0.0655389402424139,
       "direction": "positive"
     },
     {
-      "feature": "dmean",
-      "value": 0.5379999876022339,
-      "shap_contribution": -0.08326238684418184,
-      "direction": "negative"
-    },
-    {
-      "feature": "ct_state_ttl",
-      "value": 0.0,
-      "shap_contribution": 0.08262045689008946,
-      "direction": "positive"
-    },
-    {
-      "feature": "sload",
-      "value": 0.00018210335110779852,
-      "shap_contribution": 0.04444976035048975,
-      "direction": "positive"
-    },
-    {
-      "feature": "sloss",
-      "value": 0.0013160367961972952,
-      "shap_contribution": -0.041167049785668985,
-      "direction": "negative"
-    },
-    {
-      "feature": "dinpkt",
-      "value": 7.938087037473451e-06,
-      "shap_contribution": 0.02258231900509937,
+      "feature": "smean",
+      "value": 0.02432432398200035,
+      "shap_contribution": 0.03945397433618833,
       "direction": "positive"
     },
     {
       "feature": "ct_dst_sport_ltm",
       "value": 0.0,
-      "shap_contribution": 0.00924061834031305,
+      "shap_contribution": 0.027908465596605096,
       "direction": "positive"
     },
     {
-      "feature": "dbytes",
-      "value": 0.003413671860471368,
-      "shap_contribution": -0.0036565951336946486,
-      "direction": "negative"
+      "feature": "sinpkt",
+      "value": 5.264076207822654e-06,
+      "shap_contribution": 0.016380661414907828,
+      "direction": "positive"
+    },
+    {
+      "feature": "dtcpb",
+      "value": 0.8446008563041687,
+      "shap_contribution": 0.014845379601910458,
+      "direction": "positive"
+    },
+    {
+      "feature": "dload",
+      "value": 0.6831895709037781,
+      "shap_contribution": 0.013237889535694386,
+      "direction": "positive"
+    },
+    {
+      "feature": "dinpkt",
+      "value": 7.938087037473451e-06,
+      "shap_contribution": 0.011500823707480996,
+      "direction": "positive"
     }
   ]
 }

@@ -24,27 +24,37 @@ Each entry follows the strict scientific traceability format:
 
 ---
 
-### Deviation / Ambiguity 2: NSL-KDD Feature Dimensionality (35 vs 36)
-* **Issue:** Mathematical mismatch between original NSL-KDD features, 6 dropped features, and the paper's reported 36 selected features.
-* **Paper states:** The paper states that 6 features (`srv_serror_rate`, `dst_host_srv_rerror_rate`, `num_root`, `dst_host_serror_rate`, `dst_host_srv_serror_rate`, `srv_rerror_rate`) are dropped due to $|PCC| > 0.95$, and that the resulting dataset contains 36 features. It then reshapes the input into a $6 \times 6 = 36$ grid for 2D-CNN.
-* **Our implementation:** Standard NSL-KDD contains 41 traffic predictors (plus 1 attack class column and 1 difficulty level column). Removing 6 predictors leaves exactly $41 - 6 = 35$ features. To construct the $6 \times 6 = 36$ input grid for 2D-CNN, we either append 1 deterministic zero-padding feature or investigate if the original authors retained `difficulty_level` before dropping. For target-safety and consistency, we maintain the 35 true network predictors for DNN and 1D-CNN, and zero-pad 1 element to yield the $6 \times 6$ grid for 2D-CNN.
-* **Reason:** Preserves 100% integrity of network traffic predictors while satisfying the $6 \times 6$ geometric requirement of the 2D-CNN.
-* **Effect on replication:** Allows flawless execution of the 2D-CNN without distorting feature semantics.
+### Deviation / Ambiguity 2: NSL-KDD Feature Dimensionality (42 raw -> 36 selected)
+* **Issue:** Mathematical alignment between raw NSL-KDD attributes, 6 dropped features, and the paper's reported 36 selected features.
+* **Paper states:** The paper states that 6 features (`srv_serror_rate`, `dst_host_srv_rerror_rate`, `num_root`, `dst_host_serror_rate`, `dst_host_srv_serror_rate`, `srv_rerror_rate`) are dropped due to $|PCC| > 0.95$, and that the resulting dataset contains 36 features. It reshapes the input into a $6 \times 6 = 36$ grid for 2D-CNN. However, the paper's feature table lists only 41 traffic attributes and omits `difficulty_level`.
+* **Our implementation:** In the original NSL-KDD dataset, there are 41 traffic attributes, 1 binary/multi-class label, and 1 difficulty score attribute (43 columns total). To isolate the ground-truth target label and prevent leakage, target labels are removed. We chose to retain `difficulty_level` as an input predictor, yielding 42 raw predictors. Dropping the 6 collinear features yields exactly $42 - 6 = 36$ selected features, mapping into a $6 \times 6$ grid with **0 padding zeros**. In an alternative strict-traffic ablation where `difficulty_level` is discarded as non-network metadata, 41 raw predictors minus 6 yields 35 features, requiring 1 zero padding cell. Retaining `difficulty_level` to achieve the canonical 36 features is our **project reconstruction decision**, not a mechanical copy of a procedure specified in the paper.
+* **Reason:** Reconciles the paper's reported 36-feature dimension and zero-padded $6 \times 6$ grid without introducing synthetic padding.
+* **Effect on replication:** Guarantees exact agreement with the paper's canonical 36-feature model input shape.
 * **Confidence:** High.
 
 ---
 
-### Deviation / Ambiguity 3: UNSW-NB15 "label" Column in Feature Selection Table
-* **Issue:** The paper lists `label` as one of the 6 features removed by Pearson correlation.
-* **Paper states:** Section 3.2 explicitly lists the removed features for UNSW-NB15: `ct_src_dport_ltm`, `loss`, `dwin`, `ct_ftp_cmd`, `label`, `ct_srv_dst`.
-* **Our implementation:** In the UNSW-NB15 dataset, `label` is the ground-truth binary target column ($0 = \text{Normal}, 1 = \text{Attack}$), whereas `attack_cat` is the multi-class attack category. If `label` were included in the feature matrix $X$ prior to Pearson correlation, it would constitute target leakage. In our implementation, `label` and `attack_cat` are separated immediately upon ingestion into the target vector $y$. The 5 redundant predictors (`ct_src_dport_ltm`, `loss` [i.e. `sloss`/`dloss`], `dwin`, `ct_ftp_cmd`, `ct_srv_dst`) are dropped from the input feature set.
-* **Reason:** Target leakage violates fundamental machine learning principles. The paper's authors likely computed a correlation matrix across all dataframe columns (including the binary target `label`) and observed high correlation with attack status.
-* **Effect on replication:** Prevents artificial inflation of classification metrics and ensures scientific defensibility.
+### Deviation / Ambiguity 3: UNSW-NB15 "label" and "loss" Columns in Feature Selection (42 raw -> 38 selected)
+* **Issue:** The paper lists `label` and `loss` among the 6 features removed by Pearson correlation, but reports 38 selected features.
+* **Paper states:** Section 3.2 lists 6 removed features for UNSW-NB15: `ct_src_dport_ltm`, `loss`, `dwin`, `ct_ftp_cmd`, `label`, `ct_srv_dst`. However, the paper does not present the arithmetic "$42 - 4 = 38$".
+* **Our implementation:** In UNSW-NB15, `label` is the ground-truth binary classification target ($0 = \text{Normal}, 1 = \text{Attack}$) and `attack_cat` is the multi-class target. Retaining `label` inside the predictor set $X$ would cause catastrophic target leakage. In our pipeline, `label` and `attack_cat` are isolated immediately upon ingestion into the target vector $y$, leaving 42 input predictors. Furthermore, UNSW-NB15 contains no column named `loss`; it contains source packet loss (`sloss`) and destination packet loss (`dloss`). Dropping the 4 unambiguous collinear traffic predictors (`ct_src_dport_ltm`, `dwin`, `ct_ftp_cmd`, `ct_srv_dst`) while retaining `sloss` and `dloss` leaves exactly **38 selected features**. For the 2D-CNN, the 38 features are reshaped into a $7 \times 7 = 49$ grid with **exactly 11 trailing zero-padding elements**. Isolating `label` to avoid leakage and retaining `sloss`/`dloss` to yield 38 selected features are **project reconstruction decisions**, not paper arithmetic.
+* **Reason:** Strictly prevents target leakage while maintaining architectural compatibility with the paper's 38 selected features and $7 \times 7$ grid.
+* **Effect on replication:** Prevents artificial target leakage and achieves the canonical 38 input features with 11 padding zeros.
 * **Confidence:** High.
 
 ---
 
-### Deviation / Ambiguity 4: Incomplete 1D-CNN Architecture Specification
+### Deviation / Ambiguity 4: 2D-CNN Fig. 5 Topology and Spatial Padding on Small Grids
+* **Issue:** Paper Fig. 5 illustrates 3 Conv2D layers and 3 MaxPooling2D layers. On small $6 \times 6$ and $7 \times 7$ grids, standard valid pooling leads to negative or zero spatial dimensions.
+* **Paper states:** Figure 5 illustrates Conv2D(64, 3x3) $\to$ MaxPool2D(2x2) $\to$ Conv2D(32, 3x3) $\to$ MaxPool2D(2x2) $\to$ Conv2D(32, 3x3) $\to$ MaxPool2D(2x2) $\to$ Flatten $\to$ Dense(5, softmax).
+* **Our implementation:** We implement the exact 3-Conv / 3-Pool architecture with deterministic `padding='same'` on all Conv2D and MaxPooling2D layers. For NSL-KDD ($6 \times 6$), the spatial transitions proceed: $6 \times 6 \to 3 \times 3 \to 2 \times 2 \to 1 \times 1$, flattening to 32 units. For UNSW-NB15 ($7 \times 7$), the spatial transitions proceed: $7 \times 7 \to 4 \times 4 \to 2 \times 2 \to 1 \times 1$, flattening to 32 units.
+* **Reason:** Preserves every single convolutional and pooling layer depicted in the paper's canonical Figure 5 without dropping any pooling operations.
+* **Effect on replication:** Fully adheres to the paper's diagrammatic architecture.
+* **Confidence:** High.
+
+---
+
+### Deviation / Ambiguity 5: 1D-CNN Inferred Filter Progression
 * **Issue:** 1D-CNN filter counts and layer depths are omitted from the text.
 * **Paper states:** Section 4.2 specifies `kernel_size = 3`, `pool_size = 2`, `activation = 'relu'`, `optimizer = Adam`, `learning_rate = 0.001`, `weight_decay = 0.0001`, and `epochs = 20`. The number of convolutional layers and filter dimensions are unstated.
 * **Our implementation:** We implemented an architecture consistent with the 2D-CNN pattern: Conv1D(64, kernel_size=3, padding='same', activation='relu') $\to$ MaxPool1D(pool_size=2) $\to$ Conv1D(32, kernel_size=3, padding='same', activation='relu') $\to$ Flatten $\to$ Dense(5, activation='softmax'). This is cataloged as `INFERRED PARAMETER`.
@@ -54,17 +64,17 @@ Each entry follows the strict scientific traceability format:
 
 ---
 
-### Deviation / Ambiguity 5: 2D-CNN Spatial Feature Ordering
-* **Issue:** The exact spatial mapping (which feature goes to which $(i, j)$ cell in the $6 \times 6$ or $7 \times 7$ grid) is not specified.
-* **Paper states:** NSL-KDD is reshaped to $6 \times 6 \times 1$; UNSW-NB15 is reshaped to $7 \times 7 \times 1$ with zero padding.
-* **Our implementation:** We use deterministic row-major ordering based on the standardized column sequence after feature selection, zero-padding the final cells up to the target grid capacity. The mapping is saved to `feature_to_grid_mapping.json`.
-* **Reason:** CNN spatial inductive bias depends on adjacency; without an explicit coordinate map, deterministic natural ordering is the only reproducible, non-arbitrary choice.
-* **Effect on replication:** Guarantees 100% deterministic reproducibility across runs and environments.
+### Deviation / Ambiguity 6: DNN Architecture Standardization
+* **Issue:** Discrepancy between paper specification and third-party references (e.g. 128 -> 64 -> 32).
+* **Paper states:** Section 4.1 specifies three dense layers with 64 units each and ReLU activation, followed by a 5-unit Softmax classification layer ($64 \to 64 \to 64 \to 5$).
+* **Our implementation:** We audited and strictly enforce Dense(64, ReLU) $\to$ Dense(64, ReLU) $\to$ Dense(64, ReLU) $\to$ Dense(5, Softmax). All legacy scripts or documentation mentioning 128 $\to$ 64 $\to$ 32 were purged.
+* **Reason:** Full fidelity to Section 4.1 text.
+* **Effect on replication:** Exact structural alignment with Sharma et al. (2024).
 * **Confidence:** High.
 
 ---
 
-### Deviation / Ambiguity 6: Training Batch Size Not Specified
+### Deviation / Ambiguity 7: Training Batch Size Not Specified
 * **Issue:** Batch size for DNN, 1D-CNN, and 2D-CNN is omitted from the publication.
 * **Paper states:** Section 4 does not report a batch size.
 * **Our implementation:** We configure `batch_size = 64` (with support for 32). This is recorded as `INFERRED PARAMETER`.
@@ -74,10 +84,21 @@ Each entry follows the strict scientific traceability format:
 
 ---
 
-### Deviation / Ambiguity 7: Training Time Reporting Context
-* **Issue:** The paper reports training times of $\approx 142$ ms for NSL-KDD DNN, $\approx 325$ ms for 1D-CNN, etc., without specifying whether this represents per-epoch step time or total runtime, nor the exact CPU/GPU model.
-* **Paper states:** Training times given as milliseconds (e.g. 142 ms, 325 ms, 340 ms).
-* **Our implementation:** We record high-resolution timestamps (`time.perf_counter()`) for total training time, per-epoch average time, and per-sample inference latency, alongside complete system hardware and software specifications.
-* **Reason:** Training time in milliseconds on modern hardware typically reflects single-epoch or single-batch execution rather than 20 full epochs over $>100,000$ samples.
-* **Effect on replication:** Enables rigorous academic interpretation without claiming false hardware parity.
+### Deviation / Ambiguity 8: Training Time Terminology & Comparability
+* **Issue:** The paper reports 142/325/340 ms (NSL-KDD) and 323/442/455 ms (UNSW-NB15) as "training times" without specifying execution hardware, epoch breakdown, or profiling scope.
+* **Paper states:** Table 3 and accompanying text report these figures strictly as "training time" in milliseconds.
+* **Our implementation:** We label the published figures strictly as `"Paper-reported training time"` and our measured times as `"Our measured total 20-epoch wall-clock training time"`. In comparative tables, headers are formatted as `Paper Training Time (ms)` and `Our Total Training Time (s)`. We record high-resolution timestamps (`time.perf_counter()`) for total training time, per-epoch average, and inference latency. We add the explicit caveat: *"The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons."* We do NOT describe the paper's figures as inference latency, per-sample latency, or per-batch inference.
+* **Reason:** Adheres strictly to the paper's own terminology while ensuring transparent, scientifically rigorous reporting.
+* **Effect on replication:** Eliminates mischaracterization of published metrics while recording empirical execution times faithfully.
+* **Confidence:** High.
+
+---
+
+### Deviation / Ambiguity 9: UNSW-NB15 SHAP Top Feature 'data' Inconsistency
+* **Issue:** Sharma et al. cite `data` as the #1 most important feature for UNSW-NB15 Normal global SHAP attribution, but `data` does not exist in the UNSW-NB15 dataset.
+* **Paper states:** Figure 7 and Section 5.2 describe `data` as the top-ranking feature driving Normal flow classification in UNSW-NB15.
+* **Our implementation:** We document that a feature named `data` is neither in the UNSW-NB15 dataset schema nor in the paper's own feature table (Table 2). In our empirical replication, we compute SHAP strictly on the canonical 38-feature set and faithfully report the actual top-ranking feature: `dttl` (destination time to live, mean |SHAP| = 0.15098), followed by `swin`, `sttl`, `ct_dst_sport_ltm`, and `ct_state_ttl`.
+* **Reason:** Zero fabrication: we report empirical outputs from the real dataset rather than inserting or inventing non-existent features.
+* **Effect on replication:** Completely transparent audit trail resolving a published textual inconsistency.
+* **Confidence:** High.
 * **Confidence:** High.

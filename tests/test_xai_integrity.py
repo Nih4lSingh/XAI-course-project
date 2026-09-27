@@ -56,10 +56,85 @@ class TestXAIIntegrity(unittest.TestCase):
         expected_names = set(self.unsw_data["selected_features"])
         self.assertEqual(ranked_names, expected_names, "Feature names in UNSW SHAP ranking do not match selected features")
 
-    def test_xai_target_class_alignment(self):
-        """Verify target classes align with Sharma et al. (2024): NSL -> DoS (0), UNSW -> Normal (4)."""
-        self.assertEqual(NSL_KDD_CLASS_MAPPING[0], "DoS")
-        self.assertEqual(UNSW_NB15_CLASS_MAPPING[4], "Normal")
+    def test_nsl_shap_target_class_and_sampling(self):
+        """Verify NSL-KDD SHAP targets DoS (0) using a seed-controlled 50-sample set without stratification."""
+        meta_file = self.xai_dir / "shap" / "nsl_kdd" / "shap_global_nsl_kdd_meta.json"
+        with open(meta_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        self.assertEqual(data["target_class_index"], 0, "NSL SHAP must target class index 0")
+        self.assertEqual(data["target_class_name"], "DoS", "NSL SHAP must target 'DoS'")
+        self.assertEqual(data["num_test_samples"], 50, "Must evaluate exactly 50 test samples")
+        self.assertEqual(len(data["test_sample_indices"]), 50, "Must record exactly 50 sample indices")
+        
+        # Verify sampling strategy wording (must NOT be called stratified)
+        sampling_strat = data.get("sampling_strategy", "")
+        self.assertEqual(sampling_strat, "seed-controlled random sample of 50 test instances")
+        self.assertNotIn("stratified", sampling_strat.lower(), "50 SHAP samples must NOT be described as stratified")
+
+        # Verify monotonicity of ranking (class-specific mean(abs(SHAP)) descending)
+        ranking = data["feature_importance_ranking"]
+        scores = [item["mean_abs_shap"] for item in ranking]
+        for i in range(len(scores) - 1):
+            self.assertGreaterEqual(scores[i], scores[i + 1], "SHAP scores must be monotonically descending")
+
+        # Verify top feature is serror_rate
+        self.assertEqual(ranking[0]["feature"], "serror_rate", "Top feature for DoS must be serror_rate")
+
+    def test_unsw_shap_target_class_and_sampling(self):
+        """Verify UNSW-NB15 SHAP targets Normal (4), identifies dttl as empirical top, and excludes 'data'."""
+        meta_file = self.xai_dir / "shap" / "unsw_nb15" / "shap_global_unsw_nb15_meta.json"
+        with open(meta_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        self.assertEqual(data["target_class_index"], 4, "UNSW SHAP must target class index 4")
+        self.assertEqual(data["target_class_name"], "Normal", "UNSW SHAP must target 'Normal'")
+        self.assertEqual(data["num_test_samples"], 50, "Must evaluate exactly 50 test samples")
+        self.assertEqual(len(data["test_sample_indices"]), 50, "Must record exactly 50 sample indices")
+
+        sampling_strat = data.get("sampling_strategy", "")
+        self.assertEqual(sampling_strat, "seed-controlled random sample of 50 test instances")
+        self.assertNotIn("stratified", sampling_strat.lower(), "50 SHAP samples must NOT be described as stratified")
+
+        ranking = data["feature_importance_ranking"]
+        scores = [item["mean_abs_shap"] for item in ranking]
+        for i in range(len(scores) - 1):
+            self.assertGreaterEqual(scores[i], scores[i + 1], "SHAP scores must be monotonically descending")
+
+        # Verify empirical top feature is dttl
+        self.assertEqual(ranking[0]["feature"], "dttl", "Empirical top feature for Normal must be dttl")
+        
+        # Verify non-existent feature 'data' from paper text does not appear
+        ranked_features = [item["feature"] for item in ranking]
+        self.assertNotIn("data", ranked_features, "Non-existent feature 'data' must not be in UNSW ranking")
+
+    def test_shap_beeswarm_and_plot_artifacts(self):
+        """Verify same-class beeswarm plots and global importance bar plots exist and are valid."""
+        artifacts = [
+            self.xai_dir / "shap" / "nsl_kdd" / "shap_beeswarm_summary_nsl_kdd.png",
+            self.xai_dir / "shap" / "nsl_kdd" / "shap_global_importance_nsl_kdd.png",
+            self.xai_dir / "shap" / "unsw_nb15" / "shap_beeswarm_summary_unsw_nb15.png",
+            self.xai_dir / "shap" / "unsw_nb15" / "shap_global_importance_unsw_nb15.png",
+        ]
+        for p in artifacts:
+            self.assertTrue(p.exists(), f"Missing SHAP plot artifact: {p}")
+            self.assertGreater(p.stat().st_size, 1000, f"SHAP plot artifact appears empty: {p}")
+
+    def test_lime_artifacts_integrity(self):
+        """Verify LIME explanation artifacts exist and contain valid explanations."""
+        lime_meta_files = [
+            self.xai_dir / "lime" / "nsl_kdd" / "lime_instance_0_meta.json",
+            self.xai_dir / "lime" / "nsl_kdd" / "lime_instance_2_meta.json",
+            self.xai_dir / "lime" / "unsw_nb15" / "lime_instance_1_meta.json",
+            self.xai_dir / "lime" / "unsw_nb15" / "lime_instance_5_meta.json",
+        ]
+        for p in lime_meta_files:
+            self.assertTrue(p.exists(), f"Missing LIME meta file: {p}")
+            with open(p, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            self.assertIn("predicted_class", data)
+            self.assertIn("top_features", data)
+            self.assertGreater(len(data["top_features"]), 0)
 
 
 if __name__ == "__main__":

@@ -166,6 +166,22 @@ def run_experiment(
             name=experiment_id
         )
 
+    # Determine real feature count and zero padding
+    if dataset_name == "nsl_kdd":
+        if feature_mode == "selected":
+            num_real_features = 36
+            padding_zeros = 0
+        else:
+            num_real_features = 42
+            padding_zeros = 7 if model_type == "2DCNN" else 0
+    else:
+        if feature_mode == "selected":
+            num_real_features = 38
+            padding_zeros = 11 if model_type == "2DCNN" else 0
+        else:
+            num_real_features = 42
+            padding_zeros = 7 if model_type == "2DCNN" else 0
+
     # Train and evaluate
     metrics = train_and_evaluate_model(
         experiment_id=experiment_id,
@@ -179,6 +195,11 @@ def run_experiment(
         class_names=class_names,
         epochs=epochs,
         batch_size=batch_size,
+        learning_rate=0.001,
+        weight_decay=0.0001,
+        dropout_rate=dropout_rate,
+        num_real_features=num_real_features,
+        padding_zeros=padding_zeros,
         verbose=verbose
     )
 

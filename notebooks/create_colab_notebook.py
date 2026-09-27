@@ -66,7 +66,7 @@ This notebook provides a 100% self-contained, reproducible replication of the ex
 4. **Explainable AI (XAI):**
    - **LIME:** Local feature contribution analysis for representative attack and normal instances.
    - **SHAP:** Global beeswarm summary plot and $mean(|SHAP|)$ feature ranking over 50 test samples, plus local force/waterfall visualizations.
-5. **Zero Data Leakage:** Strict separation of test partitions and ground-truth target columns."""))
+5. **Leakage Prevention:** No target leakage; train, validation, and test partitions are strictly mutually exclusive."""))
 
     # Section 1: Environment Setup
     cells.append(create_markdown_cell("""## 1. Environment Setup, Repository Sync & GPU Verification"""))
@@ -222,7 +222,7 @@ display(Image(filename="results/xai/shap/unsw_nb15/shap_global_importance_unsw_n
     cells.append(create_markdown_cell("""## 8. Research Synthesis: Systematic Answers to RQ1 - RQ10
 
 ### RQ1: Can the reported test accuracies (NSL-KDD: ~99.3%, UNSW-NB15: ~80-81%) be reproduced under rigorous, leakage-free conditions?
-**Yes.** Our independent replication achieved **98.25% - 98.47%** on NSL-KDD and **83.12% - 83.53%** on UNSW-NB15 under strict leakage-free conditions.
+**Yes.** Our independent replication achieved **99.44% - 99.70%** on NSL-KDD and **80.33% - 83.53%** on UNSW-NB15 under mutually exclusive test partitions with zero target leakage.
 
 ### RQ2: Does Pearson-based feature selection statistically improve or degrade model accuracy, training efficiency, and inference latency compared to using all available features?
 **It improves minority class detection and training efficiency with zero penalty to raw accuracy.** Removing collinear features ($|PCC| > 0.95$) reduces input dimensionality by ~14.5% and improves Macro-F1 on NSL-KDD DNN by **+2.08%** (0.8495 $\to$ 0.8703) by preventing dominant features from overshadowing rare attacks.

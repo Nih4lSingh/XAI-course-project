@@ -6,60 +6,60 @@
   "predicted_class_name": "DoS",
   "probabilities": {
     "DoS": 0.9999891519546509,
-    "Normal": 3.119906182291743e-07,
+    "Normal": 3.119906466508837e-07,
     "Probe": 9.772989869816229e-06,
-    "R2L": 7.256261937982345e-07,
+    "R2L": 7.256262506416533e-07,
     "U2R": 3.191692954374048e-08
   },
   "top_features": [
     {
       "feature_condition": "wrong_fragment <= 0.00",
-      "weight": -0.5612775056650946,
+      "weight": -0.561277498327448,
       "direction": "negative"
     },
     {
       "feature_condition": "0.00 < serror_rate <= 1.00",
-      "weight": 0.3950212090958372,
+      "weight": 0.39502123039956827,
       "direction": "positive"
     },
     {
       "feature_condition": "logged_in <= 0.00",
-      "weight": 0.20853273607042683,
+      "weight": 0.208532742369279,
       "direction": "positive"
     },
     {
       "feature_condition": "root_shell <= 0.00",
-      "weight": -0.18041729344429008,
+      "weight": -0.1804173062950997,
       "direction": "negative"
     },
     {
       "feature_condition": "land <= 0.00",
-      "weight": -0.17039021141637806,
+      "weight": -0.17039020523479462,
       "direction": "negative"
     },
     {
       "feature_condition": "num_shells <= 0.00",
-      "weight": -0.16966410199928753,
+      "weight": -0.16966414236887178,
       "direction": "negative"
     },
     {
       "feature_condition": "count > 0.28",
-      "weight": 0.1369629336830997,
+      "weight": 0.13696293529976722,
       "direction": "positive"
     },
     {
       "feature_condition": "is_guest_login <= 0.00",
-      "weight": 0.10557720973622661,
+      "weight": 0.10557720704397179,
       "direction": "positive"
     },
     {
       "feature_condition": "dst_host_rerror_rate <= 0.00",
-      "weight": -0.09203329299915838,
+      "weight": -0.09203329373884893,
       "direction": "negative"
     },
     {
       "feature_condition": "urgent <= 0.00",
-      "weight": 0.0515519421710279,
+      "weight": 0.05155194460744101,
       "direction": "positive"
     }
   ]

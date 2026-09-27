@@ -4,11 +4,15 @@ service
 state
 spkts
 dpkts
+sbytes
+dbytes
 rate
 sttl
 dttl
 sload
 dload
+sloss
+dloss
 sinpkt
 dinpkt
 sjit
@@ -27,6 +31,7 @@ ct_srv_src
 ct_state_ttl
 ct_dst_ltm
 ct_dst_sport_ltm
+ct_dst_src_ltm
 is_ftp_login
 ct_flw_http_mthd
 ct_src_ltm

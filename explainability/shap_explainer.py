@@ -56,26 +56,34 @@ class ShapExplainerWrapper:
         X_test_50: np.ndarray,
         test_indices_50: np.ndarray,
         output_dir: Path,
-        dataset_name: str = "dataset"
+        dataset_name: str = "dataset",
+        target_class_index: int = 0,
+        target_class_name: Optional[str] = None
     ) -> Dict:
         """
-        Executes paper's global SHAP analysis across 50 testing samples.
+        Executes paper's global SHAP analysis across 50 testing samples for a specific target class.
+        NSL-KDD: DoS (Class 0)
+        UNSW-NB15: Normal (Class 4)
         """
         output_dir.mkdir(parents=True, exist_ok=True)
-        print(f"[SHAP] Computing SHAP values for {len(X_test_50)} test instances...")
+        if target_class_name is None:
+            target_class_name = self.class_names[target_class_index]
+
+        print(f"[SHAP] Computing SHAP values for {len(X_test_50)} test instances (Target Class: {target_class_name} [idx={target_class_index}])...")
 
         # Compute SHAP values
         shap_values = self.explainer.shap_values(X_test_50, nsamples=100)
-        # shap_values is a list of [n_samples, n_features] for each class or array (50, features, classes)
 
+        # Extract SHAP values for the specific target class
         if isinstance(shap_values, list):
-            # Shape: list of (50, n_features) for each class
-            # Calculate mean absolute SHAP across all classes and samples
-            abs_shap = np.mean([np.abs(sv) for sv in shap_values], axis=0)  # (50, n_features)
-            mean_abs_shap = np.mean(abs_shap, axis=0)  # (n_features,)
+            # List of (50, n_features), one per class
+            sv_class = shap_values[target_class_index]
         else:
-            # (50, n_features, n_classes)
-            mean_abs_shap = np.mean(np.abs(shap_values), axis=(0, 2))
+            # Array of shape (50, n_features, n_classes)
+            sv_class = shap_values[:, :, target_class_index]
+
+        # Calculate mean absolute SHAP for the target class across the 50 test samples
+        mean_abs_shap = np.mean(np.abs(sv_class), axis=0)  # (n_features,)
 
         # Rank features by mean(|SHAP|)
         ranked_indices = np.argsort(mean_abs_shap)[::-1]
@@ -88,11 +96,11 @@ class ShapExplainerWrapper:
             for rank, idx in enumerate(ranked_indices)
         ]
 
-        print(f"\n[SHAP Top 10 Features - {dataset_name.upper()}]:")
+        print(f"\n[SHAP Top 10 Features - {dataset_name.upper()} (Class: {target_class_name})]:")
         for item in ranking[:10]:
             print(f"  {item['rank']}. {item['feature']}: {item['mean_abs_shap']:.5f}")
 
-        # 1. Bar Plot of Feature Importance
+        # 1. Bar Plot of Feature Importance for target class
         plt.figure(figsize=(9, 7))
         top_k = min(15, len(ranking))
         top_feats = [r["feature"] for r in ranking[:top_k]][::-1]
@@ -100,38 +108,36 @@ class ShapExplainerWrapper:
 
         plt.barh(range(top_k), top_scores, color="#1f77b4", align="center")
         plt.yticks(range(top_k), top_feats)
-        plt.xlabel("Mean Absolute SHAP Value (Global Impact)", fontsize=10)
-        plt.title(f"SHAP Global Feature Importance ({dataset_name.upper()})\n(Evaluated over 50 test samples)", fontsize=11)
+        plt.xlabel(f"Mean Absolute SHAP Value (Class: {target_class_name})", fontsize=10)
+        plt.title(f"SHAP Global Feature Importance ({dataset_name.upper()} - Class: {target_class_name})\n(Seed-controlled random sample of 50 test instances)", fontsize=11)
         plt.tight_layout()
         bar_plot_path = output_dir / f"shap_global_importance_{dataset_name}.png"
         plt.savefig(bar_plot_path, dpi=300)
         plt.close()
         print(f"[SHAP] Saved global importance bar plot to {bar_plot_path}")
 
-        # 2. Summary Beeswarm Plot for primary predicted class (e.g. Normal or Attack)
+        # 2. Summary Beeswarm Plot for target class
         plt.figure(figsize=(10, 8))
-        if isinstance(shap_values, list):
-            sv_to_plot = shap_values[1]  # Class 1 (Normal in NSL, Exploits in UNSW)
-        else:
-            sv_to_plot = shap_values[:, :, 1]
-
         shap.summary_plot(
-            sv_to_plot,
+            sv_class,
             X_test_50,
             feature_names=self.feature_names,
             show=False,
             max_display=15
         )
-        plt.title(f"SHAP Beeswarm Summary Plot ({dataset_name.upper()} - 50 Test Samples)", fontsize=12, pad=12)
+        plt.title(f"SHAP Beeswarm Summary Plot ({dataset_name.upper()} - Class: {target_class_name} - 50 Test Samples)", fontsize=12, pad=12)
         plt.tight_layout()
         summary_plot_path = output_dir / f"shap_beeswarm_summary_{dataset_name}.png"
         plt.savefig(summary_plot_path, dpi=300)
         plt.close()
         print(f"[SHAP] Saved beeswarm summary plot to {summary_plot_path}")
 
-        # Save metadata JSON
+        # Save metadata JSON with explicit target class and sampling strategy
         meta = {
             "dataset": dataset_name,
+            "target_class_index": int(target_class_index),
+            "target_class_name": str(target_class_name),
+            "sampling_strategy": "seed-controlled random sample of 50 test instances",
             "num_test_samples": len(X_test_50),
             "test_sample_indices": [int(idx) for idx in test_indices_50],
             "feature_importance_ranking": ranking

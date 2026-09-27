@@ -1,40 +1,54 @@
 {
-  "accuracy": 0.9967295357845939,
-  "precision_macro": 0.9570262081767632,
-  "recall_macro": 0.8737652745767805,
-  "f1_macro": 0.9035079526153706,
-  "precision_weighted": 0.9966939254424115,
-  "recall_weighted": 0.9967295357845939,
-  "f1_weighted": 0.9966858830660833,
+  "accuracy": 0.9949831713977265,
+  "precision_macro": 0.9306143596489349,
+  "recall_macro": 0.8538719630640592,
+  "f1_macro": 0.8698830094416552,
+  "precision_weighted": 0.9950768612587599,
+  "recall_weighted": 0.9949831713977265,
+  "f1_weighted": 0.994948973877305,
   "per_class": {
     "DoS": {
-      "precision": 0.99921554955112,
-      "recall": 0.9984323288625675,
-      "f1_score": 0.9988237856676105
+      "precision": 0.9959222627103939,
+      "recall": 0.9997387214770945,
+      "f1_score": 0.997826842837274
     },
     "Normal": {
-      "precision": 0.9964421252371917,
-      "recall": 0.9980993110002376,
-      "f1_score": 0.9972700296735905
+      "precision": 0.9993418690917794,
+      "recall": 0.9921002613447375,
+      "f1_score": 0.9957078986587183
     },
     "Probe": {
-      "precision": 0.993805918788713,
-      "recall": 0.9910775566231984,
-      "f1_score": 0.9924398625429554
+      "precision": 0.9778076664425017,
+      "recall": 0.9979409746053535,
+      "f1_score": 0.9877717391304348
     },
     "R2L": {
-      "precision": 0.9385245901639344,
-      "recall": 0.9196787148594378,
-      "f1_score": 0.9290060851926978
+      "precision": 0.88,
+      "recall": 0.9718875502008032,
+      "f1_score": 0.9236641221374046
     },
     "U2R": {
-      "precision": 0.8571428571428571,
-      "recall": 0.46153846153846156,
-      "f1_score": 0.6
+      "precision": 0.8,
+      "recall": 0.3076923076923077,
+      "f1_score": 0.4444444444444444
     }
   },
   "experiment_id": "NSL_SELECTED_2DCNN",
-  "training_time_seconds": 90.35385135900003,
-  "training_time_ms": 90353.85135900004,
-  "num_features": 36
+  "num_real_features": 36,
+  "num_features": 36,
+  "input_size": 36,
+  "input_shape": [
+    6,
+    6,
+    1
+  ],
+  "padding_zeros": 0,
+  "seed": 42,
+  "epochs": 20,
+  "batch_size": 64,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "dropout_rate": 0.0,
+  "training_time_seconds": 116.81435080000665,
+  "training_time_ms": 116814.35080000665
 }
