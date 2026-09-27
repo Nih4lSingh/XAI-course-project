@@ -190,17 +190,38 @@ def run_all_experiments(epochs: int = 20, batch_size: int = 64, run_sensitivity:
     df_comp.to_csv(comp_csv_path, index=False)
     print(f"[SAVED] Paper vs Reproduction table saved to {comp_csv_path}")
 
+    def _df_to_md(df: pd.DataFrame) -> str:
+        headers = list(df.columns)
+        lines = [
+            "| " + " | ".join(str(h) for h in headers) + " |",
+            "| " + " | ".join(["---"] * len(headers)) + " |"
+        ]
+        for _, row in df.iterrows():
+            lines.append("| " + " | ".join(str(row[h]) for h in headers) + " |")
+        return "\n".join(lines)
+
     # Export Markdown table
     md_table_path = reports_dir / "results_table.md"
     with open(md_table_path, "w", encoding="utf-8") as f:
         f.write("# Master Results Summary (12 Model Experiments)\n\n")
-        f.write(df_summary.to_markdown(index=False))
+        f.write(_df_to_md(df_summary))
         f.write("\n\n# Paper Reported vs Reproduction Comparison\n\n")
-        f.write(df_comp.to_markdown(index=False))
+        f.write(_df_to_md(df_comp))
     print(f"[SAVED] Markdown summary table saved to {md_table_path}")
 
     return df_summary
 
 
 if __name__ == "__main__":
-    run_all_experiments(epochs=20, batch_size=64)
+    import argparse
+    parser = argparse.ArgumentParser(description="Run all 14 models for Sharma et al. (2024) replication")
+    parser.add_argument("--epochs", type=int, default=20, help="Number of training epochs")
+    parser.add_argument("--batch_size", type=int, default=64, help="Batch size")
+    parser.add_argument("--force", action="store_true", help="Force retraining even if metrics exist")
+    args = parser.parse_args()
+
+    run_all_experiments(
+        epochs=args.epochs,
+        batch_size=args.batch_size,
+        skip_existing=not args.force
+    )

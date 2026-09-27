@@ -1,7 +1,7 @@
 {
   "experiment_id": "UNSW_SELECTED_DNN_DROPOUT_001",
-  "total_training_time_seconds": 44.617,
-  "total_training_time_ms": 44617.04,
+  "total_training_time_seconds": 74.9211,
+  "total_training_time_ms": 74921.05,
   "num_epochs_recorded": 0,
   "avg_epoch_time_seconds": null,
   "hardware_environment": {

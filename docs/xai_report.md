@@ -26,16 +26,16 @@ Features are ranked by **Mean Absolute SHAP Value** ($mean(|SHAP|)$) for each re
 
 | Rank | Feature Name | Mean Absolute SHAP ($mean(|SHAP|)$) |
 | :---: | :--- | :---: |
-| 1 | `serror_rate` | 0.14447 |
-| 2 | `logged_in` | 0.05023 |
-| 3 | `dst_host_same_src_port_rate` | 0.03798 |
-| 4 | `count` | 0.02916 |
-| 5 | `dst_host_srv_count` | 0.02378 |
-| 6 | `protocol_type` | 0.02090 |
-| 7 | `difficulty_level` | 0.01868 |
-| 8 | `dst_host_rerror_rate` | 0.01661 |
-| 9 | `wrong_fragment` | 0.01414 |
-| 10 | `flag` | 0.01273 |
+| 1 | `serror_rate` | 0.13955 |
+| 2 | `logged_in` | 0.05795 |
+| 3 | `dst_host_same_src_port_rate` | 0.03883 |
+| 4 | `dst_host_srv_count` | 0.03649 |
+| 5 | `count` | 0.02537 |
+| 6 | `protocol_type` | 0.02327 |
+| 7 | `dst_host_rerror_rate` | 0.02241 |
+| 8 | `difficulty_level` | 0.01880 |
+| 9 | `srv_count` | 0.01328 |
+| 10 | `wrong_fragment` | 0.01308 |
 
 ### 2.2 UNSW-NB15 SHAP Global Importance Ranking (Target Class: Normal)
 
@@ -52,10 +52,6 @@ Features are ranked by **Mean Absolute SHAP Value** ($mean(|SHAP|)$) for each re
 | 9 | `smean` | 0.01161 |
 | 10 | `service` | 0.00977 |
 
-> [!NOTE]
-> **UNSW-NB15 SHAP Feature Inconsistency in Published Paper**:
-> In Sharma et al. (2024), Figure 7 and text cite `data` as the #1 most important feature for UNSW-NB15 Normal global SHAP attribution. However, a feature named `data` does not exist in the UNSW-NB15 dataset schema or in the paper's own feature table (Table 2). Our empirical replication faithfully calculates and reports SHAP on the actual canonical feature set, identifying `dttl` (destination time to live) as the top feature receiving the largest attribution.
-
 ---
 
 ## 3. LIME Local Explanations
@@ -65,13 +61,3 @@ Representative test instances were audited using LIME TabularExplainer:
 - **UNSW-NB15:** Normal traffic instance and Exploits attack instance.
 
 High-resolution contribution plots and structured JSON explanations are archived in `results/xai/lime/` and `results/xai/shap/`.
-
----
-
-## 4. Methodological Interpretation & Non-Causal Framing
-
-These features receive the largest model attributions for the target class under study (`DoS` for NSL-KDD, `Normal` for UNSW-NB15). 
-
-> [!IMPORTANT]
-> **Non-Causal Disclaimer**:
-> SHAP and LIME explain the model's learned prediction behavior; they do not establish causal relationships between a feature and the underlying network attack. Attribution values reflect how strongly input perturbations shift output activations within the learned decision boundaries, rather than mechanistic physical causes in network protocol stacks.

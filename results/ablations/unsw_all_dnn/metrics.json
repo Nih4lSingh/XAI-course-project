@@ -1,55 +1,55 @@
 {
-  "accuracy": 0.8352039696872521,
-  "precision_macro": 0.7324252643035634,
-  "recall_macro": 0.6744879290466785,
-  "f1_macro": 0.6694191848742583,
-  "precision_weighted": 0.8178216802714997,
-  "recall_weighted": 0.8352039696872521,
-  "f1_weighted": 0.8125290131102408,
+  "accuracy": 0.8104837838421814,
+  "precision_macro": 0.774278280317032,
+  "recall_macro": 0.6877231449231311,
+  "f1_macro": 0.6654311242357347,
+  "precision_weighted": 0.8128535171371981,
+  "recall_weighted": 0.8104837838421814,
+  "f1_weighted": 0.7788205262777897,
   "per_class": {
     "DoS": {
-      "precision": 0.4741100323624595,
-      "recall": 0.07167318982387476,
-      "f1_score": 0.12452188695282618
+      "precision": 0.6612903225806451,
+      "recall": 0.020058708414872797,
+      "f1_score": 0.0389363722697056
     },
     "Exploits": {
-      "precision": 0.6827945776850887,
-      "recall": 0.882400503099452,
-      "f1_score": 0.7698698855620003
+      "precision": 0.6649682329999371,
+      "recall": 0.9496900548019046,
+      "f1_score": 0.7822258398697647
     },
     "Fuzzers": {
-      "precision": 0.6287973366625051,
-      "recall": 0.49851534147146154,
-      "f1_score": 0.5561280824438719
+      "precision": 0.6678476527900797,
+      "recall": 0.6219069613988782,
+      "f1_score": 0.6440591099342274
     },
     "Generic": {
-      "precision": 0.998812434509256,
-      "recall": 0.9714635140644109,
-      "f1_score": 0.9849481624358488
+      "precision": 0.999424436770268,
+      "recall": 0.9724,
+      "f1_score": 0.9857270294380018
     },
     "Normal": {
-      "precision": 0.8776119402985074,
-      "recall": 0.9483870967741935,
-      "f1_score": 0.9116279069767442
+      "precision": 0.8778607564442303,
+      "recall": 0.87456,
+      "f1_score": 0.8762072696669739
     }
   },
   "experiment_id": "UNSW_ALL_DNN",
-  "training_time_seconds": 149.68819890400005,
-  "training_time_ms": 149688.19890400005,
-  "num_features": 42,
-  "num_real_features": 42,
-  "padding_zeros": 0,
   "dataset": "UNSW-NB15",
   "model": "DNN",
   "feature_mode": "all",
+  "num_real_features": 42,
+  "num_features": 42,
   "input_size": 42,
   "input_shape": [
     42
   ],
+  "padding_zeros": 0,
   "seed": 42,
   "epochs": 20,
   "batch_size": 64,
   "learning_rate": 0.001,
   "weight_decay": 0.0001,
-  "dropout_rate": 0.0
+  "dropout_rate": 0.0,
+  "training_time_seconds": 62.87115150000318,
+  "training_time_ms": 62871.15150000318
 }

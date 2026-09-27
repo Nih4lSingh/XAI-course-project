@@ -3,67 +3,67 @@
   "dataset": "nsl_kdd",
   "actual_class": "Normal",
   "predicted_class": "Normal",
-  "base_value": 0.6269659261794953,
-  "prediction_probability": 0.9999995231628418,
+  "base_value": 0.6203399991447243,
+  "prediction_probability": 1.0,
   "feature_contributions": [
     {
       "feature": "serror_rate",
       "value": 0.0,
-      "shap_contribution": 0.07810401783940177,
-      "direction": "positive"
-    },
-    {
-      "feature": "count",
-      "value": 0.003913894295692444,
-      "shap_contribution": 0.05926017817145379,
+      "shap_contribution": 0.07452955115717078,
       "direction": "positive"
     },
     {
       "feature": "logged_in",
       "value": 1.0,
-      "shap_contribution": 0.05463396155676036,
+      "shap_contribution": 0.07085115389050121,
+      "direction": "positive"
+    },
+    {
+      "feature": "count",
+      "value": 0.003913894295692444,
+      "shap_contribution": 0.05747075214770682,
       "direction": "positive"
     },
     {
       "feature": "dst_host_srv_count",
       "value": 1.0,
-      "shap_contribution": 0.03928830224932472,
-      "direction": "positive"
-    },
-    {
-      "feature": "dst_host_diff_srv_rate",
-      "value": 0.0,
-      "shap_contribution": 0.03492697913084591,
-      "direction": "positive"
-    },
-    {
-      "feature": "difficulty_level",
-      "value": 1.0,
-      "shap_contribution": 0.03192501845460188,
+      "shap_contribution": 0.04345748712675788,
       "direction": "positive"
     },
     {
       "feature": "dst_host_same_srv_rate",
       "value": 1.0,
-      "shap_contribution": 0.031052199561177427,
-      "direction": "positive"
-    },
-    {
-      "feature": "dst_host_same_src_port_rate",
-      "value": 0.5,
-      "shap_contribution": 0.018473016259391743,
+      "shap_contribution": 0.03219809077934738,
       "direction": "positive"
     },
     {
       "feature": "num_file_creations",
       "value": 0.0,
-      "shap_contribution": 0.014295503220090152,
+      "shap_contribution": 0.028771226681228702,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_count",
+      "value": 0.007843137718737125,
+      "shap_contribution": 0.020878892301082697,
+      "direction": "positive"
+    },
+    {
+      "feature": "diff_srv_rate",
+      "value": 0.0,
+      "shap_contribution": 0.020273000984414827,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_same_src_port_rate",
+      "value": 0.5,
+      "shap_contribution": 0.01869591089686257,
       "direction": "positive"
     },
     {
       "feature": "protocol_type",
       "value": 0.5,
-      "shap_contribution": 0.01107442054029874,
+      "shap_contribution": 0.012533934890202896,
       "direction": "positive"
     }
   ]

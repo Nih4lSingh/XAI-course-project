@@ -18,8 +18,8 @@
   },
   "gpu_nondeterminism_notice": "Exact bitwise floating-point reproducibility across different GPU architectures or cuDNN versions cannot be guaranteed due to atomic add parallelism in backpropagation. All metrics remain statistically robust and consistent across runs.",
   "experiment_id": "UNSW_ALL_DNN",
-  "reported_accuracy": 0.8352039696872521,
-  "reported_f1_macro": 0.6694191848742583,
+  "reported_accuracy": 0.8104837838421814,
+  "reported_f1_macro": 0.6654311242357347,
   "num_features": 42,
-  "training_time_s": 149.68819890400005
+  "training_time_s": 62.87115150000318
 }

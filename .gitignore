@@ -22,3 +22,7 @@ ENV/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Backups
+results_colab_backup/
+

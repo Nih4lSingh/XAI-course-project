@@ -173,12 +173,12 @@ python scripts/generate_tables.py
 
 | Dataset | Model | Selected Feats | Our Accuracy | Paper Accuracy | Difference | Our Macro-F1 | Our Weighted-F1 | Paper Training Time (ms) | Our Total Training Time (s) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **NSL-KDD** | DNN | 36 | **0.9970** | 0.9930 | +0.0040 | 0.9242 | 0.9970 | 142.0 | 87.01 |
-| **NSL-KDD** | 1D-CNN | 36 | **0.9944** | 0.9920 | +0.0024 | 0.9188 | 0.9944 | 325.0 | 85.99 |
-| **NSL-KDD** | 2D-CNN | 36 | **0.9950** | 0.9940 | +0.0010 | 0.8699 | 0.9949 | 340.0 | 116.81 |
-| **UNSW-NB15** | DNN | 38 | **0.8089** | 0.8000 | +0.0089 | 0.6599 | 0.7754 | 323.0 | 40.54 |
-| **UNSW-NB15** | 1D-CNN | 38 | **0.8033** | 0.8000 | +0.0033 | 0.6538 | 0.7700 | 442.0 | 91.23 |
-| **UNSW-NB15** | 2D-CNN | 38 | **0.8097** | 0.8100 | -0.0003 | 0.6600 | 0.7761 | 455.0 | 187.72 |
+| **NSL-KDD** | DNN | 36 | **0.9967** | 0.9930 | +0.0037 | 0.8040 | 0.9966 | 142.0 | 35.51 |
+| **NSL-KDD** | 1D-CNN | 36 | **0.9945** | 0.9920 | +0.0025 | 0.8941 | 0.9946 | 325.0 | 72.29 |
+| **NSL-KDD** | 2D-CNN | 36 | **0.9950** | 0.9940 | +0.0010 | 0.8699 | 0.9949 | 340.0 | 129.86 |
+| **UNSW-NB15** | DNN | 38 | **0.8089** | 0.8000 | +0.0089 | 0.6599 | 0.7754 | 323.0 | 65.65 |
+| **UNSW-NB15** | 1D-CNN | 38 | **0.8033** | 0.8000 | +0.0033 | 0.6538 | 0.7700 | 442.0 | 154.01 |
+| **UNSW-NB15** | 2D-CNN | 38 | **0.8097** | 0.8100 | -0.0003 | 0.6600 | 0.7761 | 455.0 | 232.06 |
 
 *Note: Differences are reported as (Our Accuracy - Paper Accuracy). Paper training times (142/325/340 ms for NSL-KDD; 323/442/455 ms for UNSW-NB15) are labeled by the authors as training time. Our reproduction measures total 20-epoch wall-clock training time in seconds. The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons.*
 
@@ -189,17 +189,15 @@ python scripts/generate_tables.py
 ### A. Feature Selection Ablation (Selected vs. All Features)
 | Dataset | Architecture | Selected Feats Acc | All Feats Acc | Selected Macro-F1 | All Macro-F1 | Macro-F1 $\Delta$ |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **NSL-KDD** | DNN | 0.9970 | 0.9971 | **0.9242** | 0.8759 | **+4.83%** |
-| **NSL-KDD** | 1D-CNN | 0.9944 | 0.9953 | 0.9188 | 0.9212 | -0.24% |
-| **NSL-KDD** | 2D-CNN | 0.9950 | 0.9865 | 0.8699 | 0.8875 | -1.76% |
-| **UNSW-NB15** | DNN | 0.8089 | 0.8352 | 0.6599 | 0.6694 | -0.95% |
-| **UNSW-NB15** | 1D-CNN | 0.8033 | 0.8321 | 0.6538 | 0.6647 | -1.09% |
-| **UNSW-NB15** | 2D-CNN | 0.8097 | 0.8374 | **0.6600** | 0.6601 | -0.01% |
-
-*Finding*: On NSL-KDD, Pearson correlation feature filtering produced a **+4.83% increase in Macro-F1** on the DNN by reducing collinear noise that obscured extreme minority classes (`R2L` and `U2R`).
+| **NSL-KDD** | DNN | 0.9967 | 0.9966 | 0.8040 | 0.8402 | -3.62% |
+| **NSL-KDD** | 1D-CNN | 0.9945 | 0.9953 | 0.8941 | 0.9128 | -1.87% |
+| **NSL-KDD** | 2D-CNN | 0.9950 | 0.9939 | 0.8699 | 0.8884 | -1.85% |
+| **UNSW-NB15** | DNN | 0.8089 | 0.8105 | 0.6599 | 0.6654 | -0.55% |
+| **UNSW-NB15** | 1D-CNN | 0.8033 | 0.8046 | 0.6538 | 0.6543 | -0.05% |
+| **UNSW-NB15** | 2D-CNN | 0.8097 | 0.8089 | **0.6600** | 0.6605 | -0.05% |
 
 ### B. Dropout Sensitivity ($p=0.0$ vs. $p=0.01$)
-- **NSL-KDD DNN**: Accuracy 0.9970 ($p=0.0$) vs. 0.9971 ($p=0.01$). Macro-F1: 0.9242 ($p=0.0$) vs. 0.9015 ($p=0.01$).
+- **NSL-KDD DNN**: Accuracy 0.9967 ($p=0.0$) vs. 0.9971 ($p=0.01$). Macro-F1: 0.8040 ($p=0.0$) vs. 0.9015 ($p=0.01$).
 - **UNSW-NB15 DNN**: Accuracy 0.8089 ($p=0.0$) vs. 0.8095 ($p=0.01$). Macro-F1: 0.6599 ($p=0.0$) vs. 0.6619 ($p=0.01$).
 
 ### C. Preprocessing Sensitivity (Mode A vs. Mode B)

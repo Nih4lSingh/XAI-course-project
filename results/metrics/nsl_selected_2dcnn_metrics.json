@@ -34,6 +34,9 @@
     }
   },
   "experiment_id": "NSL_SELECTED_2DCNN",
+  "dataset": "NSL-KDD",
+  "model": "2DCNN",
+  "feature_mode": "selected",
   "num_real_features": 36,
   "num_features": 36,
   "input_size": 36,
@@ -49,9 +52,6 @@
   "learning_rate": 0.001,
   "weight_decay": 0.0001,
   "dropout_rate": 0.0,
-  "training_time_seconds": 116.81435080000665,
-  "training_time_ms": 116814.35080000665,
-  "dataset": "NSL-KDD",
-  "model": "2DCNN",
-  "feature_mode": "selected"
+  "training_time_seconds": 129.85979499999667,
+  "training_time_ms": 129859.79499999667
 }

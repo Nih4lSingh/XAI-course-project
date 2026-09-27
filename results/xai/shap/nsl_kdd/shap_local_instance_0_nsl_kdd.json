@@ -3,67 +3,67 @@
   "dataset": "nsl_kdd",
   "actual_class": "DoS",
   "predicted_class": "DoS",
-  "base_value": 0.26319523181103865,
-  "prediction_probability": 0.9999891519546509,
+  "base_value": 0.2681915536626764,
+  "prediction_probability": 0.9999624490737915,
   "feature_contributions": [
     {
       "feature": "serror_rate",
       "value": 1.0,
-      "shap_contribution": 0.2653073103014187,
+      "shap_contribution": 0.32163993366224525,
       "direction": "positive"
     },
     {
       "feature": "logged_in",
       "value": 0.0,
-      "shap_contribution": 0.13660775057450644,
-      "direction": "positive"
-    },
-    {
-      "feature": "src_bytes",
-      "value": 0.0,
-      "shap_contribution": 0.09279844523473228,
+      "shap_contribution": 0.12936475035169728,
       "direction": "positive"
     },
     {
       "feature": "dst_host_same_src_port_rate",
       "value": 0.0,
-      "shap_contribution": 0.05964523370943974,
+      "shap_contribution": 0.08143950836651993,
       "direction": "positive"
     },
     {
       "feature": "dst_host_same_srv_rate",
       "value": 0.05999999865889549,
-      "shap_contribution": 0.04708163357602144,
+      "shap_contribution": 0.07657549524607403,
       "direction": "positive"
     },
     {
-      "feature": "dst_host_count",
-      "value": 1.0,
-      "shap_contribution": 0.038906380281342426,
-      "direction": "positive"
-    },
-    {
-      "feature": "srv_count",
-      "value": 0.03131115436553955,
-      "shap_contribution": 0.036915508604968915,
-      "direction": "positive"
-    },
-    {
-      "feature": "service",
-      "value": 0.15942029654979706,
-      "shap_contribution": 0.028768303165465133,
-      "direction": "positive"
-    },
-    {
-      "feature": "flag",
-      "value": 0.5,
-      "shap_contribution": 0.019042235939102373,
+      "feature": "dst_host_srv_count",
+      "value": 0.062745101749897,
+      "shap_contribution": 0.036721980363382235,
       "direction": "positive"
     },
     {
       "feature": "count",
       "value": 0.3855185806751251,
-      "shap_contribution": 0.011721118756614857,
+      "shap_contribution": 0.03577820530735908,
+      "direction": "positive"
+    },
+    {
+      "feature": "flag",
+      "value": 0.5,
+      "shap_contribution": 0.018733179973946565,
+      "direction": "positive"
+    },
+    {
+      "feature": "difficulty_level",
+      "value": 0.9047619104385376,
+      "shap_contribution": 0.016581671260230038,
+      "direction": "positive"
+    },
+    {
+      "feature": "src_bytes",
+      "value": 0.0,
+      "shap_contribution": 0.012532289535534013,
+      "direction": "positive"
+    },
+    {
+      "feature": "land",
+      "value": 0.0,
+      "shap_contribution": 0.0024038813441267237,
       "direction": "positive"
     }
   ]

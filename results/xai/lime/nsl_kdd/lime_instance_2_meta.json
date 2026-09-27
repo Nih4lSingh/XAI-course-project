@@ -5,62 +5,62 @@
   "predicted_class": 1,
   "predicted_class_name": "Normal",
   "probabilities": {
-    "DoS": 4.38930783275282e-07,
-    "Normal": 0.9999995231628418,
-    "Probe": 2.3590352782321133e-08,
-    "R2L": 4.038700396336026e-08,
-    "U2R": 1.1976158953430627e-09
+    "DoS": 1.5376976136849407e-08,
+    "Normal": 1.0,
+    "Probe": 2.792513165150723e-10,
+    "R2L": 2.477006511014679e-08,
+    "U2R": 2.0637529161179717e-14
   },
   "top_features": [
     {
       "feature_condition": "wrong_fragment <= 0.00",
-      "weight": 0.5086979171942798,
+      "weight": 0.42527039379040704,
       "direction": "positive"
     },
     {
       "feature_condition": "serror_rate <= 0.00",
-      "weight": 0.4328626118637057,
-      "direction": "positive"
-    },
-    {
-      "feature_condition": "root_shell <= 0.00",
-      "weight": 0.25666168078070734,
-      "direction": "positive"
-    },
-    {
-      "feature_condition": "0.00 < logged_in <= 1.00",
-      "weight": 0.24381222889048856,
+      "weight": 0.3246424595586676,
       "direction": "positive"
     },
     {
       "feature_condition": "rerror_rate <= 0.00",
-      "weight": 0.15869527397173552,
+      "weight": 0.2208093165194631,
       "direction": "positive"
     },
     {
-      "feature_condition": "dst_host_rerror_rate <= 0.00",
-      "weight": 0.1529762114250331,
+      "feature_condition": "0.00 < logged_in <= 1.00",
+      "weight": 0.2009543384475588,
       "direction": "positive"
     },
     {
       "feature_condition": "is_guest_login <= 0.00",
-      "weight": -0.14815444588517246,
+      "weight": -0.19323797899050843,
+      "direction": "negative"
+    },
+    {
+      "feature_condition": "dst_host_same_src_port_rate > 0.06",
+      "weight": -0.16809966116100025,
       "direction": "negative"
     },
     {
       "feature_condition": "num_file_creations <= 0.00",
-      "weight": 0.14297007769086495,
+      "weight": 0.16185477719426228,
       "direction": "positive"
     },
     {
       "feature_condition": "0.51 < dst_host_same_srv_rate <= 1.00",
-      "weight": 0.09627498061776182,
+      "weight": 0.16026760906814635,
       "direction": "positive"
     },
     {
-      "feature_condition": "num_shells <= 0.00",
-      "weight": -0.054837002204252965,
-      "direction": "negative"
+      "feature_condition": "dst_host_rerror_rate <= 0.00",
+      "weight": 0.12972691548718263,
+      "direction": "positive"
+    },
+    {
+      "feature_condition": "num_failed_logins <= 0.00",
+      "weight": 0.12324686646381822,
+      "direction": "positive"
     }
   ]
 }
