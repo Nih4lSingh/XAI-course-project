@@ -101,4 +101,3 @@ Each entry follows the strict scientific traceability format:
 * **Reason:** Zero fabrication: we report empirical outputs from the real dataset rather than inserting or inventing non-existent features.
 * **Effect on replication:** Completely transparent audit trail resolving a published textual inconsistency.
 * **Confidence:** High.
-* **Confidence:** High.

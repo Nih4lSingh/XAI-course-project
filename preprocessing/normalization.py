@@ -7,7 +7,7 @@ Formula:
 
 Maps all feature values strictly to [0, 1].
 Handles zero-variance columns (F_max == F_min) by mapping to 0.0.
-Saves scaling parameters to JSON for exact reproduction and production inference.
+Saves scaling parameters to JSON for reproducible scaling and production inference.
 """
 
 import json

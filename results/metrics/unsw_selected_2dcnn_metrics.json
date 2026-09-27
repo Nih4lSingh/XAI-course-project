@@ -50,5 +50,8 @@
   "weight_decay": 0.0001,
   "dropout_rate": 0.0,
   "training_time_seconds": 187.71550309998565,
-  "training_time_ms": 187715.50309998565
+  "training_time_ms": 187715.50309998565,
+  "dataset": "UNSW-NB15",
+  "model": "2DCNN",
+  "feature_mode": "selected"
 }

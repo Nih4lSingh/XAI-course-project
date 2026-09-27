@@ -50,5 +50,8 @@
   "weight_decay": 0.0001,
   "dropout_rate": 0.0,
   "training_time_seconds": 116.81435080000665,
-  "training_time_ms": 116814.35080000665
+  "training_time_ms": 116814.35080000665,
+  "dataset": "NSL-KDD",
+  "model": "2DCNN",
+  "feature_mode": "selected"
 }

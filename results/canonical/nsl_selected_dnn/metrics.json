@@ -38,5 +38,18 @@
   "training_time_ms": 87009.13105200016,
   "num_features": 36,
   "num_real_features": 36,
-  "padding_zeros": 0
+  "padding_zeros": 0,
+  "dataset": "NSL-KDD",
+  "model": "DNN",
+  "feature_mode": "selected",
+  "input_size": 36,
+  "input_shape": [
+    36
+  ],
+  "seed": 42,
+  "epochs": 20,
+  "batch_size": 64,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "dropout_rate": 0.0
 }

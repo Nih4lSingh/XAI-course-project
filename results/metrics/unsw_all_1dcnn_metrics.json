@@ -36,5 +36,21 @@
   "experiment_id": "UNSW_ALL_1DCNN",
   "training_time_seconds": 152.50771016,
   "training_time_ms": 152507.71016,
-  "num_features": 42
+  "num_features": 42,
+  "dataset": "UNSW-NB15",
+  "model": "1DCNN",
+  "feature_mode": "all",
+  "num_real_features": 42,
+  "input_size": 42,
+  "input_shape": [
+    42,
+    1
+  ],
+  "padding_zeros": 0,
+  "seed": 42,
+  "epochs": 20,
+  "batch_size": 64,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "dropout_rate": 0.0
 }
