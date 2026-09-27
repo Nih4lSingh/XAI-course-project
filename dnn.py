@@ -228,25 +228,83 @@ def explain_with_lime(model, X_train, X_test, y_test, class_names, feature_names
         plt.close(fig)
 
 
-def explain_with_shap(model, X_train, X_test, feature_names, class_names, sample_size=50):
-    background = X_train.sample(min(100, len(X_train)), random_state=RANDOM_STATE)
-    test_sample = X_test.sample(min(sample_size, len(X_test)), random_state=RANDOM_STATE)
+def explain_with_shap(model, X_train, X_test, y_test, feature_names, class_names):
+    """SHAP explanation exactly as described in Section 6.2 of the paper:
 
-    explainer = shap.KernelExplainer(
-        lambda x: model.predict(x, verbose=0), background.values
-    )
-    shap_values = explainer.shap_values(test_sample.values, nsamples=100)
+      - Local explanation: pick a particular test instance, compute its SHAP
+        values, and plot a force plot showing each feature's contribution
+        (Figs. 15/16 in the paper).
+      - Global explanation: select 50 samples of the testing dataset, compute
+        their SHAP values, and derive (a) a per-class summary/beeswarm plot
+        (Figs. 17/18) and (b) a stacked bar "force plot" of mean(|SHAP value|)
+        per feature across all classes (Figs. 19/20).
+    """
+    background = shap.kmeans(X_train.values, 50)  # compact background for KernelExplainer
+    predict_fn = lambda x: model.predict(x, verbose=0)
+    explainer = shap.KernelExplainer(predict_fn, background)
 
-    # Global summary plot for class 0 (or the first attack class) as an example
+    # ---- Global explanation: exactly 50 samples of the testing dataset ----
+    test_sample = X_test.sample(50, random_state=RANDOM_STATE)
+    print("Computing SHAP values for 50 test samples (this takes a few minutes)...")
+    shap_values = explainer.shap_values(test_sample.values, nsamples="auto")
+    # shap_values: list of arrays (one per class) OR a single (n, features, classes) array
+    if isinstance(shap_values, list):
+        shap_list = shap_values
+    else:
+        shap_list = [shap_values[..., c] for c in range(shap_values.shape[-1])]
+
+    # (a) Per-class summary (beeswarm) plot -- one per class, as in Figs. 17/18
+    for c, cname in enumerate(class_names):
+        plt.figure()
+        shap.summary_plot(shap_list[c], test_sample, feature_names=feature_names,
+                           show=False)
+        plt.title(f"SHAP summary plot - {cname} class")
+        plt.tight_layout()
+        plt.savefig(os.path.join(OUTPUT_DIR, f"shap_summary_{cname}.png"),
+                     dpi=150, bbox_inches="tight")
+        plt.close()
+    print(f"Saved {len(class_names)} per-class SHAP summary plots "
+          f"(shap_summary_<class>.png)")
+
+    # (b) Stacked bar "force plot" across all classes, as in Figs. 19/20
     plt.figure()
-    shap.summary_plot(
-        shap_values[0] if isinstance(shap_values, list) else shap_values[..., 0],
-        test_sample, feature_names=feature_names, show=False
-    )
+    shap.summary_plot(shap_list, test_sample, feature_names=feature_names,
+                       class_names=class_names, plot_type="bar", show=False)
+    plt.title("SHAP feature importance across classes")
     plt.tight_layout()
-    plt.savefig(os.path.join(OUTPUT_DIR, "shap_summary.png"), dpi=150, bbox_inches="tight")
+    plt.savefig(os.path.join(OUTPUT_DIR, "shap_force_plot_allclasses.png"),
+                 dpi=150, bbox_inches="tight")
     plt.close()
-    print("\nSHAP global summary plot saved to shap_summary.png")
+    print("Saved stacked per-class SHAP bar/force plot (shap_force_plot_allclasses.png)")
+
+    # ---- Local explanation: one particular test instance (Figs. 15/16) ----
+    idx = np.random.RandomState(RANDOM_STATE).randint(0, len(X_test))
+    instance = X_test.iloc[[idx]]
+    actual = class_names[y_test[idx]]
+    pred_probs = predict_fn(instance.values)[0]
+    pred_class = int(np.argmax(pred_probs))
+    print(f"\nComputing local SHAP explanation for test instance {idx} "
+          f"(Actual={actual}, Predicted={class_names[pred_class]})...")
+    inst_shap = explainer.shap_values(instance.values, nsamples="auto")
+    if isinstance(inst_shap, list):
+        inst_shap_pred = inst_shap[pred_class][0]
+    else:
+        inst_shap_pred = inst_shap[0, :, pred_class]
+    base_value = explainer.expected_value
+    base_value = base_value[pred_class] if hasattr(base_value, "__len__") else base_value
+
+    fig = plt.figure()
+    shap.force_plot(
+        base_value, inst_shap_pred, instance.iloc[0],
+        feature_names=feature_names, matplotlib=True, show=False,
+    )
+    plt.title(f"SHAP local force plot - instance {idx} "
+              f"(Actual={actual}, Predicted={class_names[pred_class]})")
+    plt.tight_layout()
+    plt.savefig(os.path.join(OUTPUT_DIR, f"shap_force_instance_{idx}.png"),
+                 dpi=150, bbox_inches="tight")
+    plt.close()
+    print(f"Saved local SHAP force plot (shap_force_instance_{idx}.png)")
 
 
 def main():
@@ -321,10 +379,10 @@ def main():
                        list(X_reduced.columns), n_instances=2)
 
     print("\n" + "=" * 60)
-    print("SHAP explanation (this is slow - uses a small sample)")
+    print("SHAP explanation (50 test samples, per the paper - this takes a few minutes)")
     print("=" * 60)
-    explain_with_shap(model, X_train, X_test, list(X_reduced.columns),
-                       class_names, sample_size=30)
+    explain_with_shap(model, X_train, X_test, y_test, list(X_reduced.columns),
+                       class_names)
 
     model.save(os.path.join(OUTPUT_DIR, "dnn_ids_model.keras"))
     print(f"\nDone. Model and plots saved to ./{OUTPUT_DIR}/")
