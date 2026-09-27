@@ -21,5 +21,5 @@
   "reported_accuracy": 0.8097059268382274,
   "reported_f1_macro": 0.6599711464300755,
   "num_features": 38,
-  "training_time_s": 187.71550309998565
+  "training_time_s": 232.06060129997786
 }

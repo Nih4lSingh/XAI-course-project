@@ -1,40 +1,55 @@
 {
-  "accuracy": 0.9970788086619674,
-  "precision_macro": 0.9843035037226299,
-  "recall_macro": 0.8409264541569919,
-  "f1_macro": 0.8759129268157088,
-  "precision_weighted": 0.9970666871717251,
-  "recall_weighted": 0.9970788086619674,
-  "f1_weighted": 0.9969944642867983,
+  "accuracy": 0.9966342795453103,
+  "precision_macro": 0.8554572300561316,
+  "recall_macro": 0.8379172547265565,
+  "f1_macro": 0.8401573546697607,
+  "precision_weighted": 0.9966649360840631,
+  "recall_weighted": 0.9966342795453103,
+  "f1_weighted": 0.9966106088344162,
   "per_class": {
     "DoS": {
-      "precision": 0.9992159595783605,
-      "recall": 0.9989548859083783,
-      "f1_score": 0.9990854056879056
+      "precision": 0.998955522673862,
+      "recall": 0.9995645357951576,
+      "f1_score": 0.9992599364416003
     },
     "Normal": {
-      "precision": 0.9975653206650832,
-      "recall": 0.9978023283440247,
-      "f1_score": 0.9976838104287921
+      "precision": 0.9992252220036951,
+      "recall": 0.9958422428130197,
+      "f1_score": 0.9975308641975309
     },
     "Probe": {
-      "precision": 0.9911262798634812,
-      "recall": 0.9965682910089224,
-      "f1_score": 0.9938398357289527
+      "precision": 0.986734693877551,
+      "recall": 0.9955387783115992,
+      "f1_score": 0.9911171848308848
     },
     "R2L": {
-      "precision": 0.9336099585062241,
-      "recall": 0.9036144578313253,
-      "f1_score": 0.9183673469387755
+      "precision": 0.8637992831541219,
+      "recall": 0.9678714859437751,
+      "f1_score": 0.9128787878787878
     },
     "U2R": {
-      "precision": 1.0,
-      "recall": 0.3076923076923077,
-      "f1_score": 0.47058823529411764
+      "precision": 0.42857142857142855,
+      "recall": 0.23076923076923078,
+      "f1_score": 0.3
     }
   },
   "experiment_id": "NSL_ALL_DNN",
-  "training_time_seconds": 80.88081677200012,
-  "training_time_ms": 80880.81677200012,
-  "num_features": 42
+  "dataset": "NSL-KDD",
+  "model": "DNN",
+  "feature_mode": "all",
+  "num_real_features": 42,
+  "num_features": 42,
+  "input_size": 42,
+  "input_shape": [
+    42
+  ],
+  "padding_zeros": 0,
+  "seed": 42,
+  "epochs": 20,
+  "batch_size": 64,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "dropout_rate": 0.0,
+  "training_time_seconds": 35.464564699999755,
+  "training_time_ms": 35464.564699999755
 }

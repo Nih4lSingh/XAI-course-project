@@ -18,8 +18,8 @@
   },
   "gpu_nondeterminism_notice": "Exact bitwise floating-point reproducibility across different GPU architectures or cuDNN versions cannot be guaranteed due to atomic add parallelism in backpropagation. All metrics remain statistically robust and consistent across runs.",
   "experiment_id": "NSL_SELECTED_1DCNN",
-  "reported_accuracy": 0.9944116339620245,
-  "reported_f1_macro": 0.9188340146643922,
+  "reported_accuracy": 0.9945068902013082,
+  "reported_f1_macro": 0.8940964660566977,
   "num_features": 36,
-  "training_time_s": 85.99280947700004
+  "training_time_s": 72.2879377999925
 }

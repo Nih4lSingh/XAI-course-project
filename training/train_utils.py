@@ -145,6 +145,9 @@ def train_and_evaluate_model(
     # Compute metrics
     metrics = compute_all_metrics(y_test, y_pred, class_names=class_names)
     metrics["experiment_id"] = experiment_id
+    metrics["dataset"] = "NSL-KDD" if "NSL" in experiment_id.upper() else "UNSW-NB15"
+    metrics["model"] = "2DCNN" if "2DCNN" in experiment_id.upper() else ("1DCNN" if "1DCNN" in experiment_id.upper() else "DNN")
+    metrics["feature_mode"] = "selected" if "SELECTED" in experiment_id.upper() else "all"
     metrics["num_real_features"] = int(num_real_features)
     metrics["num_features"] = int(num_real_features)  # Backward compatible alias
     metrics["input_size"] = int(input_size)
