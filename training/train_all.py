@@ -2,15 +2,9 @@
 Master Experiment Orchestrator
 Replication of Sharma et al. (2024)
 
-Executes the complete 12-model training matrix:
+Executes the complete 6-model training matrix:
 1. NSL-KDD + Selected Features: DNN, 1D-CNN, 2D-CNN (Paper replication)
-2. NSL-KDD + All Features: DNN, 1D-CNN, 2D-CNN (Ablation baseline)
-3. UNSW-NB15 + Selected Features: DNN, 1D-CNN, 2D-CNN (Paper replication)
-4. UNSW-NB15 + All Features: DNN, 1D-CNN, 2D-CNN (Ablation baseline)
-
-Plus Sensitivity Analysis:
-- NSL-KDD DNN with Dropout = 0.01
-- UNSW-NB15 DNN with Dropout = 0.01
+2. UNSW-NB15 + Selected Features: DNN, 1D-CNN, 2D-CNN (Paper replication)
 
 Compiles:
 - results/results_summary.csv
@@ -32,31 +26,16 @@ import pandas as pd
 from training.train_experiment import run_experiment
 
 
-PRIMARY_12_EXPERIMENTS = [
+PRIMARY_6_EXPERIMENTS = [
     # 1. NSL-KDD Paper Replication (Selected Features)
     "NSL_SELECTED_DNN",
     "NSL_SELECTED_1DCNN",
     "NSL_SELECTED_2DCNN",
     
-    # 2. NSL-KDD Ablation Baseline (All Features)
-    "NSL_ALL_DNN",
-    "NSL_ALL_1DCNN",
-    "NSL_ALL_2DCNN",
-
-    # 3. UNSW-NB15 Paper Replication (Selected Features)
+    # 2. UNSW-NB15 Paper Replication (Selected Features)
     "UNSW_SELECTED_DNN",
     "UNSW_SELECTED_1DCNN",
-    "UNSW_SELECTED_2DCNN",
-
-    # 4. UNSW-NB15 Ablation Baseline (All Features)
-    "UNSW_ALL_DNN",
-    "UNSW_ALL_1DCNN",
-    "UNSW_ALL_2DCNN"
-]
-
-SENSITIVITY_EXPERIMENTS = [
-    ("NSL_SELECTED_DNN_DROPOUT_001", "NSL_SELECTED_DNN", 0.01),
-    ("UNSW_SELECTED_DNN_DROPOUT_001", "UNSW_SELECTED_DNN", 0.01)
+    "UNSW_SELECTED_2DCNN"
 ]
 
 PAPER_REPORTED_METRICS = {
@@ -69,7 +48,7 @@ PAPER_REPORTED_METRICS = {
 }
 
 
-def run_all_experiments(epochs: int = 20, batch_size: int = 64, run_sensitivity: bool = True, skip_existing: bool = True) -> pd.DataFrame:
+def run_all_experiments(epochs: int = 20, batch_size: int = 128, skip_existing: bool = True) -> pd.DataFrame:
     results_dir = PROJECT_ROOT / "results"
     reports_dir = PROJECT_ROOT / "reports" / "tables"
     metrics_dir = results_dir / "metrics"
@@ -80,17 +59,17 @@ def run_all_experiments(epochs: int = 20, batch_size: int = 64, run_sensitivity:
     summary_records = []
 
     print("\n" + "=" * 75)
-    print("STARTING EXECUTION OF THE 12-MODEL MATRIX (SHARMA ET AL. 2024 REPLICATION)")
+    print("STARTING EXECUTION OF THE 6-MODEL MATRIX (SHARMA ET AL. 2024 REPLICATION)")
     print("=" * 75)
 
-    for idx, exp_id in enumerate(PRIMARY_12_EXPERIMENTS, 1):
+    for idx, exp_id in enumerate(PRIMARY_6_EXPERIMENTS, 1):
         metric_file = metrics_dir / f"{exp_id.lower()}_metrics.json"
         if skip_existing and metric_file.exists():
-            print(f"\n>>> [RESUME] Skipping already trained experiment [{idx}/{len(PRIMARY_12_EXPERIMENTS)}]: {exp_id}")
+            print(f"\n>>> [RESUME] Skipping already trained experiment [{idx}/{len(PRIMARY_6_EXPERIMENTS)}]: {exp_id}")
             with open(metric_file, "r", encoding="utf-8") as f:
                 metrics = json.load(f)
         else:
-            print(f"\n>>> Running Experiment [{idx}/{len(PRIMARY_12_EXPERIMENTS)}]: {exp_id}")
+            print(f"\n>>> Running Experiment [{idx}/{len(PRIMARY_6_EXPERIMENTS)}]: {exp_id}")
             metrics = run_experiment(
                 experiment_id=exp_id,
                 epochs=epochs,
@@ -121,46 +100,6 @@ def run_all_experiments(epochs: int = 20, batch_size: int = 64, run_sensitivity:
             "experiment_id": exp_id
         }
         summary_records.append(record)
-
-    # Optional Sensitivity Experiments
-    if run_sensitivity:
-        print("\n" + "=" * 75)
-        print("RUNNING DROPOUT SENSITIVITY EXPERIMENTS (DROPOUT = 0.01)")
-        print("=" * 75)
-        for exp_label, base_exp, d_rate in SENSITIVITY_EXPERIMENTS:
-            metric_file = metrics_dir / f"{exp_label.lower()}_metrics.json"
-            if skip_existing and metric_file.exists():
-                print(f"\n>>> [RESUME] Skipping already trained sensitivity experiment: {exp_label}")
-                with open(metric_file, "r", encoding="utf-8") as f:
-                    metrics = json.load(f)
-            else:
-                print(f"\n>>> Running Sensitivity Experiment: {exp_label}")
-                metrics = run_experiment(
-                    experiment_id=exp_label,
-                    epochs=epochs,
-                    batch_size=batch_size,
-                    dropout_rate=d_rate,
-                    verbose=1
-                )
-            parts = base_exp.split("_")
-            dataset_label = "NSL-KDD" if "NSL" in parts[0] else "UNSW-NB15"
-            record = {
-                "dataset": dataset_label,
-                "feature_mode": "Selected (Dropout=0.01)",
-                "model": "DNN",
-                "num_features": metrics["num_features"],
-                "accuracy": round(metrics["accuracy"], 4),
-                "precision_macro": round(metrics["precision_macro"], 4),
-                "recall_macro": round(metrics["recall_macro"], 4),
-                "f1_macro": round(metrics["f1_macro"], 4),
-                "precision_weighted": round(metrics["precision_weighted"], 4),
-                "recall_weighted": round(metrics["recall_weighted"], 4),
-                "f1_weighted": round(metrics["f1_weighted"], 4),
-                "training_time_s": round(metrics["training_time_seconds"], 2),
-                "training_time_ms": round(metrics["training_time_ms"], 1),
-                "experiment_id": exp_label
-            }
-            summary_records.append(record)
 
     # Convert to DataFrame
     df_summary = pd.DataFrame(summary_records)
@@ -203,7 +142,7 @@ def run_all_experiments(epochs: int = 20, batch_size: int = 64, run_sensitivity:
     # Export Markdown table
     md_table_path = reports_dir / "results_table.md"
     with open(md_table_path, "w", encoding="utf-8") as f:
-        f.write("# Master Results Summary (12 Model Experiments)\n\n")
+        f.write("# Master Results Summary (6 Model Experiments)\n\n")
         f.write(_df_to_md(df_summary))
         f.write("\n\n# Paper Reported vs Reproduction Comparison\n\n")
         f.write(_df_to_md(df_comp))
@@ -214,9 +153,9 @@ def run_all_experiments(epochs: int = 20, batch_size: int = 64, run_sensitivity:
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Run all 14 models for Sharma et al. (2024) replication")
+    parser = argparse.ArgumentParser(description="Run all 6 models for Sharma et al. (2024) replication")
     parser.add_argument("--epochs", type=int, default=20, help="Number of training epochs")
-    parser.add_argument("--batch_size", type=int, default=64, help="Batch size")
+    parser.add_argument("--batch_size", type=int, default=128, help="Batch size")
     parser.add_argument("--force", action="store_true", help="Force retraining even if metrics exist")
     args = parser.parse_args()
 

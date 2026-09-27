@@ -1,4 +1,4 @@
-# Explainable AI (XAI) Synthesis Report: LIME & SHAP Analysis
+# Explainable AI (XAI) Synthesis Report: SHAP Analysis
 
 Replication of **Sharma et al. (2024)**, *“Explainable artificial intelligence for intrusion detection in IoT networks: A deep learning based approach”*.
 
@@ -10,7 +10,7 @@ In accordance with Section 5 of Sharma et al., the explainability evaluation cen
 1. **NSL-KDD:** 3-layer DNN ($64 \to 64 \to 64 \to 5$) trained on the 36 selected features.
 2. **UNSW-NB15:** 3-layer DNN ($64 \to 64 \to 64 \to 5$) trained on the 38 selected features.
 
-Both **Local Interpretable Model-agnostic Explanations (LIME)** and **SHapley Additive Explanations (SHAP)** were deployed to audit local and global prediction mechanics.
+**SHapley Additive Explanations (SHAP)** was deployed to audit local and global prediction mechanics.
 
 ---
 
@@ -54,10 +54,7 @@ Features are ranked by **Mean Absolute SHAP Value** ($mean(|SHAP|)$) for each re
 
 ---
 
-## 3. LIME Local Explanations
+## 3. SHAP Artifacts
 
-Representative test instances were audited using LIME TabularExplainer:
-- **NSL-KDD:** DoS attack instance and Normal instance.
-- **UNSW-NB15:** Normal traffic instance and Exploits attack instance.
+High-resolution beeswarm summary plots, global importance bar plots, and structured JSON explanations are archived in `results/xai/shap/`.
 
-High-resolution contribution plots and structured JSON explanations are archived in `results/xai/lime/` and `results/xai/shap/`.
