@@ -148,12 +148,12 @@ python scripts/generate_tables.py
 
 | Dataset | Model | Selected Feats | Our Accuracy | Paper Accuracy | Difference | Our Macro-F1 | Our Weighted-F1 | Paper Training Time (ms) | Our Total Training Time (s) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **NSL-KDD** | DNN | 36 | **0.9967** | 0.9930 | +0.0037 | 0.8040 | 0.9966 | 142.0 | 35.51 |
-| **NSL-KDD** | 1D-CNN | 36 | **0.9945** | 0.9920 | +0.0025 | 0.8941 | 0.9946 | 325.0 | 72.29 |
-| **NSL-KDD** | 2D-CNN | 36 | **0.9950** | 0.9940 | +0.0010 | 0.8699 | 0.9949 | 340.0 | 129.86 |
-| **UNSW-NB15** | DNN | 38 | **0.8089** | 0.8000 | +0.0089 | 0.6599 | 0.7754 | 323.0 | 65.65 |
-| **UNSW-NB15** | 1D-CNN | 38 | **0.8033** | 0.8000 | +0.0033 | 0.6538 | 0.7700 | 442.0 | 154.01 |
-| **UNSW-NB15** | 2D-CNN | 38 | **0.8097** | 0.8100 | -0.0003 | 0.6600 | 0.7761 | 455.0 | 232.06 |
+| **NSL-KDD** | DNN | 36 | **0.9966** | 0.9930 | +0.0036 | 0.8058 | 0.9965 | 142.0 | 18.77 |
+| **NSL-KDD** | 1D-CNN | 36 | **0.9947** | 0.9920 | +0.0027 | 0.9017 | 0.9947 | 325.0 | 53.05 |
+| **NSL-KDD** | 2D-CNN | 36 | **0.9962** | 0.9940 | +0.0022 | 0.8085 | 0.9961 | 340.0 | 103.90 |
+| **UNSW-NB15** | DNN | 38 | **0.8052** | 0.8000 | +0.0052 | 0.6627 | 0.7754 | 323.0 | 26.46 |
+| **UNSW-NB15** | 1D-CNN | 38 | **0.7995** | 0.8000 | -0.0005 | 0.6454 | 0.7639 | 442.0 | 75.45 |
+| **UNSW-NB15** | 2D-CNN | 38 | **0.8079** | 0.8100 | -0.0021 | 0.6595 | 0.7755 | 455.0 | 166.65 |
 
 *Note: Differences are reported as (Our Accuracy - Paper Accuracy). Paper training times (142/325/340 ms for NSL-KDD; 323/442/455 ms for UNSW-NB15) are labeled by the authors as training time. Our reproduction measures total 20-epoch wall-clock training time in seconds. The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons.*
 

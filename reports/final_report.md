@@ -8,7 +8,7 @@
 ## Abstract
 This report presents an independent, scientifically controlled replication of the deep-learning and Explainable Artificial Intelligence (XAI) framework published by Sharma et al. (2024). The reference paper proposed combining Pearson Correlation Coefficient ($|PCC| > 0.95$) feature reduction with Deep Neural Networks (DNN), 1D Convolutional Neural Networks (1D-CNN), and 2D Convolutional Neural Networks (2D-CNN) for IoT network intrusion detection, using SHAP for global model interpretability. Because the original authors did not release a code repository, we audited the methodological descriptions from the text, identified several underspecified design choices (such as 1D-CNN hyperparameters, potential target leakage in UNSW-NB15, and feature dimension discrepancies), and reconstructed the pipeline from first principles. 
 
-Across the 6 canonical paper-faithful models, our reproduction obtained test accuracies of **99.67%** (DNN), **99.45%** (1D-CNN), and **99.50%** (2D-CNN) on NSL-KDD (compared to published values of 99.30%, 99.20%, and 99.40%), and **80.89%** (DNN), **80.33%** (1D-CNN), and **80.97%** (2D-CNN) on UNSW-NB15 (compared to published values of 80.00%, 80.00%, and 81.00%). Post-hoc explainability audits with SHAP identify consistent primary indicators on major attack categories (e.g., `serror_rate` for DoS in NSL-KDD, and `dttl` / `swin` for Normal traffic in UNSW-NB15). We discuss key methodological limitations, including the synthetic nature of 2D grid reshaping for tabular flows and the persistent impact of severe class imbalance.
+Across the 6 canonical paper-faithful models, our reproduction obtained test accuracies of **99.66%** (DNN), **99.47%** (1D-CNN), and **99.62%** (2D-CNN) on NSL-KDD (compared to published values of 99.30%, 99.20%, and 99.40%), and **80.52%** (DNN), **79.95%** (1D-CNN), and **80.79%** (2D-CNN) on UNSW-NB15 (compared to published values of 80.00%, 80.00%, and 81.00%). Post-hoc explainability audits with SHAP identify consistent primary indicators on major attack categories (e.g., `serror_rate` for DoS in NSL-KDD, and `dttl` / `swin` for Normal traffic in UNSW-NB15). We discuss key methodological limitations, including the synthetic nature of 2D grid reshaping for tabular flows and the persistent impact of severe class imbalance.
 
 ---
 
@@ -95,12 +95,12 @@ Collinear filtering was implemented using the paper's reported threshold of $|PC
 
 | Dataset | Feature Mode | Model | Num Feats | Test Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) |
 | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **NSL-KDD** | Selected | DNN | 36 | **0.9967** | 0.8215 | 0.8057 | **0.8040** | 0.9966 | 35.51 |
-| **NSL-KDD** | Selected | 1D-CNN | 36 | **0.9945** | 0.8909 | 0.9011 | **0.8941** | 0.9946 | 72.29 |
-| **NSL-KDD** | Selected | 2D-CNN | 36 | **0.9950** | 0.9306 | 0.8539 | **0.8699** | 0.9949 | 129.86 |
-| **UNSW-NB15** | Selected | DNN | 38 | **0.8089** | 0.7656 | 0.6816 | **0.6599** | 0.7754 | 65.65 |
-| **UNSW-NB15** | Selected | 1D-CNN | 38 | **0.8033** | 0.7693 | 0.6774 | **0.6538** | 0.7700 | 154.01 |
-| **UNSW-NB15** | Selected | 2D-CNN | 38 | **0.8097** | 0.7644 | 0.6834 | **0.6600** | 0.7761 | 232.06 |
+| **NSL-KDD** | Selected | DNN | 36 | **0.9966** | 0.9659 | 0.8056 | **0.8058** | 0.9965 | 18.77 |
+| **NSL-KDD** | Selected | 1D-CNN | 36 | **0.9947** | 0.9107 | 0.8978 | **0.9017** | 0.9947 | 53.05 |
+| **NSL-KDD** | Selected | 2D-CNN | 36 | **0.9962** | 0.9711 | 0.8051 | **0.8085** | 0.9961 | 103.90 |
+| **UNSW-NB15** | Selected | DNN | 38 | **0.8052** | 0.7510 | 0.6848 | **0.6627** | 0.7754 | 26.46 |
+| **UNSW-NB15** | Selected | 1D-CNN | 38 | **0.7995** | 0.7796 | 0.6684 | **0.6454** | 0.7639 | 75.45 |
+| **UNSW-NB15** | Selected | 2D-CNN | 38 | **0.8079** | 0.7578 | 0.6845 | **0.6595** | 0.7755 | 166.65 |
 
 ---
 
@@ -108,14 +108,14 @@ Collinear filtering was implemented using the paper's reported threshold of $|PC
 
 | Metric / Aspect | Paper Reported | Our Reproduction | Difference | Interpretation |
 | :--- | :---: | :---: | :---: | :--- |
-| **NSL-KDD DNN Accuracy** | 0.9930 | **0.9967** | +0.0037 | Replicated within +0.37%; high accuracy consistent with published benchmark. |
-| **NSL-KDD 1D-CNN Accuracy** | 0.9920 | **0.9945** | +0.0025 | Replicated within +0.25%; confirms 1D convolutional baseline stability. |
-| **NSL-KDD 2D-CNN Accuracy** | 0.9940 | **0.9950** | +0.0010 | Replicated within +0.10%; confirms 6x6 pseudo-image feature grid mapping with Fig. 5 topology. |
-| **UNSW-NB15 DNN Accuracy** | 0.8000 | **0.8089** | +0.0089 | Replicated within +0.89%; confirms behavior under 50K class capping. |
-| **UNSW-NB15 1D-CNN Accuracy** | 0.8000 | **0.8033** | +0.0033 | Replicated within +0.33%; reproduces published 80% plateau under 38 features. |
-| **UNSW-NB15 2D-CNN Accuracy** | 0.8100 | **0.8097** | -0.0003 | Replicated within -0.03%; reproduces published 81% benchmark under 7x7 grid with 11 zeros padding. |
-| **NSL-KDD Runtime** | 142–340 ms (Paper-reported training time) | 36–130 s (Our measured total 20-epoch wall-clock training time) | N/A | **Runtime Caveat**: The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons. |
-| **UNSW-NB15 Runtime** | 323–455 ms (Paper-reported training time) | 66–232 s (Our measured total 20-epoch wall-clock training time) | N/A | **Runtime Caveat**: The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons. |
+| **NSL-KDD DNN Accuracy** | 0.9930 | **0.9966** | +0.0036 | Replicated within +0.36%; high accuracy consistent with published benchmark. |
+| **NSL-KDD 1D-CNN Accuracy** | 0.9920 | **0.9947** | +0.0027 | Replicated within +0.27%; confirms 1D convolutional baseline stability. |
+| **NSL-KDD 2D-CNN Accuracy** | 0.9940 | **0.9962** | +0.0022 | Replicated within +0.22%; confirms 6x6 pseudo-image feature grid mapping with Fig. 5 topology. |
+| **UNSW-NB15 DNN Accuracy** | 0.8000 | **0.8052** | +0.0052 | Replicated within +0.52%; confirms behavior under 50K class capping. |
+| **UNSW-NB15 1D-CNN Accuracy** | 0.8000 | **0.7995** | -0.0005 | Replicated within -0.05%; reproduces published 80% plateau under 38 features. |
+| **UNSW-NB15 2D-CNN Accuracy** | 0.8100 | **0.8079** | -0.0021 | Replicated within -0.21%; reproduces published 81% benchmark under 7x7 grid with 11 zeros padding. |
+| **NSL-KDD Runtime** | 142–340 ms (Paper-reported training time) | 19–104 s (Our measured total 20-epoch wall-clock training time) | N/A | **Runtime Caveat**: The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons. |
+| **UNSW-NB15 Runtime** | 323–455 ms (Paper-reported training time) | 26–167 s (Our measured total 20-epoch wall-clock training time) | N/A | **Runtime Caveat**: The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons. |
 
 ---
 
@@ -124,12 +124,12 @@ Collinear filtering was implemented using the paper's reported threshold of $|PC
 ### 8.1 NSL-KDD Global and Local Explanations
 - **Global SHAP (Target: DoS / Class 0)**:
   - Evaluated on a seed-controlled random sample of 50 test instances.
-  - Top 5 influential features (by class-specific $mean(|SHAP|)$): `serror_rate` (0.13955), `logged_in` (0.05795), `dst_host_same_src_port_rate` (0.03883), `dst_host_srv_count` (0.03649), `count` (0.02537).
+  - Top 5 influential features (by class-specific $mean(|SHAP|)$): `serror_rate` (0.12886), `logged_in` (0.06740), `dst_host_same_src_port_rate` (0.04317), `dst_host_srv_count` (0.02940), `protocol_type` (0.02803).
   - These features receive the largest model attributions for the DoS target class. High values of SYN error rate (`serror_rate`) and unauthenticated session state (`logged_in = 0`) yield the strongest positive attribution toward DoS classification, aligning with known SYN-flood traffic signatures.
 ### 8.2 UNSW-NB15 Global and Local Explanations
 - **Global SHAP (Target: Normal / Class 4)**:
   - Evaluated on a seed-controlled random sample of 50 test instances.
-  - Top 5 influential features (by class-specific $mean(|SHAP|)$): `dttl` (0.15098), `swin` (0.11924), `sttl` (0.07591), `ct_dst_sport_ltm` (0.05688), `ct_state_ttl` (0.02169).
+  - Top 5 influential features (by class-specific $mean(|SHAP|)$): `dttl` (0.17550), `swin` (0.16447), `sttl` (0.06162), `ct_dst_sport_ltm` (0.05263), `ct_state_ttl` (0.02248).
   - These features receive the largest model attributions for the Normal target class. Normal traffic instances are characterized by canonical operating system TTL values (e.g., 64 or 252) and stable TCP window advertisements (`swin = 255`).
   - **Note on Published Feature Inconsistency**: In Sharma et al. (2024), Figure 7 and accompanying text cite `data` as the #1 most important feature for UNSW Normal global SHAP attribution. However, a feature named `data` does not exist in the UNSW-NB15 dataset schema or in the paper's own feature table (Table 2). Our reproduction therefore reports the feature ranking obtained from the actual canonical feature set (top feature: `dttl`).
 

@@ -1,36 +1,36 @@
 {
-  "accuracy": 0.9945068902013082,
-  "precision_macro": 0.8909108578914985,
-  "recall_macro": 0.9011380605609842,
-  "f1_macro": 0.8940964660566977,
-  "precision_weighted": 0.9947122397570033,
-  "recall_weighted": 0.9945068902013082,
-  "f1_weighted": 0.9945563601887072,
+  "accuracy": 0.9947291547596367,
+  "precision_macro": 0.9106941065017718,
+  "recall_macro": 0.8978191457600342,
+  "f1_macro": 0.9016611222836961,
+  "precision_weighted": 0.9948127645376306,
+  "recall_weighted": 0.9947291547596367,
+  "f1_weighted": 0.9947452225382613,
   "per_class": {
     "DoS": {
-      "precision": 0.9959169490052993,
-      "recall": 0.9984323288625675,
-      "f1_score": 0.9971730526682033
+      "precision": 0.9956529299252304,
+      "recall": 0.9973872147709458,
+      "f1_score": 0.9965193177862861
     },
     "Normal": {
-      "precision": 0.9986854684512428,
-      "recall": 0.9927536231884058,
-      "f1_score": 0.9957107113070416
+      "precision": 0.9976162097735399,
+      "recall": 0.9942979330007128,
+      "f1_score": 0.995954307472632
     },
     "Probe": {
-      "precision": 0.9816638370118845,
-      "recall": 0.9921070693205216,
-      "f1_score": 0.986857825567503
+      "precision": 0.987012987012987,
+      "recall": 0.9910775566231984,
+      "f1_score": 0.989041095890411
     },
     "R2L": {
-      "precision": 0.8419243986254296,
-      "recall": 0.9839357429718876,
-      "f1_score": 0.9074074074074074
+      "precision": 0.8731884057971014,
+      "recall": 0.9678714859437751,
+      "f1_score": 0.9180952380952381
     },
     "U2R": {
-      "precision": 0.6363636363636364,
+      "precision": 0.7,
       "recall": 0.5384615384615384,
-      "f1_score": 0.5833333333333334
+      "f1_score": 0.6086956521739131
     }
   },
   "experiment_id": "NSL_SELECTED_1DCNN",
@@ -47,10 +47,10 @@
   "padding_zeros": 0,
   "seed": 42,
   "epochs": 20,
-  "batch_size": 64,
+  "batch_size": 128,
   "learning_rate": 0.001,
   "weight_decay": 0.0001,
   "dropout_rate": 0.0,
-  "training_time_seconds": 72.2879377999925,
-  "training_time_ms": 72287.9377999925
+  "training_time_seconds": 53.05254359999981,
+  "training_time_ms": 53052.54359999981
 }

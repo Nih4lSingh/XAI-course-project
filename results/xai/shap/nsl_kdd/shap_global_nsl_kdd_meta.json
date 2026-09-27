@@ -60,132 +60,132 @@
     {
       "rank": 1,
       "feature": "serror_rate",
-      "mean_abs_shap": 0.13955482714592896
+      "mean_abs_shap": 0.12886281696380553
     },
     {
       "rank": 2,
       "feature": "logged_in",
-      "mean_abs_shap": 0.05795346437275037
+      "mean_abs_shap": 0.0674047010885622
     },
     {
       "rank": 3,
       "feature": "dst_host_same_src_port_rate",
-      "mean_abs_shap": 0.03882733236016395
+      "mean_abs_shap": 0.043169060399785825
     },
     {
       "rank": 4,
       "feature": "dst_host_srv_count",
-      "mean_abs_shap": 0.03648877135343402
+      "mean_abs_shap": 0.029397187071176063
     },
     {
       "rank": 5,
-      "feature": "count",
-      "mean_abs_shap": 0.025368471692798527
+      "feature": "protocol_type",
+      "mean_abs_shap": 0.028029623789405312
     },
     {
       "rank": 6,
-      "feature": "protocol_type",
-      "mean_abs_shap": 0.02326942257242925
+      "feature": "count",
+      "mean_abs_shap": 0.025207681689204054
     },
     {
       "rank": 7,
       "feature": "dst_host_rerror_rate",
-      "mean_abs_shap": 0.022409449845568728
+      "mean_abs_shap": 0.02344995730199861
     },
     {
       "rank": 8,
       "feature": "difficulty_level",
-      "mean_abs_shap": 0.018795363055749997
+      "mean_abs_shap": 0.018543913102202148
     },
     {
       "rank": 9,
-      "feature": "srv_count",
-      "mean_abs_shap": 0.013277797837279826
+      "feature": "wrong_fragment",
+      "mean_abs_shap": 0.014502373104449484
     },
     {
       "rank": 10,
-      "feature": "wrong_fragment",
-      "mean_abs_shap": 0.013075059810467006
+      "feature": "flag",
+      "mean_abs_shap": 0.012540893129109347
     },
     {
       "rank": 11,
-      "feature": "flag",
-      "mean_abs_shap": 0.01172302356283983
+      "feature": "dst_host_same_srv_rate",
+      "mean_abs_shap": 0.01106738161061984
     },
     {
       "rank": 12,
-      "feature": "dst_host_same_srv_rate",
-      "mean_abs_shap": 0.011213583968367073
+      "feature": "srv_count",
+      "mean_abs_shap": 0.010731178108310585
     },
     {
       "rank": 13,
       "feature": "dst_host_count",
-      "mean_abs_shap": 0.007351538700069164
+      "mean_abs_shap": 0.008875827361713587
     },
     {
       "rank": 14,
-      "feature": "rerror_rate",
-      "mean_abs_shap": 0.006815896598429779
+      "feature": "same_srv_rate",
+      "mean_abs_shap": 0.00803292834960953
     },
     {
       "rank": 15,
-      "feature": "service",
-      "mean_abs_shap": 0.006481005577169755
+      "feature": "rerror_rate",
+      "mean_abs_shap": 0.007140955117783141
     },
     {
       "rank": 16,
       "feature": "num_compromised",
-      "mean_abs_shap": 0.0050273312088078516
+      "mean_abs_shap": 0.00511790008186592
     },
     {
       "rank": 17,
       "feature": "diff_srv_rate",
-      "mean_abs_shap": 0.004608993946055262
+      "mean_abs_shap": 0.0045394639883200045
     },
     {
       "rank": 18,
-      "feature": "same_srv_rate",
-      "mean_abs_shap": 0.004405859989664866
+      "feature": "land",
+      "mean_abs_shap": 0.0037443156083005304
     },
     {
       "rank": 19,
-      "feature": "land",
-      "mean_abs_shap": 0.004223352866757341
+      "feature": "service",
+      "mean_abs_shap": 0.0037226519160878987
     },
     {
       "rank": 20,
-      "feature": "dst_host_diff_srv_rate",
-      "mean_abs_shap": 0.0042056718793715584
+      "feature": "dst_host_srv_diff_host_rate",
+      "mean_abs_shap": 0.0036840038329436437
     },
     {
       "rank": 21,
-      "feature": "duration",
-      "mean_abs_shap": 0.003969767004798638
+      "feature": "src_bytes",
+      "mean_abs_shap": 0.003588473574475012
     },
     {
       "rank": 22,
-      "feature": "dst_host_srv_diff_host_rate",
-      "mean_abs_shap": 0.0034574737898373635
+      "feature": "dst_host_diff_srv_rate",
+      "mean_abs_shap": 0.0033232576534707
     },
     {
       "rank": 23,
-      "feature": "src_bytes",
-      "mean_abs_shap": 0.0033671296256829707
+      "feature": "dst_bytes",
+      "mean_abs_shap": 0.0030625906742022483
     },
     {
       "rank": 24,
-      "feature": "dst_bytes",
-      "mean_abs_shap": 0.0024480319288289493
+      "feature": "duration",
+      "mean_abs_shap": 0.002780107551927892
     },
     {
       "rank": 25,
       "feature": "srv_diff_host_rate",
-      "mean_abs_shap": 0.0021703951533660094
+      "mean_abs_shap": 0.002297679932309187
     },
     {
       "rank": 26,
       "feature": "num_file_creations",
-      "mean_abs_shap": 0.0018123772363794108
+      "mean_abs_shap": 0.0013676645849855734
     },
     {
       "rank": 27,

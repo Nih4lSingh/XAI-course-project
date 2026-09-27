@@ -117,23 +117,23 @@ Identified 12 highly collinear pairs. All paper-reported redundant predictors we
 
 | Dataset | Feature Mode | Model | Input Dim | Accuracy | Precision (Macro) | Recall (Macro) | F1-Score (Macro) | F1-Score (Weighted) | Training Time (s) |
 | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **NSL-KDD** | **Selected** | **DNN** | 36 | **0.9967** | 0.8215 | 0.8057 | **0.8040** | 0.9966 | 35.51 s |
-| **NSL-KDD** | **Selected** | **1D-CNN** | 36 | **0.9945** | 0.8909 | 0.9011 | **0.8941** | 0.9946 | 72.29 s |
-| **NSL-KDD** | **Selected** | **2D-CNN** | 36 ($6\times6$) | **0.9950** | 0.9306 | 0.8539 | **0.8699** | 0.9949 | 129.86 s |
-| **UNSW-NB15**| **Selected** | **DNN** | 38 | **0.8089** | 0.7656 | 0.6816 | **0.6599** | 0.7754 | 65.65 s |
-| **UNSW-NB15**| **Selected** | **1D-CNN** | 38 | **0.8033** | 0.7693 | 0.6774 | **0.6538** | 0.7700 | 154.01 s |
-| **UNSW-NB15**| **Selected** | **2D-CNN** | 49 ($7\times7$) | **0.8097** | 0.7644 | 0.6834 | **0.6600** | 0.7761 | 232.06 s |
+| **NSL-KDD** | **Selected** | **DNN** | 36 | **0.9966** | 0.9659 | 0.8056 | **0.8058** | 0.9965 | 18.77 s |
+| **NSL-KDD** | **Selected** | **1D-CNN** | 36 | **0.9947** | 0.9107 | 0.8978 | **0.9017** | 0.9947 | 53.05 s |
+| **NSL-KDD** | **Selected** | **2D-CNN** | 36 ($6\times6$) | **0.9962** | 0.9711 | 0.8051 | **0.8085** | 0.9961 | 103.90 s |
+| **UNSW-NB15**| **Selected** | **DNN** | 38 | **0.8052** | 0.7510 | 0.6848 | **0.6627** | 0.7754 | 26.46 s |
+| **UNSW-NB15**| **Selected** | **1D-CNN** | 38 | **0.7995** | 0.7796 | 0.6684 | **0.6454** | 0.7639 | 75.45 s |
+| **UNSW-NB15**| **Selected** | **2D-CNN** | 49 ($7\times7$) | **0.8079** | 0.7578 | 0.6845 | **0.6595** | 0.7755 | 166.65 s |
 
 ### 5.3 Paper Reported vs. Reproduced Performance Comparison
 
 | Dataset | Model | Paper Accuracy | Our Accuracy | Difference ($\Delta$) | Paper Training Time (ms) | Our Total Training Time (s) | Replication Assessment |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **NSL-KDD** | **DNN** | 0.9930 (99.3%) | **0.9967 (99.67%)** | $+0.0037$ | 142.0 | 35.51 | **Faithfully Reproduced** ($\Delta \le 0.0037$) |
-| **NSL-KDD** | **1D-CNN** | 0.9920 (99.2%) | **0.9945 (99.45%)** | $+0.0025$ | 325.0 | 72.29 | **Faithfully Reproduced** ($\Delta \le 0.0025$) |
-| **NSL-KDD** | **2D-CNN** | 0.9940 (99.4%) | **0.9950 (99.50%)** | $+0.0010$ | 340.0 | 129.86 | **Faithfully Reproduced** ($\Delta \le 0.0010$) |
-| **UNSW-NB15** | **DNN** | 0.8000 (80.0%) | **0.8089 (80.89%)** | $+0.0089$ | 323.0 | 65.65 | **Faithfully Reproduced** ($\Delta \le 0.0089$) |
-| **UNSW-NB15** | **1D-CNN** | 0.8000 (80.0%) | **0.8033 (80.33%)** | $+0.0033$ | 442.0 | 154.01 | **Faithfully Reproduced** ($\Delta \le 0.0033$) |
-| **UNSW-NB15** | **2D-CNN** | 0.8100 (81.0%) | **0.8097 (80.97%)** | $-0.0003$ | 455.0 | 232.06 | **Faithfully Reproduced** ($\Delta \le 0.0003$) |
+| **NSL-KDD** | **DNN** | 0.9930 (99.3%) | **0.9966 (99.66%)** | $+0.0036$ | 142.0 | 18.77 | **Faithfully Reproduced** ($\Delta \le 0.0036$) |
+| **NSL-KDD** | **1D-CNN** | 0.9920 (99.2%) | **0.9947 (99.47%)** | $+0.0027$ | 325.0 | 53.05 | **Faithfully Reproduced** ($\Delta \le 0.0027$) |
+| **NSL-KDD** | **2D-CNN** | 0.9940 (99.4%) | **0.9962 (99.62%)** | $+0.0022$ | 340.0 | 103.90 | **Faithfully Reproduced** ($\Delta \le 0.0022$) |
+| **UNSW-NB15** | **DNN** | 0.8000 (80.0%) | **0.8052 (80.52%)** | $+0.0052$ | 323.0 | 26.46 | **Faithfully Reproduced** ($\Delta \le 0.0052$) |
+| **UNSW-NB15** | **1D-CNN** | 0.8000 (80.0%) | **0.7995 (79.95%)** | $-0.0005$ | 442.0 | 75.45 | **Faithfully Reproduced** ($\Delta \le 0.0005$) |
+| **UNSW-NB15** | **2D-CNN** | 0.8100 (81.0%) | **0.8079 (80.79%)** | $-0.0021$ | 455.0 | 166.65 | **Faithfully Reproduced** ($\Delta \le 0.0021$) |
 
 *Runtime Note: The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons.*
 
@@ -142,11 +142,11 @@ Identified 12 highly collinear pairs. All paper-reported redundant predictors we
 ## 6. Explainable AI (XAI) Synthesis: SHAP Analysis
 
 ### 7.1 NSL-KDD Interpretability Findings
-- **SHAP Global Importance (Seed-controlled random sample of 50 test instances; Target Class: DoS):** Top features ranked by class-specific $mean(|SHAP|)$ were `serror_rate` (0.13955), `logged_in` (0.05795), `dst_host_same_src_port_rate` (0.03883), `dst_host_srv_count` (0.03649), and `count` (0.02537).
+- **SHAP Global Importance (Seed-controlled random sample of 50 test instances; Target Class: DoS):** Top features ranked by class-specific $mean(|SHAP|)$ were `serror_rate` (0.12886), `logged_in` (0.06740), `dst_host_same_src_port_rate` (0.04317), `dst_host_srv_count` (0.02940), and `protocol_type` (0.02803).
 - **Attribution Interpretation:** These features receive the largest model attributions for the DoS target class. In particular, elevated SYN error rates (`serror_rate`) and unauthenticated session state (`logged_in = 0`) yield the strongest positive attributions toward DoS classifications.
 
 ### 7.2 UNSW-NB15 Interpretability Findings
-- **SHAP Global Importance (Seed-controlled random sample of 50 test instances; Target Class: Normal):** Top features ranked by class-specific $mean(|SHAP|)$ were `dttl` (0.15098), `swin` (0.11924), `sttl` (0.07591), `ct_dst_sport_ltm` (0.05688), and `ct_state_ttl` (0.02169).
+- **SHAP Global Importance (Seed-controlled random sample of 50 test instances; Target Class: Normal):** Top features ranked by class-specific $mean(|SHAP|)$ were `dttl` (0.17550), `swin` (0.16447), `sttl` (0.06162), `ct_dst_sport_ltm` (0.05263), and `ct_state_ttl` (0.02248).
 - **Attribution Interpretation:** These features receive the largest model attributions for the Normal target class. Canonical TTL thresholds (`sttl = 64` or `255`, `dttl = 252`) and standard TCP window advertisements (`swin = 255`) yield positive attribution toward Normal predictions.
 - **Note on Published Feature Inconsistency:** In Sharma et al. (2024), Figure 7 and Section 5.2 cite `data` as the #1 most important feature for UNSW-NB15 Normal global SHAP attribution. However, a feature named `data` does not exist in the UNSW-NB15 dataset schema or in the paper's own feature table (Table 2). Our reproduction therefore reports the feature ranking obtained from the actual canonical feature set (top feature: `dttl`).
 
@@ -173,10 +173,10 @@ Removing highly collinear predictors ($|PCC| > 0.95$) preserves high classificat
 - **UNSW-NB15:** Predictors reduced from 42 to 38 ($9.52\%$ reduction). Reshaped into a $7 \times 7$ grid with exactly 11 trailing zero-padding elements.
 
 ### RQ5: What effect does feature selection have on model training duration?
-Feature reduction decreased training duration significantly due to smaller input matrices and fewer first-layer parameters. Note: The paper reports training times of 142–340 ms for NSL-KDD and 323–455 ms for UNSW-NB15 ("Paper-reported training time"). Our reproduction measures total 20-epoch wall-clock training time (36–130 s and 66–232 s, respectively). The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons.
+Feature reduction decreased training duration significantly due to smaller input matrices and fewer first-layer parameters. Note: The paper reports training times of 142–340 ms for NSL-KDD and 323–455 ms for UNSW-NB15 ("Paper-reported training time"). Our reproduction measures total 20-epoch wall-clock training time (19–104 s and 26–167 s, respectively). The paper and reproduction were executed in different environments, so the reported training times are not directly hardware-normalized comparisons.
 
 ### RQ6: How do DNN, 1D-CNN, and 2D-CNN compare under identical preprocessing?
-DNN achieved the lowest training duration on both datasets (35.51 s on NSL-KDD and 65.65 s on UNSW-NB15). 2D-CNN achieved 0.9950 accuracy on NSL-KDD and 0.8097 on UNSW-NB15, matching the paper's 0.8100 within 0.0003, while requiring higher training overhead due to 2D convolutions.
+DNN achieved the lowest training duration on both datasets (18.77 s on NSL-KDD and 26.46 s on UNSW-NB15). 2D-CNN achieved 0.9962 accuracy on NSL-KDD and 0.8079 on UNSW-NB15, matching the paper's 0.8100 within 0.0021, while requiring higher training overhead due to 2D convolutions.
 
 ### RQ7: Does SHAP identify interpretable features driving the DNN decisions?
 **Yes.** SHAP consistently identified domain-critical network flow attributes receiving the largest model attributions for the target classes. In NSL-KDD, connection error rates and authentication status received the highest attribution for DoS. In UNSW-NB15, packet TTL and TCP window size received the highest attribution for Normal traffic. SHAP explains the model's learned prediction behavior; they do not establish causal relationships between a feature and the underlying network attack.

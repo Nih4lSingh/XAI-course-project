@@ -39,7 +39,7 @@ def set_deterministic_seeds(seed: int = 42):
 def run_experiment(
     experiment_id: str,
     epochs: int = 20,
-    batch_size: int = 64,
+    batch_size: int = 128,
     dropout_rate: float = 0.0,
     verbose: int = 1
 ) -> Dict:

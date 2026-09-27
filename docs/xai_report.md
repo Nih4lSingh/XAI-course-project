@@ -10,7 +10,7 @@ In accordance with Section 5 of Sharma et al., the explainability evaluation cen
 1. **NSL-KDD:** 3-layer DNN ($64 \to 64 \to 64 \to 5$) trained on the 36 selected features.
 2. **UNSW-NB15:** 3-layer DNN ($64 \to 64 \to 64 \to 5$) trained on the 38 selected features.
 
-**SHapley Additive Explanations (SHAP)** was deployed to audit local and global prediction mechanics.
+**SHapley Additive Explanations (SHAP)** were deployed to audit local and global prediction mechanics.
 
 ---
 
@@ -26,35 +26,28 @@ Features are ranked by **Mean Absolute SHAP Value** ($mean(|SHAP|)$) for each re
 
 | Rank | Feature Name | Mean Absolute SHAP ($mean(|SHAP|)$) |
 | :---: | :--- | :---: |
-| 1 | `serror_rate` | 0.13955 |
-| 2 | `logged_in` | 0.05795 |
-| 3 | `dst_host_same_src_port_rate` | 0.03883 |
-| 4 | `dst_host_srv_count` | 0.03649 |
-| 5 | `count` | 0.02537 |
-| 6 | `protocol_type` | 0.02327 |
-| 7 | `dst_host_rerror_rate` | 0.02241 |
-| 8 | `difficulty_level` | 0.01880 |
-| 9 | `srv_count` | 0.01328 |
-| 10 | `wrong_fragment` | 0.01308 |
+| 1 | `serror_rate` | 0.12886 |
+| 2 | `logged_in` | 0.06740 |
+| 3 | `dst_host_same_src_port_rate` | 0.04317 |
+| 4 | `dst_host_srv_count` | 0.02940 |
+| 5 | `protocol_type` | 0.02803 |
+| 6 | `count` | 0.02521 |
+| 7 | `dst_host_rerror_rate` | 0.02345 |
+| 8 | `difficulty_level` | 0.01854 |
+| 9 | `wrong_fragment` | 0.01450 |
+| 10 | `flag` | 0.01254 |
 
 ### 2.2 UNSW-NB15 SHAP Global Importance Ranking (Target Class: Normal)
 
 | Rank | Feature Name | Mean Absolute SHAP ($mean(|SHAP|)$) |
 | :---: | :--- | :---: |
-| 1 | `dttl` | 0.15098 |
-| 2 | `swin` | 0.11924 |
-| 3 | `sttl` | 0.07591 |
-| 4 | `ct_dst_sport_ltm` | 0.05688 |
-| 5 | `ct_state_ttl` | 0.02169 |
-| 6 | `dmean` | 0.01636 |
-| 7 | `ct_dst_src_ltm` | 0.01604 |
-| 8 | `ct_srv_src` | 0.01172 |
-| 9 | `smean` | 0.01161 |
-| 10 | `service` | 0.00977 |
-
----
-
-## 3. SHAP Artifacts
-
-High-resolution beeswarm summary plots, global importance bar plots, and structured JSON explanations are archived in `results/xai/shap/`.
-
+| 1 | `dttl` | 0.17550 |
+| 2 | `swin` | 0.16447 |
+| 3 | `sttl` | 0.06162 |
+| 4 | `ct_dst_sport_ltm` | 0.05263 |
+| 5 | `ct_state_ttl` | 0.02248 |
+| 6 | `ct_dst_src_ltm` | 0.01748 |
+| 7 | `dmean` | 0.01300 |
+| 8 | `service` | 0.01058 |
+| 9 | `smean` | 0.00802 |
+| 10 | `state` | 0.00735 |
