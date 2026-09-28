@@ -1,0 +1,79 @@
+{
+  "experiment_id": "NSL_SELECTED_DNN",
+  "dataset": "NSL-KDD",
+  "model": "DNN",
+  "paper_accuracy": 0.993,
+  "paper_decimals": 3,
+  "seed_count": 2,
+  "accuracy_mean": 0.9929034101733664,
+  "accuracy_std": 0.0002469732200753526,
+  "accuracy_ci95_margin": 0.00034228741982604837,
+  "accuracy_ci95_low": 0.9925611227535404,
+  "accuracy_ci95_high": 0.9932456975931924,
+  "accuracy_min": 0.9927287737346796,
+  "accuracy_max": 0.9930780466120531,
+  "paper_in_95ci": true,
+  "paper_in_range": true,
+  "rounding_match_count": 2,
+  "rounding_match_percentage": 100.0,
+  "best_seed": {
+    "seed": 656305562,
+    "test_accuracy": 0.9930780466120531,
+    "test_loss": 0.038117267191410065,
+    "f1_macro": 0.7696505871657002,
+    "raw_error": 7.804661205312868e-05,
+    "absolute_error": 7.804661205312868e-05,
+    "rounding_aware_error": 0.0,
+    "matches_paper_rounding": true
+  },
+  "metric_statistics": {
+    "test_accuracy": {
+      "mean": 0.9929034101733664,
+      "std": 0.0002469732200753526,
+      "min": 0.9927287737346796,
+      "max": 0.9930780466120531
+    },
+    "test_loss": {
+      "mean": 0.039498185738921165,
+      "std": 0.0019529137384227538,
+      "min": 0.038117267191410065,
+      "max": 0.040879104286432266
+    },
+    "precision_macro": {
+      "mean": 0.7639158662673615,
+      "std": 0.0021786923443941255,
+      "min": 0.7623752981365213,
+      "max": 0.7654564343982019
+    },
+    "recall_macro": {
+      "mean": 0.7805099023352151,
+      "std": 0.00926250161997336,
+      "min": 0.7739603246289806,
+      "max": 0.7870594800414497
+    },
+    "f1_macro": {
+      "mean": 0.7718449922095485,
+      "std": 0.003103357374350148,
+      "min": 0.7696505871657002,
+      "max": 0.7740393972533968
+    },
+    "precision_weighted": {
+      "mean": 0.9926393518957748,
+      "std": 0.00016924054466550383,
+      "min": 0.9925196807589901,
+      "max": 0.9927590230325595
+    },
+    "recall_weighted": {
+      "mean": 0.9929034101733664,
+      "std": 0.0002469732200753526,
+      "min": 0.9927287737346796,
+      "max": 0.9930780466120531
+    },
+    "f1_weighted": {
+      "mean": 0.9927436114466657,
+      "std": 0.00022688699032322892,
+      "min": 0.9925831781172452,
+      "max": 0.9929040447760863
+    }
+  }
+}

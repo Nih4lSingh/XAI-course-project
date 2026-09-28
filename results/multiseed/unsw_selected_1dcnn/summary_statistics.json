@@ -1,0 +1,79 @@
+{
+  "experiment_id": "UNSW_SELECTED_1DCNN",
+  "dataset": "UNSW-NB15",
+  "model": "1D-CNN",
+  "paper_accuracy": 0.8,
+  "paper_decimals": 2,
+  "seed_count": 2,
+  "accuracy_mean": 0.7683448573898013,
+  "accuracy_std": 0.004767012007999161,
+  "accuracy_ci95_margin": 0.006606741573033659,
+  "accuracy_ci95_low": 0.7617381158167676,
+  "accuracy_ci95_high": 0.7749515989628349,
+  "accuracy_min": 0.7649740708729473,
+  "accuracy_max": 0.7717156439066551,
+  "paper_in_95ci": false,
+  "paper_in_range": false,
+  "rounding_match_count": 0,
+  "rounding_match_percentage": 0.0,
+  "best_seed": {
+    "seed": 1251710312,
+    "test_accuracy": 0.7717156439066551,
+    "test_loss": 0.5578511357307434,
+    "f1_macro": 0.6318841134513269,
+    "raw_error": -0.028284356093344898,
+    "absolute_error": 0.028284356093344898,
+    "rounding_aware_error": 0.023284356093344893,
+    "matches_paper_rounding": false
+  },
+  "metric_statistics": {
+    "test_accuracy": {
+      "mean": 0.7683448573898013,
+      "std": 0.004767012007999161,
+      "min": 0.7649740708729473,
+      "max": 0.7717156439066551
+    },
+    "test_loss": {
+      "mean": 0.5598267018795013,
+      "std": 0.0027938724409386543,
+      "min": 0.5578511357307434,
+      "max": 0.5618022680282593
+    },
+    "precision_macro": {
+      "mean": 0.758614265594344,
+      "std": 0.08926019366139121,
+      "min": 0.6954977773663498,
+      "max": 0.8217307538223382
+    },
+    "recall_macro": {
+      "mean": 0.6658127649112671,
+      "std": 0.0014389512431211813,
+      "min": 0.6647952727294593,
+      "max": 0.6668302570930749
+    },
+    "f1_macro": {
+      "mean": 0.6312630816403897,
+      "std": 0.0008782716096924341,
+      "min": 0.6306420498294526,
+      "max": 0.6318841134513269
+    },
+    "precision_weighted": {
+      "mean": 0.8062896196434921,
+      "std": 0.03941908438503245,
+      "min": 0.7784161177666709,
+      "max": 0.8341631215203132
+    },
+    "recall_weighted": {
+      "mean": 0.7683448573898013,
+      "std": 0.004767012007999161,
+      "min": 0.7649740708729473,
+      "max": 0.7717156439066551
+    },
+    "f1_weighted": {
+      "mean": 0.7439812247056397,
+      "std": 0.0025407039818077437,
+      "min": 0.7421846756911158,
+      "max": 0.7457777737201636
+    }
+  }
+}
