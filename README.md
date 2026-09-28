@@ -322,19 +322,8 @@ AI assistance was used as a development aid. The reported experimental results w
 
 ---
 
-## 12. GitHub Repository
 
-GitHub repository:
-
-```text
-<YOUR_GITHUB_REPOSITORY_URL>
-```
-
-Replace the placeholder above with the final repository URL after creating the GitHub repository.
-
----
-
-## 13. Paper
+## 12. Paper
 
 Sharma et al. (2024):
 
