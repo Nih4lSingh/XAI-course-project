@@ -29,7 +29,7 @@ import pandas as pd
 
 from feature_selection.pearson_selector import PearsonCorrelationSelector
 from feature_selection.feature_to_grid_mapping import get_unsw_nb15_grid_mapper
-from preprocessing.unsw_preprocessing import (
+from preprocessing.unsw_nb15 import (
     load_raw_unsw_nb15,
     UNSW_NON_PREDICTORS,
     UNSW_CATEGORICAL_COLS,

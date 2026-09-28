@@ -28,7 +28,7 @@ import pandas as pd
 
 from feature_selection.pearson_selector import PearsonCorrelationSelector
 from feature_selection.feature_to_grid_mapping import get_nsl_kdd_grid_mapper
-from preprocessing.nsl_kdd_preprocessing import (
+from preprocessing.nsl_kdd import (
     load_raw_nsl_kdd,
     NSL_KDD_CATEGORICAL_COLS,
     NSL_KDD_PREDICTOR_COLS,

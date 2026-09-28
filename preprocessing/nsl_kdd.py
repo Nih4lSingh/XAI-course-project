@@ -68,6 +68,9 @@ NSL_KDD_PAPER_REMOVED_FEATURES = [
     "srv_rerror_rate"
 ]
 
+NSL_KDD_PREDICTOR_COLS = [c for c in NSL_KDD_COLUMNS if c != "label"]
+NSL_KDD_PAPER_SELECTED_FEATURES = [c for c in NSL_KDD_PREDICTOR_COLS if c not in NSL_KDD_PAPER_REMOVED_FEATURES]
+
 
 def load_raw_nsl_kdd(raw_dir: Path, use_train_only: bool = True) -> pd.DataFrame:
     """
