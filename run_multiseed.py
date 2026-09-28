@@ -184,25 +184,28 @@ def main() -> None:
     summaries: Dict[str, Dict] = {}
 
     if not args.report_only:
-        for exp_id in target_models:
-            # Generate seeds for this experiment
-            if args.seeds:
-                seed_list = [int(s.strip()) for s in args.seeds.split(",") if s.strip()]
-            else:
-                master_seed = (
-                    args.master_seed_nsl if "NSL" in exp_id.upper() else args.master_seed_unsw
-                )
-                seed_list = select_random_seeds(count=num_seeds, master_seed=master_seed)
+        try:
+            for exp_id in target_models:
+                # Generate seeds for this experiment
+                if args.seeds:
+                    seed_list = [int(s.strip()) for s in args.seeds.split(",") if s.strip()]
+                else:
+                    master_seed = (
+                        args.master_seed_nsl if "NSL" in exp_id.upper() else args.master_seed_unsw
+                    )
+                    seed_list = select_random_seeds(count=num_seeds, master_seed=master_seed)
 
-            # Run sweep for this model
-            runs_df, summary = runner.run_sweep(
-                experiment_id=exp_id,
-                seeds=seed_list,
-                epochs=epochs,
-                batch_size=args.batch_size,
-                overwrite=args.overwrite,
-            )
-            summaries[exp_id] = summary
+                # Run sweep for this model
+                runs_df, summary = runner.run_sweep(
+                    experiment_id=exp_id,
+                    seeds=seed_list,
+                    epochs=epochs,
+                    batch_size=args.batch_size,
+                    overwrite=args.overwrite,
+                )
+                summaries[exp_id] = summary
+        except KeyboardInterrupt:
+            print("\n[WARNING] Multi-seed sweep stopped by user. Generating report for all completed runs so far...\n")
 
     # Load existing summaries if report_only or to consolidate all completed models
     for exp_id in CANONICAL_6_MODELS:

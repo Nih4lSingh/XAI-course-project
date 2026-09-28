@@ -121,6 +121,44 @@ PAPER_BENCHMARKS = {
 }
 
 
+
+def configure_gpu_memory():
+    """Configures TensorFlow GPU memory growth to prevent Out-Of-Memory allocation issues."""
+    try:
+        gpus = tf.config.list_physical_devices("GPU")
+        if gpus:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+    except Exception:
+        pass
+
+
+configure_gpu_memory()
+
+
+class SeedProgressCallback(keras.callbacks.Callback):
+    """Prints training progress periodically to provide live feedback and prevent notebook timeout."""
+
+    def __init__(self, seed: int, total_epochs: int):
+        super().__init__()
+        self.seed = seed
+        self.total_epochs = total_epochs
+
+    def on_epoch_end(self, epoch: int, logs: Optional[Dict] = None):
+        logs = logs or {}
+        ep = epoch + 1
+        if ep == 1 or ep % 5 == 0 or ep == self.total_epochs:
+            loss = logs.get("loss", 0.0)
+            acc = logs.get("accuracy", 0.0)
+            val_acc = logs.get("val_accuracy", 0.0)
+            print(
+                f"\n      [Seed {self.seed}] Epoch {ep:2d}/{self.total_epochs} -> "
+                f"loss: {loss:.4f}, acc: {acc:.4f}, val_acc: {val_acc:.4f}",
+                end="",
+                flush=True,
+            )
+
+
 def select_random_seeds(count: int, master_seed: int) -> List[int]:
     """
     Deterministically generates non-repeating 32-bit random seeds from a master seed.
@@ -427,8 +465,9 @@ class MultiSeedExperimentRunner:
         # Build fresh model
         model = self._build_model(experiment_id, model_type, dataset_name)
 
-        # Train model
+        # Train model with live progress reporting
         start_time = time.perf_counter()
+        callbacks = [SeedProgressCallback(seed=seed, total_epochs=epochs)]
         history = model.fit(
             X_train,
             y_train,
@@ -436,6 +475,7 @@ class MultiSeedExperimentRunner:
             epochs=epochs,
             batch_size=batch_size,
             verbose=verbose,
+            callbacks=callbacks,
             shuffle=True,
         )
         elapsed_train = time.perf_counter() - start_time
@@ -490,6 +530,12 @@ class MultiSeedExperimentRunner:
             result_row[f"{c_key}_recall"] = float(c_metrics.get("recall", 0.0))
             result_row[f"{c_key}_f1"] = float(c_metrics.get("f1_score", 0.0))
 
+        # Explicit GPU/RAM cleanup to prevent memory accumulation across seeds
+        del model
+        tf.keras.backend.clear_session()
+        import gc
+        gc.collect()
+
         return result_row
 
     def run_sweep(
@@ -508,14 +554,20 @@ class MultiSeedExperimentRunner:
         exp_dir.mkdir(parents=True, exist_ok=True)
         csv_path = exp_dir / "seed_runs.csv"
 
-        # Check for existing completed seed runs
+        # Check for existing completed seed runs matching the requested epoch count
         completed_df = pd.DataFrame()
         existing_seeds = set()
         if csv_path.is_file() and not overwrite:
-            completed_df = pd.read_csv(csv_path)
-            if "seed" in completed_df.columns:
+            raw_completed = pd.read_csv(csv_path)
+            if not raw_completed.empty and "seed" in raw_completed.columns:
+                if "epochs" in raw_completed.columns:
+                    matching_epochs = raw_completed["epochs"] == epochs
+                    completed_df = raw_completed[matching_epochs].copy()
+                else:
+                    completed_df = raw_completed.copy()
                 existing_seeds = set(completed_df["seed"].astype(int).tolist())
-                print(f"[{experiment_id}] Found {len(existing_seeds)} existing completed runs in {csv_path.name}")
+                if existing_seeds:
+                    print(f"[{experiment_id}] Found {len(existing_seeds)} existing completed runs (epochs={epochs}) in {csv_path.name}")
 
         benchmark = PAPER_BENCHMARKS.get(experiment_id, {})
         print(f"\n=======================================================")
@@ -529,31 +581,40 @@ class MultiSeedExperimentRunner:
             results_list = completed_df.to_dict(orient="records")
 
         total_seeds = len(seeds)
-        for idx, seed in enumerate(seeds, 1):
-            if seed in existing_seeds and not overwrite:
-                print(f"[{idx}/{total_seeds}] Seed {seed} already completed. Skipping.")
-                continue
+        try:
+            for idx, seed in enumerate(seeds, 1):
+                if seed in existing_seeds and not overwrite:
+                    print(f"[{idx}/{total_seeds}] Seed {seed} already completed with epochs={epochs}. Skipping.")
+                    continue
 
-            print(f"[{idx}/{total_seeds}] Running seed {seed} ... ", end="", flush=True)
-            t0 = time.time()
-            res = self.run_single_seed(
-                experiment_id=experiment_id,
-                seed=seed,
-                epochs=epochs,
-                batch_size=batch_size,
-                verbose=verbose,
-            )
-            elapsed = time.time() - t0
-            print(
-                f"Done ({elapsed:.1f}s) | Accuracy: {res['test_accuracy']:.5f} | "
-                f"Abs Error: {res['absolute_error']:.5f} | "
-                f"Paper Match: {'YES' if res['matches_paper_rounding'] else 'No'}"
-            )
-            results_list.append(res)
+                print(f"[{idx}/{total_seeds}] Initializing seed {seed} ...", end="", flush=True)
+                t0 = time.time()
+                res = self.run_single_seed(
+                    experiment_id=experiment_id,
+                    seed=seed,
+                    epochs=epochs,
+                    batch_size=batch_size,
+                    verbose=verbose,
+                )
+                elapsed = time.time() - t0
+                print(
+                    f"\n      => Seed {seed} Finished ({elapsed:.1f}s) | Accuracy: {res['test_accuracy']:.5f} | "
+                    f"Abs Error: {res['absolute_error']:.5f} | "
+                    f"Paper Match: {'YES' if res['matches_paper_rounding'] else 'No'}\n"
+                )
+                results_list.append(res)
 
-            # Persist checkpoint immediately
-            temp_df = pd.DataFrame(results_list)
-            temp_df.to_csv(csv_path, index=False)
+                # Persist checkpoint immediately
+                temp_df = pd.DataFrame(results_list)
+                temp_df.to_csv(csv_path, index=False)
+
+        except KeyboardInterrupt:
+            print(f"\n\n[WARNING] Sweep interrupted by user (Control-C).")
+            print(f"[{experiment_id}] Safely saving {len(results_list)} completed runs to {csv_path}...")
+            if results_list:
+                temp_df = pd.DataFrame(results_list)
+                temp_df.to_csv(csv_path, index=False)
+            print(f"[{experiment_id}] Checkpointed successfully. Re-run anytime to resume.\n")
 
         runs_df = pd.DataFrame(results_list)
         summary = self.compute_statistics(runs_df, experiment_id)
