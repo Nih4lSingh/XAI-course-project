@@ -1,0 +1,7 @@
+model,dataset,metric,paper_reported_value,replication_value,unit,source_or_note
+DNN,NSL-KDD,accuracy,0.993,0.9936708860759492,proportion,Paper section 5 reports 0.993; rerun required after multiclass protocol correction.
+1D-CNN,NSL-KDD,accuracy,0.992,0.9872340425531916,proportion,Paper section 5; rerun required after multiclass protocol correction.
+2D-CNN,NSL-KDD,accuracy,0.994,0.9922704012927552,proportion,Paper section 5; rerun required after multiclass protocol correction.
+DNN,UNSW-NB15,accuracy,0.8,0.8103757481471878,proportion,Paper section 5; rerun required after multiclass protocol correction.
+1D-CNN,UNSW-NB15,accuracy,0.8,0.7795207536570082,proportion,Paper section 5; rerun required after multiclass protocol correction.
+2D-CNN,UNSW-NB15,accuracy,0.81,0.8100732482012056,proportion,Paper section 5; rerun required after multiclass protocol correction.
