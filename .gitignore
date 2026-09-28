@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+data/raw/
+data/processed/
+models/**/*.keras
+
+results/**/run_metadata.json
+results/**/preprocessing_metadata.json
+!results/**/metrics.csv
+*.DS_Store
