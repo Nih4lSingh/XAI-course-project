@@ -177,7 +177,7 @@ python scripts/generate_tables.py
 
 ## 14. Reproducibility Information
 - **Random Seed**: 42 fixed across NumPy, Python, and TensorFlow.
-- **Software Stack**: Python 3.10+, TensorFlow 2.17.0 / 2.22.0, scikit-learn 1.5.2, SHAP 0.46.0, LIME 0.2.0.
+- **Software Stack**: Python 3.10+, TensorFlow 2.17.0 / 2.22.0, scikit-learn 1.5.2, SHAP 0.46.0.
 - **Reproducibility Metadata**: Machine-readable metadata saved in `reproducibility.json` within every experiment directory in `results/`.
 - **Hardware Nondeterminism Note**: Exact floating-point bitwise parity cannot be guaranteed across distinct GPU architectures due to non-deterministic atomic operations in cuDNN.
 
@@ -189,30 +189,33 @@ XAI-course-project/
 ├── README.md                                  # Authoritative project documentation
 ├── requirements.txt                           # Python dependencies
 ├── environment.yml                            # Conda environment file
+├── run_all.py                                 # Single entry-point script for 6 models
+├── run_experiment.py                          # Single experiment runner
+├── run_xai.py                                 # SHAP explainability runner
 │
-├── src/                                       # Modular source package
-│   ├── preprocessing/                         # Encoders, scalers, dataset pipelines
-│   ├── feature_selection/                     # Pearson correlation selector & grid mapping
-│   ├── models/                                # DNN, 1D-CNN, 2D-CNN architectures
-│   ├── training/                              # Training loop & experiment backend
-│   ├── evaluation/                            # 5-class metrics, confusion matrices, timing
-│   └── xai/                                   # SHAP explainer backends
+├── configs/                                   # Class mappings & experiment JSON configs
+├── preprocessing/                             # Encoders, scalers, dataset pipelines
+├── feature_selection/                         # Pearson correlation selector & grid mapping
+├── models/                                    # DNN, 1D-CNN, 2D-CNN architectures
+├── training/                                  # Training loop & experiment backend
+├── evaluation/                                # 5-class metrics, confusion matrices, timing
+├── explainability/                            # SHAP explainer backends
 │
-├── scripts/                                   # Automation scripts
+├── scripts/                                   # Automation & verification scripts
 │   ├── organize_results.py                    # Results directory organizer
 │   ├── generate_tables.py                     # Programmatic table generator from JSON
-│   └── validate_results.py                    # Pre-submission consistency auditor
+│   ├── validate_results.py                    # Pre-submission consistency auditor
+│   └── validate_pipeline.py                   # Data integrity & leakage auditor
 │
-├── tests/                                     # Automated test suite (26 passing tests)
+├── tests/                                     # Automated test suite (29 tests)
 │   ├── test_no_leakage.py                     # Split disjointness & leakage prevention
 │   ├── test_pipeline.py                       # Dimension, grid transform & mapping
 │   ├── test_feature_selection.py              # Canonical 36 & 38 feature count checks
-│   ├── test_models.py                         # 5-class softmax output dimension checks
+│   ├── test_models.py                         # Architecture & layer configuration checks
 │   ├── test_metrics_and_summary.py            # JSON-to-CSV alignment & bounds
-│   └── test_xai_integrity.py                  # XAI feature alignment & target classes
+│   └── test_xai_integrity.py                  # SHAP feature alignment & target classes
 │
-├── configs/                                   # Model & experiment YAML configurations
-├── data/                                      # Raw & preprocessed dataset arrays
+├── data/                                      # Preprocessed dataset arrays (.npz)
 ├── splits/                                    # Exact 60/15/25 split indices (.npy)
 ├── docs/                                      # Research & audit documentation
 │   ├── change_log.md                          # Detailed change & audit log
@@ -228,14 +231,12 @@ XAI-course-project/
 │   ├── tables/results_table.md                # Markdown summary tables
 │   └── figures/                               # Confusion matrices & heatmaps
 │
-├── results/                                   # Structured experimental outputs
-│   ├── canonical/                             # 6 primary paper replication models
-│   ├── results_summary.csv                    # Complete master metrics summary
-│   ├── paper_vs_reproduction.csv              # Side-by-side paper comparison
-│   ├── models/                                # Saved .keras checkpoints
-│   ├── confusion_matrices/                    # High-res confusion matrix plots
-│   ├── training_curves/                       # Loss and accuracy curves
-│   └── xai/                                   # SHAP figures and metadata
-│
-└── archive/                                   # Quarantined legacy duplicate scripts
+└── results/                                   # Structured experimental outputs
+    ├── canonical/                             # 6 primary paper replication models
+    ├── results_summary.csv                    # Complete master metrics summary
+    ├── paper_vs_reproduction.csv              # Side-by-side paper comparison
+    ├── models/                                # Saved .keras checkpoints
+    ├── confusion_matrices/                    # High-res confusion matrix plots
+    ├── training_curves/                       # Loss and accuracy curves
+    └── xai/                                   # SHAP figures and metadata
 ```
