@@ -1,6 +1,7 @@
 """
-Generates the definitive, all-in-one Master Notebook for branch 'main':
-notebooks/Full_Project_Report.ipynb
+Generates the definitive, all-in-one Master Notebooks for both branches:
+- notebooks/Full_Project_Report.ipynb (branch: main)
+- notebooks/Full_Project_Report_MultiSeed.ipynb (branch: multiseed-replication)
 """
 
 import json
@@ -10,11 +11,45 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
 NOTEBOOKS_DIR.mkdir(parents=True, exist_ok=True)
 
+
+def colab_setup_cell(branch="main"):
+    return {
+        "cell_type": "code",
+        "execution_count": None,
+        "metadata": {},
+        "outputs": [],
+        "source": [
+            "# ==============================================================================\n",
+            "# 0. Google Colab Environment Setup (Auto-detects Colab vs Local)\n",
+            "# ==============================================================================\n",
+            "try:\n",
+            "    import google.colab\n",
+            "    IN_COLAB = True\n",
+            "except ImportError:\n",
+            "    IN_COLAB = False\n",
+            "\n",
+            "if IN_COLAB:\n",
+            "    print(\"\\U0001F680 Google Colab environment detected. Setting up repository...\")\n",
+            "    import os\n",
+            "    if not os.path.exists(\"src\") and not os.path.exists(\"XAI-course-project\"):\n",
+            "        !git clone https://github.com/Nih4lSingh/XAI-course-project.git\n",
+            "        %cd XAI-course-project\n",
+            "    elif os.path.exists(\"XAI-course-project\"):\n",
+            "        %cd XAI-course-project\n",
+            f"    !git checkout {branch}\n",
+            "    !pip install -q -r requirements.txt\n",
+            "    print(\"\\u2705 Repository setup complete for branch: " + branch + "!\")\n",
+            "else:\n",
+            "    print(\"\\U0001F4BB Running in local environment.\")"
+        ]
+    }
+
+
 def generate_canonical_master():
     nb_path = NOTEBOOKS_DIR / "Full_Project_Report.ipynb"
 
     cells = [
-        # Cell 1: Title & Abstract
+        # Cell 1: Title
         {
             "cell_type": "markdown",
             "metadata": {},
@@ -24,43 +59,13 @@ def generate_canonical_master():
                 "**Paper Reference**: *Expert Systems with Applications* 238 (2024) 121751\n",
                 "**Branch**: `main` (Canonical Single-Seed Pipeline) | **Evaluated Seed**: `42`\n",
                 "\n",
-                "This master notebook contains the complete project pipeline, empirical outputs, per-attack classification reports (Tables 6 & 7), training curves, confusion matrices, and SHAP interpretability analysis ready for presentation to faculty and evaluators.\n",
+                "This comprehensive master notebook contains the full project outputs: feature correlation heatmaps, model architectures, training curves, confusion matrices, per-attack classification reports (Tables 6 & 7), and SHAP beeswarm/global feature importance plots ready to present to professors and evaluators.\n",
                 "\n",
                 "---"
             ]
         },
-        # Cell 2: Google Colab Auto-Setup
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# ==============================================================================\n",
-                "# 0. Google Colab Environment Setup (Auto-detects Colab vs Local)\n",
-                "# ==============================================================================\n",
-                "try:\n",
-                "    import google.colab\n",
-                "    IN_COLAB = True\n",
-                "except ImportError:\n",
-                "    IN_COLAB = False\n",
-                "\n",
-                "if IN_COLAB:\n",
-                "    print(\"\\U0001F680 Google Colab environment detected. Setting up repository...\")\n",
-                "    import os\n",
-                "    if not os.path.exists(\"src\") and not os.path.exists(\"XAI-course-project\"):\n",
-                "        !git clone https://github.com/Nih4lSingh/XAI-course-project.git\n",
-                "        %cd XAI-course-project\n",
-                "    elif os.path.exists(\"XAI-course-project\"):\n",
-                "        %cd XAI-course-project\n",
-                "    !git checkout main\n",
-                "    !pip install -q -r requirements.txt\n",
-                "    print(\"\\u2705 Repository setup complete for branch: main!\")\n",
-                "else:\n",
-                "    print(\"\\U0001F4BB Running in local environment.\")"
-            ]
-        },
-        # Cell 3: Environment Setup & Library Imports
+        colab_setup_cell("main"),
+        # Cell 3: Imports
         {
             "cell_type": "code",
             "execution_count": None,
@@ -75,7 +80,6 @@ def generate_canonical_master():
                 "import seaborn as sns\n",
                 "from PIL import Image\n",
                 "\n",
-                "# Visualization & Pandas styling\n",
                 "plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')\n",
                 "pd.set_option('display.max_columns', None)\n",
                 "pd.set_option('display.width', 1000)\n",
@@ -96,41 +100,60 @@ def generate_canonical_master():
             "cell_type": "markdown",
             "metadata": {},
             "source": [
-                "## 1. Data Preprocessing & Dimensional Reshaping\n",
+                "## 1. Data Preprocessing & Correlation Heatmaps\n",
                 "\n",
-                "Raw network logs undergo a strict 5-stage transformation pipeline matching Sharma et al. (2024):\n",
-                "1. **Class Grouping**: Attack subtypes mapped into 5 high-level classes:\n",
-                "   - **NSL-KDD**: `DoS`, `Normal`, `Probe`, `R2L`, `U2R`.\n",
-                "   - **UNSW-NB15**: `DoS`, `Exploits`, `Fuzzers`, `Generic`, `Normal`.\n",
-                "2. **6-Feature Correlation Drop**:\n",
-                "   - **NSL-KDD**: Dropped `land`, `urgent`, `num_failed_logins`, `root_shell`, `su_attempted`, `num_shells` $\\rightarrow$ **36 features**.\n",
-                "   - **UNSW-NB15**: Dropped `ct_src_dport_ltm`, `loss`, `dwin`, `ct_ftp_cmd`, `label`, `ct_srv_dst` (plus `id`) $\\rightarrow$ **38 features**.\n",
-                "3. **Min-Max Scaling**: Scaled strictly to $[0, 1]$ computed on train partition to eliminate data leakage.\n",
-                "4. **Stratified Splitting**: 60% Train, 15% Validation, 25% Test using standard seed `42`.\n",
-                "5. **Spatial Grid Reshaping for 2D-CNN**:\n",
-                "   - NSL-KDD: 36 features mapped to **$6 \\times 6 \\times 1$ image** ($6 \\times 6 = 36$).\n",
-                "   - UNSW-NB15: 38 features padded with 11 zeros mapped to **$7 \\times 7 \\times 1$ image** ($7 \\times 7 = 49$)."
+                "Sharma et al. performed correlation and variance analysis to remove 6 redundant/collinear predictors:\n",
+                "- **NSL-KDD (36 features)**: Removed `land`, `urgent`, `num_failed_logins`, `root_shell`, `su_attempted`, `num_shells`.\n",
+                "- **UNSW-NB15 (38 features)**: Removed `ct_src_dport_ltm`, `loss`, `dwin`, `ct_ftp_cmd`, `label`, `ct_srv_dst` (plus `id`).\n",
+                "- **Min-Max Scaling**: Scaled strictly to $[0, 1]$ computed on train partition to eliminate data leakage.\n",
+                "- **Spatial Grid Reshaping for 2D-CNN**:\n",
+                "  - NSL-KDD: 36 features mapped to **$6 \\times 6 \\times 1$ image** ($6 \\times 6 = 36$).\n",
+                "  - UNSW-NB15: 38 features padded with 11 zeros mapped to **$7 \\times 7 \\times 1$ image** ($7 \\times 7 = 49$)."
             ]
         },
-        # Cell 5: Section 2 Markdown - Model Architectures
+        # Cell 5: Section 1 Code - Correlation Heatmaps Display
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Display Feature Correlation Heatmaps (Paper Methodology)\n",
+                "fig, axes = plt.subplots(1, 2, figsize=(18, 8))\n",
+                "heatmaps = [\n",
+                "    (ROOT / 'results' / 'feature_selection' / 'nsl_kdd_correlation_heatmap.png', 'NSL-KDD Feature Correlation Heatmap'),\n",
+                "    (ROOT / 'results' / 'feature_selection' / 'unsw_correlation_heatmap.png', 'UNSW-NB15 Feature Correlation Heatmap')\n",
+                "]\n",
+                "\n",
+                "for idx, (path, title) in enumerate(heatmaps):\n",
+                "    if path.is_file():\n",
+                "        img = Image.open(path)\n",
+                "        axes[idx].imshow(img)\n",
+                "        axes[idx].axis('off')\n",
+                "        axes[idx].set_title(title, fontsize=14, fontweight='bold', pad=10)\n",
+                "    else:\n",
+                "        axes[idx].text(0.5, 0.5, f\"{path.name}\\nNot found\", ha='center', va='center')\n",
+                "        axes[idx].axis('off')\n",
+                "\n",
+                "plt.tight_layout()\n",
+                "plt.show()"
+            ]
+        },
+        # Cell 6: Section 2 Markdown - Architectures
         {
             "cell_type": "markdown",
             "metadata": {},
             "source": [
-                "## 2. Deep Neural Network Architectures\n",
+                "## 2. Deep Neural Network Architectures & Training Curves\n",
                 "\n",
-                "All 3 deep learning architectures replicate Tables 1 & 2 of the published paper:\n",
-                "1. **Deep Neural Network (DNN)**:\n",
-                "   `Dense(64, ReLU) -> Dropout(0.01) -> Dense(64, ReLU) -> Dropout(0.01) -> Dense(64, ReLU) -> Dropout(0.01) -> Dense(5, Softmax)`\n",
-                "2. **1D-CNN (Sequential Feature Extractor)**:\n",
-                "   `Conv1D(64, k=3) -> Pool(2) -> Conv1D(32, k=3) -> Pool(2) -> Conv1D(32, k=3) -> Pool(2) -> Flatten -> Dense(5) [Dropout=0.0]`\n",
-                "3. **2D-CNN (Spatial Correlation Extractor)**:\n",
-                "   `Conv2D(32, 3x3) -> Pool(2x2) -> Conv2D(64, 3x3) -> Pool(2x2) -> Flatten -> Dense(64, ReLU) -> Dropout(0.5) -> Dense(5, Softmax)`\n",
+                "1. **Deep Neural Network (DNN)**: 3-layer Dense(64, ReLU) with Dropout(0.01) and AdamW.\n",
+                "2. **1D-CNN**: 3-stage Conv1D(64,32,32)-ReLU-MaxPool(2) with Dropout(0.0) and AdamW.\n",
+                "3. **2D-CNN**: Conv2D(32,64)-MaxPool-Dense(64)-Dropout(0.5) with AdamW.\n",
                 "\n",
-                "- **Hyperparameters**: AdamW (Learning Rate $= 0.001$, Weight Decay $= 0.0001$), Batch Size $= 128$, Epochs $= 20$."
+                "- **Hyperparameters**: AdamW (lr $= 0.001$, weight decay $= 0.0001$), Batch Size $= 128$, Epochs $= 20$."
             ]
         },
-        # Cell 6: Section 3 Code - Training Curves Display
+        # Cell 7: Section 2 Code - Training Curves Display
         {
             "cell_type": "code",
             "execution_count": None,
@@ -151,23 +174,23 @@ def generate_canonical_master():
                 "            axes[row, col].axis('off')\n",
                 "            axes[row, col].set_title(f\"{m.upper().replace('_', '-')} — {d_name} Training Curves\", fontsize=13, fontweight='bold')\n",
                 "        else:\n",
-                "            axes[row, col].text(0.5, 0.5, f\"Training curve {curve_path.name}\\nwill be generated upon training.\", ha='center', va='center')\n",
+                "            axes[row, col].text(0.5, 0.5, f\"{curve_path.name} not found.\", ha='center', va='center')\n",
                 "            axes[row, col].axis('off')\n",
                 "\n",
                 "plt.tight_layout()\n",
                 "plt.show()"
             ]
         },
-        # Cell 7: Section 4 Markdown - Overall Metrics Matrix
+        # Cell 8: Section 3 Markdown - Overall Comparison Table
         {
             "cell_type": "markdown",
             "metadata": {},
             "source": [
-                "## 3. Overall Performance Matrix vs Published Benchmarks\n",
-                "Compares overall test accuracy against Sharma et al. (2024) across all six canonical configurations."
+                "## 3. Overall Performance Matrix vs Published Paper\n",
+                "Juxtaposes our canonical single-run replicated accuracy against Sharma et al. (2024) Tables 1 & 2."
             ]
         },
-        # Cell 8: Section 4 Code - Master Comparison Table
+        # Cell 9: Section 3 Code - Overall Table
         {
             "cell_type": "code",
             "execution_count": None,
@@ -189,21 +212,21 @@ def generate_canonical_master():
                 "    df_comp = pd.DataFrame(comp_data, columns=['Dataset', 'Model', 'Paper_Accuracy', 'Replicated_Accuracy', 'Delta_Accuracy', 'Paper_Time_ms', 'Replicated_Within_Margin'])\n",
                 "\n",
                 "print(\"=\"*95)\n",
-                "print(\" SHARMA ET AL. (2024) BENCHMARK COMPARISON MATRIX (ALL 6 CANONICAL MODELS)\")\n",
+                "print(\" SHARMA ET AL. (2024) BENCHMARK COMPARISON MATRIX (ALL 6 MODELS)\")\n",
                 "print(\"=\"*95)\n",
                 "display(df_comp)"
             ]
         },
-        # Cell 9: Section 5 Markdown - Per-Attack Classification Reports (Table 6 & Table 7)
+        # Cell 10: Section 4 Markdown - Tables 6 & 7
         {
             "cell_type": "markdown",
             "metadata": {},
             "source": [
                 "## 4. Per-Attack Classification Reports (Tables 6 & 7)\n",
-                "Detailed attack-by-attack precision, recall, and F1-score comparisons matching *Expert Systems with Applications* 238 (2024) 121751."
+                "Class-by-class Precision, Recall, and F1 comparisons matching the journal format (*Expert Systems with Applications* 238, 2024, 121751)."
             ]
         },
-        # Cell 10: Section 5 Code - Table 6 & Table 7 MultiIndex Rendering
+        # Cell 11: Section 4 Code - Tables 6 & 7 MultiIndex
         {
             "cell_type": "code",
             "execution_count": None,
@@ -248,7 +271,7 @@ def generate_canonical_master():
                 "    render_multiindex_table(df7, 'UNSW-NB15', 7)"
             ]
         },
-        # Cell 11: Section 6 Code - Visual Comparison Bar Plots
+        # Cell 12: Section 5 Code - Per-Attack F1 Bar Plots
         {
             "cell_type": "code",
             "execution_count": None,
@@ -283,14 +306,14 @@ def generate_canonical_master():
                 "    plot_attack_f1_comparison(df7, 'UNSW-NB15')"
             ]
         },
-        # Cell 12: Section 7 Code - Confusion Matrices Display
+        # Cell 13: Section 6 Code - Confusion Matrix Heatmaps
         {
             "cell_type": "code",
             "execution_count": None,
             "metadata": {},
             "outputs": [],
             "source": [
-                "# Display Confusion Matrices across all 6 models\n",
+                "# Display Confusion Matrix Heatmaps across all 6 models\n",
                 "fig, axes = plt.subplots(3, 2, figsize=(16, 18))\n",
                 "models = ['dnn', '1d_cnn', '2d_cnn']\n",
                 "datasets = [('nsl', 'NSL-KDD'), ('unsw', 'UNSW-NB15')]\n",
@@ -302,7 +325,7 @@ def generate_canonical_master():
                 "            img = Image.open(cm_path)\n",
                 "            axes[row, col].imshow(img)\n",
                 "            axes[row, col].axis('off')\n",
-                "            axes[row, col].set_title(f\"{m.upper().replace('_', '-')} — {d_name} Confusion Matrix\", fontsize=13, fontweight='bold')\n",
+                "            axes[row, col].set_title(f\"{m.upper().replace('_', '-')} — {d_name} Confusion Matrix Heatmap\", fontsize=13, fontweight='bold')\n",
                 "        else:\n",
                 "            axes[row, col].text(0.5, 0.5, f\"{cm_path.name} not found.\", ha='center', va='center')\n",
                 "            axes[row, col].axis('off')\n",
@@ -311,47 +334,57 @@ def generate_canonical_master():
                 "plt.show()"
             ]
         },
-        # Cell 13: Section 8 Code - SHAP Global Feature Importance
+        # Cell 14: Section 7 Markdown - Explainable AI
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "## 5. Explainable AI (XAI): SHAP Feature Importance & Beeswarm Heatmaps\n",
+                "\n",
+                "Sharma et al. applied SHAP (KernelExplainer) to evaluate feature contributions:\n",
+                "- **NSL-KDD**: Top predictors include `serror_rate`, `logged_in`, `dst_host_same_src_port_rate`, and `dst_host_srv_count` (capturing DoS flooding and port scans).\n",
+                "- **UNSW-NB15**: Top predictors include `dttl` (destination TTL), `swin` (source TCP window), `sttl`, and `ct_dst_sport_ltm` (capturing protocol exploits)."
+            ]
+        },
+        # Cell 15: Section 7 Code - SHAP Global Importance & Beeswarm Plots
         {
             "cell_type": "code",
             "execution_count": None,
             "metadata": {},
             "outputs": [],
             "source": [
-                "# Explainable AI: SHAP Global Feature Importance Ranking\n",
-                "shap_nsl_meta = ROOT / 'results' / 'xai' / 'shap' / 'nsl_kdd' / 'shap_global_nsl_kdd_meta.json'\n",
-                "shap_unsw_meta = ROOT / 'results' / 'xai' / 'shap' / 'unsw_nb15' / 'shap_global_unsw_nb15_meta.json'\n",
+                "# Display SHAP Feature Importance & Beeswarm Plots\n",
+                "fig, axes = plt.subplots(2, 2, figsize=(18, 14))\n",
+                "shap_plots = [\n",
+                "    (ROOT / 'results' / 'xai' / 'shap' / 'nsl_kdd' / 'shap_global_importance_nsl_kdd.png', 'NSL-KDD: Global Feature Importance Ranking'),\n",
+                "    (ROOT / 'results' / 'xai' / 'shap' / 'nsl_kdd' / 'shap_beeswarm_summary_nsl_kdd.png', 'NSL-KDD: SHAP Summary Beeswarm Heatmap'),\n",
+                "    (ROOT / 'results' / 'xai' / 'shap' / 'unsw_nb15' / 'shap_global_importance_unsw_nb15.png', 'UNSW-NB15: Global Feature Importance Ranking'),\n",
+                "    (ROOT / 'results' / 'xai' / 'shap' / 'unsw_nb15' / 'shap_beeswarm_summary_unsw_nb15.png', 'UNSW-NB15: SHAP Summary Beeswarm Heatmap'),\n",
+                "]\n",
                 "\n",
-                "if shap_nsl_meta.is_file() and shap_unsw_meta.is_file():\n",
-                "    with open(shap_nsl_meta) as f: nsl_meta = json.load(f)\n",
-                "    with open(shap_unsw_meta) as f: unsw_meta = json.load(f)\n",
-                "    \n",
-                "    df_shap_nsl = pd.DataFrame(nsl_meta['feature_importance_ranking'][:10])\n",
-                "    df_shap_unsw = pd.DataFrame(unsw_meta['feature_importance_ranking'][:10])\n",
-                "    \n",
-                "    print(\"=\"*80)\n",
-                "    print(\" TOP 10 GLOBAL SHAP FEATURES: NSL-KDD (DoS Target Class)\")\n",
-                "    print(\"=\"*80)\n",
-                "    display(df_shap_nsl)\n",
-                "    \n",
-                "    print(\"=\"*80)\n",
-                "    print(\" TOP 10 GLOBAL SHAP FEATURES: UNSW-NB15 (Normal Target Class)\")\n",
-                "    print(\"=\"*80)\n",
-                "    display(df_shap_unsw)\n",
-                "else:\n",
-                "    print(\"SHAP meta files loaded from precomputed summary.\")"
+                "coords = [(0, 0), (0, 1), (1, 0), (1, 1)]\n",
+                "for (path, title), (r, c) in zip(shap_plots, coords):\n",
+                "    if path.is_file():\n",
+                "        img = Image.open(path)\n",
+                "        axes[r, c].imshow(img)\n",
+                "        axes[r, c].axis('off')\n",
+                "        axes[r, c].set_title(title, fontsize=13, fontweight='bold', pad=10)\n",
+                "    else:\n",
+                "        axes[r, c].text(0.5, 0.5, f\"{path.name}\\nNot found\", ha='center', va='center')\n",
+                "        axes[r, c].axis('off')\n",
+                "\n",
+                "plt.tight_layout()\n",
+                "plt.show()"
             ]
         },
-        # Cell 14: Section 9 Markdown - Presentation Commentary for Evaluator / Professor
+        # Cell 16: Section 8 Markdown - Presentation Defense
         {
             "cell_type": "markdown",
             "metadata": {},
             "source": [
-                "## 5. Academic Defense & Technical Discussion (For Evaluators & \"Sir\")\n",
+                "## 6. Academic Defense & Technical Discussion (For Evaluators & \"Sir\")\n",
                 "\n",
-                "When presenting these findings, the following three core points explain all empirical nuances:\n",
-                "\n",
-                "1. **High-Accuracy Classes Match Identically**:\n",
+                "1. **High-Accuracy Dominant Classes Match Identically**:\n",
                 "   - **DoS**, **Normal**, and **Probe** in NSL-KDD replicate published metrics with $\\Delta \\le 0.01$.\n",
                 "   - **Generic** in UNSW-NB15 matches Precision $1.00$ and Recall $0.97$ identically.\n",
                 "\n",
@@ -373,14 +406,14 @@ def generate_canonical_master():
     nb_json = {"cells": cells, "metadata": {"language_info": {"name": "python", "version": "3.10"}, "orig_nbformat": 4}, "nbformat": 4, "nbformat_minor": 2}
     with open(nb_path, "w", encoding="utf-8") as f:
         json.dump(nb_json, f, indent=2)
-    print(f"Generated: {nb_path}")
+    print(f"Generated Canonical Master: {nb_path}")
 
 
 def generate_multiseed_master():
     nb_path = NOTEBOOKS_DIR / "Full_Project_Report_MultiSeed.ipynb"
 
     cells = [
-        # Cell 1: Title & Overview
+        # Cell 1: Title
         {
             "cell_type": "markdown",
             "metadata": {},
@@ -389,42 +422,12 @@ def generate_multiseed_master():
                 "## Sharma et al. (2024) Intrusion Detection Across 64+ Independent Seeds\n",
                 "**Branch**: `multiseed-replication` | **Engine**: 128-Concurrent GPU Tensor Bank\n",
                 "\n",
-                "This master notebook contains the full multi-seed evaluation: PRNG seed generation, 128-concurrent GPU training logs, 64-seed statistical distributions (mean $\\pm$ std, 95% CI), LordKarsSama's rounding-aware metric ($e_{\\text{round}}$), and the identification of the exact seeds that reproduce the published paper down to printed precision.\n",
+                "This master notebook contains the full multi-seed evaluation: feature correlation heatmaps, cross-seed progression plots across 64 seeds, statistical confidence intervals (mean $\\pm$ std, 95% CI), LordKarsSama's rounding-aware metric ($e_{\\text{round}}$), and the identification of the exact winning seeds reproducing published precision.\n",
                 "\n",
                 "---"
             ]
         },
-        # Cell 2: Colab Auto-Setup
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# ==============================================================================\n",
-                "# 0. Google Colab Environment Setup (Auto-detects Colab vs Local)\n",
-                "# ==============================================================================\n",
-                "try:\n",
-                "    import google.colab\n",
-                "    IN_COLAB = True\n",
-                "except ImportError:\n",
-                "    IN_COLAB = False\n",
-                "\n",
-                "if IN_COLAB:\n",
-                "    print(\"\\U0001F680 Google Colab environment detected. Setting up repository...\")\n",
-                "    import os\n",
-                "    if not os.path.exists(\"src\") and not os.path.exists(\"XAI-course-project\"):\n",
-                "        !git clone https://github.com/Nih4lSingh/XAI-course-project.git\n",
-                "        %cd XAI-course-project\n",
-                "    elif os.path.exists(\"XAI-course-project\"):\n",
-                "        %cd XAI-course-project\n",
-                "    !git checkout multiseed-replication\n",
-                "    !pip install -q -r requirements.txt\n",
-                "    print(\"\\u2705 Repository setup complete for branch: multiseed-replication!\")\n",
-                "else:\n",
-                "    print(\"\\U0001F4BB Running in local environment.\")"
-            ]
-        },
+        colab_setup_cell("multiseed-replication"),
         # Cell 3: Imports
         {
             "cell_type": "code",
@@ -438,6 +441,7 @@ def generate_multiseed_master():
                 "import pandas as pd\n",
                 "import matplotlib.pyplot as plt\n",
                 "import seaborn as sns\n",
+                "from PIL import Image\n",
                 "\n",
                 "plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')\n",
                 "pd.set_option('display.max_columns', None)\n",
@@ -460,28 +464,51 @@ def generate_multiseed_master():
             "source": [
                 "## 1. Why Multi-Seed Evaluation Was Mandatory\n",
                 "\n",
-                "Sharma et al. (2024) omitted three critical hyperparameters in their paper:\n",
-                "1. **Weight Initialization Seed**\n",
-                "2. **Data Split Seed (60/15/25)**\n",
-                "3. **Mini-Batch Size**\n",
-                "\n",
-                "To scientifically verify whether the published results reflect true architectural capability or \"lucky seeds\", we evaluated **64 independent random initializations** per model using a vectorized GPU tensor engine."
+                "Sharma et al. (2024) omitted initialization seeds, data split seeds, and mini-batch size. To determine whether reported accuracies reflect true model architecture capability or lucky single initializations, we trained **64 independent seeds** per model using 128 concurrent GPU streams."
             ]
         },
-        # Cell 5: Section 2 Markdown - GPU Architecture
+        # Cell 5: Section 1 Code - Correlation Heatmaps
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Display Feature Correlation Heatmaps\n",
+                "fig, axes = plt.subplots(1, 2, figsize=(18, 8))\n",
+                "heatmaps = [\n",
+                "    (ROOT / 'results' / 'feature_selection' / 'nsl_kdd_correlation_heatmap.png', 'NSL-KDD Feature Correlation Heatmap'),\n",
+                "    (ROOT / 'results' / 'feature_selection' / 'unsw_correlation_heatmap.png', 'UNSW-NB15 Feature Correlation Heatmap')\n",
+                "]\n",
+                "\n",
+                "for idx, (path, title) in enumerate(heatmaps):\n",
+                "    if path.is_file():\n",
+                "        img = Image.open(path)\n",
+                "        axes[idx].imshow(img)\n",
+                "        axes[idx].axis('off')\n",
+                "        axes[idx].set_title(title, fontsize=14, fontweight='bold', pad=10)\n",
+                "    else:\n",
+                "        axes[idx].text(0.5, 0.5, f\"{path.name}\\nNot found\", ha='center', va='center')\n",
+                "        axes[idx].axis('off')\n",
+                "\n",
+                "plt.tight_layout()\n",
+                "plt.show()"
+            ]
+        },
+        # Cell 6: Section 2 Markdown - GPU Architecture
         {
             "cell_type": "markdown",
             "metadata": {},
             "source": [
                 "## 2. 128-Concurrent GPU Tensor Engine Architecture\n",
                 "\n",
-                "- **Vectorized Weight Stacking**: Parameter tensors stacked with leading dimension `[64, Din, Dout]`.\n",
-                "- **Parallel Forward Operations**: Dense layers evaluated using `torch.bmm`, convolutions mapped to native PyTorch grouped convolutions (`groups=64`).\n",
-                "- **Dual Concurrent CUDA Streams**: Stream 1 processes 64 NSL-KDD models, Stream 2 processes 64 UNSW-NB15 models simultaneously on the GPU.\n",
-                "- **Performance**: 2,560 model-epochs complete in **under 3 minutes** on modern NVIDIA GPUs."
+                "- **Vectorized Weight Stacking**: Parameter weights carry leading dimension `[64, Din, Dout]`.\n",
+                "- **Batch Matrix Multiplication (`torch.bmm`)**: Computes 64 model predictions concurrently in parallel inside NVIDIA Tensor Cores.\n",
+                "- **Dual CUDA Streams**: Stream 1 (64 NSL-KDD models) and Stream 2 (64 UNSW-NB15 models) execute simultaneously on GPU.\n",
+                "- **Throughput**: 2,560 model-epochs complete in under **3 minutes**."
             ]
         },
-        # Cell 6: Section 3 Code - Master Multi-Seed Table
+        # Cell 7: Section 3 Code - Master Multi-Seed Table
         {
             "cell_type": "code",
             "execution_count": None,
@@ -509,7 +536,7 @@ def generate_multiseed_master():
                 "display(df_multi)"
             ]
         },
-        # Cell 7: Section 4 Code - Winning Seeds Table
+        # Cell 8: Section 4 Code - Winning Seeds Table
         {
             "cell_type": "code",
             "execution_count": None,
@@ -533,7 +560,38 @@ def generate_multiseed_master():
                 "display(df_win)"
             ]
         },
-        # Cell 8: Section 5 Code - Multi-Seed Errorbar Plots
+        # Cell 9: Section 5 Code - Cross-Seed Accuracy & F1 Progression Plots
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Display Cross-Seed Progression Plots (Accuracy and F1 Across Seeds)\n",
+                "fig, axes = plt.subplots(2, 2, figsize=(18, 12))\n",
+                "seed_plots = [\n",
+                "    (ROOT / 'results' / '1d_cnn_gpu' / 'nsl_kdd_1dcnn_accuracy_across_seeds.png', 'NSL-KDD 1D-CNN: Accuracy Across 64 Seeds'),\n",
+                "    (ROOT / 'results' / '1d_cnn_gpu' / 'nsl_kdd_1dcnn_f1_macro_across_seeds.png', 'NSL-KDD 1D-CNN: Macro F1 Across 64 Seeds'),\n",
+                "    (ROOT / 'results' / '1d_cnn_gpu' / 'unsw_nb15_1dcnn_accuracy_across_seeds.png', 'UNSW-NB15 1D-CNN: Accuracy Across 64 Seeds'),\n",
+                "    (ROOT / 'results' / '1d_cnn_gpu' / 'unsw_nb15_1dcnn_f1_macro_across_seeds.png', 'UNSW-NB15 1D-CNN: Macro F1 Across 64 Seeds'),\n",
+                "]\n",
+                "\n",
+                "coords = [(0, 0), (0, 1), (1, 0), (1, 1)]\n",
+                "for (path, title), (r, c) in zip(seed_plots, coords):\n",
+                "    if path.is_file():\n",
+                "        img = Image.open(path)\n",
+                "        axes[r, c].imshow(img)\n",
+                "        axes[r, c].axis('off')\n",
+                "        axes[r, c].set_title(title, fontsize=13, fontweight='bold', pad=8)\n",
+                "    else:\n",
+                "        axes[r, c].text(0.5, 0.5, f\"{path.name}\\nNot found\", ha='center', va='center')\n",
+                "        axes[r, c].axis('off')\n",
+                "\n",
+                "plt.tight_layout()\n",
+                "plt.show()"
+            ]
+        },
+        # Cell 10: Section 6 Code - Distribution Plots vs Paper
         {
             "cell_type": "code",
             "execution_count": None,
@@ -581,14 +639,14 @@ def generate_multiseed_master():
                 "plt.show()"
             ]
         },
-        # Cell 9: Section 6 Code - Attack-by-Attack Breakdown Tables
+        # Cell 11: Section 7 Code - Tables 6 & 7 Attack Metrics
         {
             "cell_type": "code",
             "execution_count": None,
             "metadata": {},
             "outputs": [],
             "source": [
-                "# Display Tables 6 & 7 with Multi-Seed Winning Seed Integration\n",
+                "# Display Tables 6 & 7 Attack Metrics\n",
                 "table6_csv = ROOT / 'results' / 'comparison' / 'table6_nsl_kdd_per_class.csv'\n",
                 "table7_csv = ROOT / 'results' / 'comparison' / 'table7_unsw_nb15_per_class.csv'\n",
                 "\n",
@@ -605,7 +663,38 @@ def generate_multiseed_master():
                 "    display(df7)"
             ]
         },
-        # Cell 10: Section 7 Markdown - Conclusion
+        # Cell 12: Section 8 Code - SHAP Global Importance & Beeswarm Plots
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Display SHAP Feature Importance & Beeswarm Plots\n",
+                "fig, axes = plt.subplots(2, 2, figsize=(18, 14))\n",
+                "shap_plots = [\n",
+                "    (ROOT / 'results' / 'xai' / 'shap' / 'nsl_kdd' / 'shap_global_importance_nsl_kdd.png', 'NSL-KDD: Global Feature Importance Ranking'),\n",
+                "    (ROOT / 'results' / 'xai' / 'shap' / 'nsl_kdd' / 'shap_beeswarm_summary_nsl_kdd.png', 'NSL-KDD: SHAP Summary Beeswarm Heatmap'),\n",
+                "    (ROOT / 'results' / 'xai' / 'shap' / 'unsw_nb15' / 'shap_global_importance_unsw_nb15.png', 'UNSW-NB15: Global Feature Importance Ranking'),\n",
+                "    (ROOT / 'results' / 'xai' / 'shap' / 'unsw_nb15' / 'shap_beeswarm_summary_unsw_nb15.png', 'UNSW-NB15: SHAP Summary Beeswarm Heatmap'),\n",
+                "]\n",
+                "\n",
+                "coords = [(0, 0), (0, 1), (1, 0), (1, 1)]\n",
+                "for (path, title), (r, c) in zip(shap_plots, coords):\n",
+                "    if path.is_file():\n",
+                "        img = Image.open(path)\n",
+                "        axes[r, c].imshow(img)\n",
+                "        axes[r, c].axis('off')\n",
+                "        axes[r, c].set_title(title, fontsize=13, fontweight='bold', pad=10)\n",
+                "    else:\n",
+                "        axes[r, c].text(0.5, 0.5, f\"{path.name}\\nNot found\", ha='center', va='center')\n",
+                "        axes[r, c].axis('off')\n",
+                "\n",
+                "plt.tight_layout()\n",
+                "plt.show()"
+            ]
+        },
+        # Cell 13: Section 9 Markdown - Scientific Conclusion
         {
             "cell_type": "markdown",
             "metadata": {},
@@ -627,7 +716,7 @@ def generate_multiseed_master():
     nb_json = {"cells": cells, "metadata": {"language_info": {"name": "python", "version": "3.10"}, "orig_nbformat": 4}, "nbformat": 4, "nbformat_minor": 2}
     with open(nb_path, "w", encoding="utf-8") as f:
         json.dump(nb_json, f, indent=2)
-    print(f"Generated: {nb_path}")
+    print(f"Generated MultiSeed Master: {nb_path}")
 
 
 if __name__ == "__main__":
