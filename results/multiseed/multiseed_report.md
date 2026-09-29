@@ -9,12 +9,12 @@
 
 | Dataset | Architecture | Paper Accuracy | Multi-Seed Mean ± Std | 95% Confidence Interval | Range [Min, Max] | Closest Seed | Closest Accuracy | Absolute Error | Match at Printed Precision |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **UNSW-NB15** | **1D-CNN** | 0.8000 | 0.7683 ± 0.0048 | [0.7617, 0.7750] | [0.7650, 0.7717] | `1251710312` | **0.7717** | 0.028284 | No |
+| **NSL-KDD** | **DNN** | 0.9930 | 0.9876 ± 0.0010 | [0.9873, 0.9879] | [0.9839, 0.9892] | `36` | **0.9892** | 0.003800 | No |
+| **NSL-KDD** | **1D-CNN** | 0.9920 | 0.9823 ± 0.0024 | [0.9817, 0.9828] | [0.9723, 0.9853] | `41` | **0.9853** | 0.006732 | No |
+| **NSL-KDD** | **2D-CNN** | 0.9940 | 0.9966 ± 0.0005 | [0.9960, 0.9971] | [0.9960, 0.9970] | `2064790833` | **0.9960** | 0.001999 | No |
+| **UNSW-NB15** | **DNN** | 0.8000 | 0.8122 ± 0.0017 | [0.8118, 0.8127] | [0.8054, 0.8155] | `13` | **0.8054** | 0.005389 | No |
+| **UNSW-NB15** | **1D-CNN** | 0.8000 | 0.8052 ± 0.0044 | [0.8041, 0.8063] | [0.7926, 0.8107] | `34` | **0.7998** | 0.000212 | **YES** |
 | **UNSW-NB15** | **2D-CNN** | 0.8100 | 0.7892 ± 0.0030 | [0.7850, 0.7934] | [0.7871, 0.7913] | `2145378220` | **0.7913** | 0.018665 | No |
-| **NSL-KDD** | **DNN** | 0.9930 | 0.9929 ± 0.0002 | [0.9926, 0.9932] | [0.9927, 0.9931] | `656305562` | **0.9931** | 0.000078 | **YES** |
-| **NSL-KDD** | **1D-CNN** | 0.9920 | 0.9865 ± 0.0002 | [0.9861, 0.9868] | [0.9863, 0.9866] | `1878676959` | **0.9866** | 0.005368 | No |
-| **NSL-KDD** | **2D-CNN** | 0.9940 | 0.9907 ± 0.0001 | [0.9905, 0.9908] | [0.9906, 0.9908] | `1878676959` | **0.9908** | 0.003240 | No |
-| **UNSW-NB15** | **DNN** | 0.8000 | 0.7886 ± 0.0016 | [0.7864, 0.7909] | [0.7875, 0.7898] | `2145378220` | **0.7898** | 0.010242 | No |
 
 ---
 
@@ -26,7 +26,7 @@
    - On UNSW-NB15, the 50,000-sample capping policy bounds test accuracy tightly around the ~0.80 - 0.81 plateau reported in Table 2.
 
 2. **Distributional Integrity vs. Single Runs**:
-   - Single-run evaluations are sensitive to TensorFlow's initial random weight state and mini-batch shuffling.
+   - Single-run evaluations are sensitive to initial random weight state and mini-batch shuffling.
    - Multi-seed empirical aggregation demonstrates whether the author's published figures fall within the natural 95% confidence interval of the architecture.
 
 3. **LordKarsSama Methodology Parity**:
@@ -35,4 +35,4 @@
 
 ---
 
-*Generated automatically by `training/multiseed_sweep.py` on 2026-09-29 01:46:36*
+*Generated automatically by `training/multiseed_sweep.py` on 2026-09-29 09:50:04*

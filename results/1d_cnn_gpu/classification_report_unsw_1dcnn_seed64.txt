@@ -1,0 +1,11 @@
+              precision    recall  f1-score   support
+
+      Normal     0.8412    0.9126    0.8754     12500
+     Generic     0.9975    0.9726    0.9849     12500
+    Exploits     0.6645    0.9292    0.7749     11131
+         DoS     0.4367    0.0599    0.1054      4088
+     Fuzzers     0.7053    0.5129    0.5939      6062
+
+    accuracy                         0.8051     46281
+   macro avg     0.7291    0.6774    0.6669     46281
+weighted avg     0.7874    0.8051    0.7759     46281

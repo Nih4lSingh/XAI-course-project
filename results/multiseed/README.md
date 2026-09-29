@@ -95,3 +95,16 @@ For each model `<exp_id>`:
 Consolidated cross-model artifacts:
 - `results/multiseed/multiseed_paper_comparison.csv`: Master side-by-side benchmark table across all models.
 - `results/multiseed/multiseed_report.md`: Complete publication-ready Markdown report.
+
+---
+
+## 6. 64-Seed GPU Empirical Replication (1D-CNN & DNN)
+
+Using `Sharma_2024_1D_CNN_Replication_GPU_128concurrent.py` (which ports the model matrix across 64 seeds concurrently on GPU streams), the empirical distribution across 64 independent weight initializations is:
+
+| Architecture | Dataset | Paper Target | 64-Seed Mean ± Std | 95% Confidence Interval | Best Matching Seed | Best Seed Accuracy | Match at Printed Precision? |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **DNN** | NSL-KDD | **0.9930** | 0.9876 ± 0.0010 | [0.9873, 0.9879] | Seed 36 | **0.989200** | No |
+| **DNN** | UNSW-NB15 | **0.8000** | 0.8122 ± 0.0017 | [0.8118, 0.8127] | Seed 13 | **0.805389** | No |
+| **1D-CNN** | NSL-KDD | **0.9920** | 0.9823 ± 0.0024 | [0.9817, 0.9828] | Seed 41 | **0.985268** | No |
+| **1D-CNN** | UNSW-NB15 | **0.8000** | 0.8052 ± 0.0044 | [0.8041, 0.8063] | Seed 34 | **0.799788** | **YES** (rounds to 0.80) |

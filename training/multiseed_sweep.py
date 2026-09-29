@@ -2,18 +2,11 @@
 Multi-Seed Empirical Replication & Statistical Analysis Framework
 Replication of Sharma et al. (2024) across ALL 6 Canonical Models
 
-Extends LordKarsSama's multi-seed replication methodology across all deep learning architectures:
+Adopts and extends LordKarsSama's multi-seed replication methodology across all deep learning architectures:
 - NSL-KDD DNN, 1D-CNN, 2D-CNN (Table 1)
 - UNSW-NB15 DNN, 1D-CNN, 2D-CNN (Table 2)
 
-Key Features:
-1. Pseudo-random seed generation via numpy.random.default_rng (matching LordKarsSama master seeds)
-2. Support for both resplit (stratified re-partitioning per seed) and canonical split modes
-3. Evaluates full metric suite: Accuracy, Loss, Macro/Weighted Precision/Recall/F1, and Per-class metrics
-4. Computes rigorous empirical statistics across seeds: Mean, Std, 95% Confidence Interval, Min, Max
-5. Quantifies error to paper: Raw Error, Absolute Error, Rounding-Aware Error, and Printed Precision Match
-6. Identifies the Best Matching Seed per model that closest reproduces Sharma et al. (2024)
-7. Automatic checkpointing, resume capability, and CSV/JSON/Markdown reporting
+High-Performance PyTorch Engine with Native Windows AppLocker & Colab GPU Compatibility.
 """
 
 from __future__ import annotations
@@ -35,13 +28,10 @@ if str(PROJECT_ROOT) not in sys.path:
 
 import numpy as np
 import pandas as pd
-import tensorflow as tf
-from tensorflow import keras
+import torch
+import torch.nn as nn
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 
-from evaluation.metrics import compute_all_metrics
-from models.cnn1d import build_cnn1d_model
-from models.cnn2d import build_cnn2d_model
-from models.dnn import build_dnn_model
 from preprocessing.encoders import NSL_KDD_CLASS_MAPPING, UNSW_NB15_CLASS_MAPPING
 
 # Master seeds matching LordKarsSama's replication specification
@@ -121,44 +111,6 @@ PAPER_BENCHMARKS = {
 }
 
 
-
-def configure_gpu_memory():
-    """Configures TensorFlow GPU memory growth to prevent Out-Of-Memory allocation issues."""
-    try:
-        gpus = tf.config.list_physical_devices("GPU")
-        if gpus:
-            for gpu in gpus:
-                tf.config.experimental.set_memory_growth(gpu, True)
-    except Exception:
-        pass
-
-
-configure_gpu_memory()
-
-
-class SeedProgressCallback(keras.callbacks.Callback):
-    """Prints training progress periodically to provide live feedback and prevent notebook timeout."""
-
-    def __init__(self, seed: int, total_epochs: int):
-        super().__init__()
-        self.seed = seed
-        self.total_epochs = total_epochs
-
-    def on_epoch_end(self, epoch: int, logs: Optional[Dict] = None):
-        logs = logs or {}
-        ep = epoch + 1
-        if ep == 1 or ep % 5 == 0 or ep == self.total_epochs:
-            loss = logs.get("loss", 0.0)
-            acc = logs.get("accuracy", 0.0)
-            val_acc = logs.get("val_accuracy", 0.0)
-            print(
-                f"\n      [Seed {self.seed}] Epoch {ep:2d}/{self.total_epochs} -> "
-                f"loss: {loss:.4f}, acc: {acc:.4f}, val_acc: {val_acc:.4f}",
-                end="",
-                flush=True,
-            )
-
-
 def select_random_seeds(count: int, master_seed: int) -> List[int]:
     """
     Deterministically generates non-repeating 32-bit random seeds from a master seed.
@@ -172,10 +124,12 @@ def select_random_seeds(count: int, master_seed: int) -> List[int]:
 
 
 def set_deterministic_seeds(seed: int) -> None:
-    """Sets deterministic seeds across Python, NumPy, and TensorFlow."""
+    """Sets deterministic seeds across Python, NumPy, and PyTorch."""
     random.seed(seed)
     np.random.seed(seed)
-    tf.random.set_seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)
 
 
@@ -217,8 +171,7 @@ def stratified_partition(
 def rounding_aware_error(value: float, target: float, decimals: int) -> float:
     """
     Distance from the rounding interval that rounds to the published target value.
-    LordKarsSama metric:
-    Interval = [target - 0.5 * 10^(-decimals), target + 0.5 * 10^(-decimals)]
+    LordKarsSama metric: Interval = [target - 0.5 * 10^(-decimals), target + 0.5 * 10^(-decimals)]
     """
     half_unit = 0.5 * 10 ** (-decimals)
     lower = target - half_unit
@@ -235,6 +188,69 @@ def check_rounding_match(value: float, target: float, decimals: int) -> bool:
     return round(float(value), decimals) == round(float(target), decimals)
 
 
+# -------------------------------------------------------------------------
+# PyTorch Architectures matching Sharma et al. (2024)
+# -------------------------------------------------------------------------
+
+class PyTorchDNN(nn.Module):
+    """3 Dense layers of 64 units with ReLU, matching Sharma et al. Section 4.1."""
+    def __init__(self, in_features: int, num_classes: int = 5):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_features, 64),
+            nn.ReLU(),
+            nn.Linear(64, 64),
+            nn.ReLU(),
+            nn.Linear(64, 64),
+            nn.ReLU(),
+            nn.Linear(64, num_classes),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.net(x)
+
+
+class PyTorchCNN1D(nn.Module):
+    """1D-CNN architecture matching Sharma et al. (2024)."""
+    def __init__(self, in_features: int, num_classes: int = 5):
+        super().__init__()
+        self.conv1 = nn.Conv1d(1, 64, kernel_size=3, padding=1)
+        self.pool1 = nn.MaxPool1d(2)
+        self.conv2 = nn.Conv1d(64, 32, kernel_size=3, padding=1)
+        self.fc = nn.Linear(32 * (in_features // 2), num_classes)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.pool1(torch.relu(self.conv1(x)))
+        x = torch.relu(self.conv2(x))
+        x = x.flatten(1)
+        return self.fc(x)
+
+
+class PyTorchCNN2D(nn.Module):
+    """2D-CNN architecture shown in Fig. 5 of Sharma et al. (2024) and LordKarsSama."""
+    def __init__(self, num_classes: int = 5):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 64, kernel_size=3, padding=1)
+        self.pool1 = nn.MaxPool2d(2, ceil_mode=True)
+        self.conv2 = nn.Conv2d(64, 32, kernel_size=3, padding=1)
+        self.pool2 = nn.MaxPool2d(2, ceil_mode=True)
+        self.conv3 = nn.Conv2d(32, 32, kernel_size=3, padding=1)
+        self.pool3 = nn.MaxPool2d(2, ceil_mode=True)
+        # Both 6x6 (NSL) and 7x7 (UNSW) resolve to 1x1 with 3 ceil_mode pools
+        self.fc = nn.Linear(32 * 1 * 1, num_classes)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.pool1(torch.relu(self.conv1(x)))
+        x = self.pool2(torch.relu(self.conv2(x)))
+        x = self.pool3(torch.relu(self.conv3(x)))
+        x = x.flatten(1)
+        return self.fc(x)
+
+
+# -------------------------------------------------------------------------
+# Multi-Seed Experiment Runner
+# -------------------------------------------------------------------------
+
 class MultiSeedExperimentRunner:
     """
     Runs multi-seed empirical evaluations across canonical model architectures.
@@ -244,10 +260,12 @@ class MultiSeedExperimentRunner:
         self,
         output_dir: Optional[Path] = None,
         split_mode: str = "resplit",  # 'resplit' or 'canonical'
+        device: Optional[str] = None,
     ):
         self.output_dir = output_dir or (PROJECT_ROOT / "results" / "multiseed")
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.split_mode = split_mode
+        self.device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
         self._cache_data: Dict[str, Any] = {}
 
     def _load_data(self, dataset_name: str) -> Dict[str, Any]:
@@ -261,7 +279,6 @@ class MultiSeedExperimentRunner:
             class_names = [class_mapping[i] for i in range(5)]
             data = np.load(npz_path)
 
-            # Reconstruct full arrays for resplit
             X_selected_full = np.concatenate(
                 [data["X_selected_train"], data["X_selected_val"], data["X_selected_test"]],
                 axis=0,
@@ -330,7 +347,6 @@ class MultiSeedExperimentRunner:
         d = self._load_data(dataset_name)
 
         if self.split_mode == "canonical":
-            # Use fixed canonical split, seed only controls model weights & shuffling
             npz = d["data_npz"]
             y_train = npz["y_train"]
             y_val = npz["y_val"]
@@ -338,26 +354,26 @@ class MultiSeedExperimentRunner:
 
             if dataset_name == "nsl_kdd":
                 if model_type == "2DCNN":
-                    X_train = npz["X_selected_36_train"].reshape((-1, 6, 6, 1))
-                    X_val = npz["X_selected_36_val"].reshape((-1, 6, 6, 1))
-                    X_test = npz["X_selected_36_test"].reshape((-1, 6, 6, 1))
+                    X_train = npz["X_selected_36_train"].reshape((-1, 1, 6, 6))
+                    X_val = npz["X_selected_36_val"].reshape((-1, 1, 6, 6))
+                    X_test = npz["X_selected_36_test"].reshape((-1, 1, 6, 6))
                 elif model_type == "1DCNN":
-                    X_train = np.expand_dims(npz["X_selected_train"], -1)
-                    X_val = np.expand_dims(npz["X_selected_val"], -1)
-                    X_test = np.expand_dims(npz["X_selected_test"], -1)
+                    X_train = np.expand_dims(npz["X_selected_train"], 1)
+                    X_val = np.expand_dims(npz["X_selected_val"], 1)
+                    X_test = np.expand_dims(npz["X_selected_test"], 1)
                 else:  # DNN
                     X_train = npz["X_selected_train"]
                     X_val = npz["X_selected_val"]
                     X_test = npz["X_selected_test"]
             else:  # unsw_nb15
                 if model_type == "2DCNN":
-                    X_train = npz["X_selected_49_train"].reshape((-1, 7, 7, 1))
-                    X_val = npz["X_selected_49_val"].reshape((-1, 7, 7, 1))
-                    X_test = npz["X_selected_49_test"].reshape((-1, 7, 7, 1))
+                    X_train = npz["X_selected_49_train"].reshape((-1, 1, 7, 7))
+                    X_val = npz["X_selected_49_val"].reshape((-1, 1, 7, 7))
+                    X_test = npz["X_selected_49_test"].reshape((-1, 1, 7, 7))
                 elif model_type == "1DCNN":
-                    X_train = np.expand_dims(npz["X_selected_train"], -1)
-                    X_val = np.expand_dims(npz["X_selected_val"], -1)
-                    X_test = np.expand_dims(npz["X_selected_test"], -1)
+                    X_train = np.expand_dims(npz["X_selected_train"], 1)
+                    X_val = np.expand_dims(npz["X_selected_val"], 1)
+                    X_test = np.expand_dims(npz["X_selected_test"], 1)
                 else:  # DNN
                     X_train = npz["X_selected_train"]
                     X_val = npz["X_selected_val"]
@@ -366,7 +382,7 @@ class MultiSeedExperimentRunner:
             return X_train, y_train, X_val, y_val, X_test, y_test
 
         else:
-            # resplit mode: LordKarsSama's full replication with stratified partition per seed
+            # resplit mode: stratified partition per seed à la LordKarsSama
             y_full = d["y_full"]
             train_idx, val_idx, test_idx = stratified_partition(y_full, (0.60, 0.15, 0.25), seed=seed)
 
@@ -376,51 +392,31 @@ class MultiSeedExperimentRunner:
 
             if dataset_name == "nsl_kdd":
                 if model_type == "2DCNN":
-                    feat_full = d["X_selected_36_full"].reshape((-1, 6, 6, 1))
+                    feat_full = d["X_selected_36_full"].reshape((-1, 1, 6, 6))
                 elif model_type == "1DCNN":
-                    feat_full = np.expand_dims(d["X_selected_full"], -1)
+                    feat_full = np.expand_dims(d["X_selected_full"], 1)
                 else:  # DNN
                     feat_full = d["X_selected_full"]
             else:  # unsw_nb15
                 if model_type == "2DCNN":
-                    feat_full = d["X_selected_49_full"].reshape((-1, 7, 7, 1))
+                    feat_full = d["X_selected_49_full"].reshape((-1, 1, 7, 7))
                 elif model_type == "1DCNN":
-                    feat_full = np.expand_dims(d["X_selected_full"], -1)
+                    feat_full = np.expand_dims(d["X_selected_full"], 1)
                 else:  # DNN
                     feat_full = d["X_selected_full"]
 
             return feat_full[train_idx], y_train, feat_full[val_idx], y_val, feat_full[test_idx], y_test
 
-    def _build_model(self, experiment_id: str, model_type: str, dataset_name: str) -> keras.Model:
+    def _build_model(self, model_type: str, dataset_name: str) -> nn.Module:
         """Instantiates canonical model architecture matching Sharma et al. (2024)."""
         if model_type == "2DCNN":
-            grid_shape = (6, 6, 1) if dataset_name == "nsl_kdd" else (7, 7, 1)
-            return build_cnn2d_model(
-                input_shape=grid_shape,
-                num_classes=5,
-                learning_rate=0.001,
-                weight_decay=0.0001,
-                name=f"{experiment_id}_replica",
-            )
+            return PyTorchCNN2D(num_classes=5)
         elif model_type == "1DCNN":
             input_dim = 36 if dataset_name == "nsl_kdd" else 38
-            return build_cnn1d_model(
-                input_dim=input_dim,
-                num_classes=5,
-                learning_rate=0.001,
-                weight_decay=0.0001,
-                name=f"{experiment_id}_replica",
-            )
+            return PyTorchCNN1D(in_features=input_dim, num_classes=5)
         elif model_type == "DNN":
             input_dim = 36 if dataset_name == "nsl_kdd" else 38
-            return build_dnn_model(
-                input_dim=input_dim,
-                num_classes=5,
-                dropout_rate=0.0,
-                learning_rate=0.001,
-                weight_decay=0.0001,
-                name=f"{experiment_id}_replica",
-            )
+            return PyTorchDNN(in_features=input_dim, num_classes=5)
         else:
             raise ValueError(f"Unsupported model type: {model_type}")
 
@@ -452,7 +448,6 @@ class MultiSeedExperimentRunner:
         class_names = d["class_names"]
 
         # Deterministic setup
-        tf.keras.backend.clear_session()
         set_deterministic_seeds(seed)
 
         # Prepare data splits
@@ -462,36 +457,113 @@ class MultiSeedExperimentRunner:
             seed=seed,
         )
 
-        # Build fresh model
-        model = self._build_model(experiment_id, model_type, dataset_name)
+        # Build fresh model and move to device
+        model = self._build_model(model_type, dataset_name).to(self.device)
 
-        # Train model with live progress reporting
-        start_time = time.perf_counter()
-        callbacks = [SeedProgressCallback(seed=seed, total_epochs=epochs)]
-        history = model.fit(
-            X_train,
-            y_train,
-            validation_data=(X_val, y_val),
-            epochs=epochs,
-            batch_size=batch_size,
-            verbose=verbose,
-            callbacks=callbacks,
-            shuffle=True,
+        # Create DataLoaders
+        train_ds = torch.utils.data.TensorDataset(
+            torch.tensor(X_train, dtype=torch.float32),
+            torch.tensor(y_train, dtype=torch.long),
         )
+        val_ds = torch.utils.data.TensorDataset(
+            torch.tensor(X_val, dtype=torch.float32),
+            torch.tensor(y_val, dtype=torch.long),
+        )
+        test_ds = torch.utils.data.TensorDataset(
+            torch.tensor(X_test, dtype=torch.float32),
+            torch.tensor(y_test, dtype=torch.long),
+        )
+
+        # Seed the DataLoader generator
+        g = torch.Generator()
+        g.manual_seed(seed)
+
+        train_loader = torch.utils.data.DataLoader(
+            train_ds, batch_size=batch_size, shuffle=True, generator=g
+        )
+        val_loader = torch.utils.data.DataLoader(val_ds, batch_size=batch_size, shuffle=False)
+        test_loader = torch.utils.data.DataLoader(test_ds, batch_size=batch_size, shuffle=False)
+
+        # Optimizer with paper hyperparameters: Adam(lr=0.001, weight_decay=0.0001)
+        optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=0.0001)
+        criterion = nn.CrossEntropyLoss()
+
+        # Training loop
+        start_time = time.perf_counter()
+        for epoch in range(1, epochs + 1):
+            model.train()
+            running_loss = 0.0
+            correct = 0
+            total = 0
+            for x_b, y_b in train_loader:
+                x_b, y_b = x_b.to(self.device), y_b.to(self.device)
+                optimizer.zero_grad()
+                logits = model(x_b)
+                loss = criterion(logits, y_b)
+                loss.backward()
+                optimizer.step()
+
+                running_loss += loss.item() * len(y_b)
+                preds = logits.argmax(dim=1)
+                correct += (preds == y_b).sum().item()
+                total += len(y_b)
+
+            train_loss = running_loss / total
+            train_acc = correct / total
+
+            # Print progress every 5 epochs and on epoch 1 / final
+            if epoch == 1 or epoch % 5 == 0 or epoch == epochs:
+                model.eval()
+                val_correct = 0
+                val_total = 0
+                with torch.no_grad():
+                    for vx, vy in val_loader:
+                        vx, vy = vx.to(self.device), vy.to(self.device)
+                        v_logits = model(vx)
+                        val_correct += (v_logits.argmax(dim=1) == vy).sum().item()
+                        val_total += len(vy)
+                val_acc = val_correct / val_total
+                print(
+                    f"\n      [Seed {seed}] Epoch {epoch:2d}/{epochs} -> loss: {train_loss:.4f}, acc: {train_acc:.4f}, val_acc: {val_acc:.4f}",
+                    end="",
+                    flush=True,
+                )
+
         elapsed_train = time.perf_counter() - start_time
 
         # Test evaluation
-        test_eval = model.evaluate(X_test, y_test, batch_size=batch_size, verbose=0)
-        test_loss = float(test_eval[0])
-        test_acc_keras = float(test_eval[1]) if len(test_eval) > 1 else 0.0
+        model.eval()
+        test_running_loss = 0.0
+        all_preds = []
+        all_targets = []
+        with torch.no_grad():
+            for tx, ty in test_loader:
+                tx, ty = tx.to(self.device), ty.to(self.device)
+                t_logits = model(tx)
+                t_loss = criterion(t_logits, ty)
+                test_running_loss += t_loss.item() * len(ty)
+                all_preds.append(t_logits.argmax(dim=1).cpu().numpy())
+                all_targets.append(ty.cpu().numpy())
 
-        y_prob = model.predict(X_test, batch_size=batch_size, verbose=0)
-        y_pred = np.argmax(y_prob, axis=1)
+        y_true = np.concatenate(all_targets)
+        y_pred = np.concatenate(all_preds)
+        test_loss = test_running_loss / len(y_true)
+        test_acc = float(accuracy_score(y_true, y_pred))
 
-        metrics = compute_all_metrics(y_test, y_pred, class_names)
-        test_acc = float(metrics["accuracy"])
+        prec_macro = float(precision_score(y_true, y_pred, average="macro", zero_division=0))
+        rec_macro = float(recall_score(y_true, y_pred, average="macro", zero_division=0))
+        f1_macro = float(f1_score(y_true, y_pred, average="macro", zero_division=0))
 
-        # Calculate error metrics to paper
+        prec_weighted = float(precision_score(y_true, y_pred, average="weighted", zero_division=0))
+        rec_weighted = float(recall_score(y_true, y_pred, average="weighted", zero_division=0))
+        f1_weighted = float(f1_score(y_true, y_pred, average="weighted", zero_division=0))
+
+        # Per-class metrics
+        per_class_prec = precision_score(y_true, y_pred, average=None, zero_division=0)
+        per_class_rec = recall_score(y_true, y_pred, average=None, zero_division=0)
+        per_class_f1 = f1_score(y_true, y_pred, average=None, zero_division=0)
+
+        # Distance to paper
         raw_err = test_acc - paper_acc
         abs_err = abs(raw_err)
         round_err = rounding_aware_error(test_acc, paper_acc, decimals)
@@ -508,12 +580,12 @@ class MultiSeedExperimentRunner:
             "train_time_sec": round(elapsed_train, 2),
             "test_loss": float(test_loss),
             "test_accuracy": float(test_acc),
-            "precision_macro": float(metrics["precision_macro"]),
-            "recall_macro": float(metrics["recall_macro"]),
-            "f1_macro": float(metrics["f1_macro"]),
-            "precision_weighted": float(metrics["precision_weighted"]),
-            "recall_weighted": float(metrics["recall_weighted"]),
-            "f1_weighted": float(metrics["f1_weighted"]),
+            "precision_macro": float(prec_macro),
+            "recall_macro": float(rec_macro),
+            "f1_macro": float(f1_macro),
+            "precision_weighted": float(prec_weighted),
+            "recall_weighted": float(rec_weighted),
+            "f1_weighted": float(f1_weighted),
             "paper_accuracy": float(paper_acc),
             "paper_decimals": int(decimals),
             "raw_error": float(raw_err),
@@ -523,18 +595,16 @@ class MultiSeedExperimentRunner:
         }
 
         # Add per-class precision, recall, and f1
-        for c_name in class_names:
+        for idx, c_name in enumerate(class_names):
             c_key = c_name.lower().replace("-", "_")
-            c_metrics = metrics["per_class"].get(c_name, {})
-            result_row[f"{c_key}_precision"] = float(c_metrics.get("precision", 0.0))
-            result_row[f"{c_key}_recall"] = float(c_metrics.get("recall", 0.0))
-            result_row[f"{c_key}_f1"] = float(c_metrics.get("f1_score", 0.0))
+            result_row[f"{c_key}_precision"] = float(per_class_prec[idx]) if idx < len(per_class_prec) else 0.0
+            result_row[f"{c_key}_recall"] = float(per_class_rec[idx]) if idx < len(per_class_rec) else 0.0
+            result_row[f"{c_key}_f1"] = float(per_class_f1[idx]) if idx < len(per_class_f1) else 0.0
 
-        # Explicit GPU/RAM cleanup to prevent memory accumulation across seeds
+        # Memory cleanup
         del model
-        tf.keras.backend.clear_session()
-        import gc
-        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
         return result_row
 
@@ -573,7 +643,7 @@ class MultiSeedExperimentRunner:
         print(f"\n=======================================================")
         print(f"MULTI-SEED SWEEP: {experiment_id}")
         print(f"Total Seeds: {len(seeds)} | Paper Target: {benchmark.get('paper_accuracy', 'N/A')}")
-        print(f"Split Mode: {self.split_mode} | Batch Size: {batch_size} | Epochs: {epochs}")
+        print(f"Split Mode: {self.split_mode} | Batch Size: {batch_size} | Epochs: {epochs} | Device: {self.device}")
         print(f"=======================================================")
 
         results_list: List[Dict[str, Any]] = []
@@ -668,7 +738,6 @@ class MultiSeedExperimentRunner:
             ascending=[True, True],
         ).iloc[0]
 
-        # Full metric means
         metric_cols = [
             "test_accuracy",
             "test_loss",
@@ -762,7 +831,6 @@ def generate_consolidated_report(
     comparison_csv = output_dir / "multiseed_paper_comparison.csv"
     comparison_df.to_csv(comparison_csv, index=False)
 
-    # Build Markdown report
     md_lines = [
         "# Multi-Seed Empirical Replication & Statistical Benchmark",
         "## Rigorous Multi-Seed Validation of Sharma et al. (2024) across All 6 Models",
@@ -798,7 +866,7 @@ def generate_consolidated_report(
         "   - On UNSW-NB15, the 50,000-sample capping policy bounds test accuracy tightly around the ~0.80 - 0.81 plateau reported in Table 2.",
         "",
         "2. **Distributional Integrity vs. Single Runs**:",
-        "   - Single-run evaluations are sensitive to TensorFlow's initial random weight state and mini-batch shuffling.",
+        "   - Single-run evaluations are sensitive to initial random weight state and mini-batch shuffling.",
         "   - Multi-seed empirical aggregation demonstrates whether the author's published figures fall within the natural 95% confidence interval of the architecture.",
         "",
         "3. **LordKarsSama Methodology Parity**:",
