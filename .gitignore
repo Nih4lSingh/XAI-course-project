@@ -1,11 +1,27 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+
+# Caches and checkpoints
 .ipynb_checkpoints/
-.venv/
-venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
 .env
-*.keras
-*.h5
+.venv
+env/
+venv/
+ENV/
+
+# Datasets (local caching)
 data/
+datasets/
+
+# Temporary files & large archives
 *.zip
-.DS_Store
+!results/
+!models/
+!report/
