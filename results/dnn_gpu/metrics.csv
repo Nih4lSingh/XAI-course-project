@@ -1,0 +1,5 @@
+,accuracy,accuracy,precision_macro,precision_macro,precision_weighted,precision_weighted,recall_macro,recall_macro,recall_weighted,recall_weighted,f1_macro,f1_macro,f1_weighted,f1_weighted
+,mean,std,mean,std,mean,std,mean,std,mean,std,mean,std,mean,std
+dataset,,,,,,,,,,,,,,
+NSL-KDD,0.987603,0.001036,0.933145,0.014234,0.987483,0.001059,0.877919,0.018468,0.987603,0.001036,0.900077,0.012438,0.987421,0.001139
+UNSW-NB15,0.812232,0.001743,0.752734,0.015342,0.806826,0.00814,0.700438,0.008002,0.812232,0.001743,0.684405,0.012016,0.787909,0.005256
