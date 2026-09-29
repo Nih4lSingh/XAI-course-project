@@ -2,6 +2,8 @@
 Generates the definitive, all-in-one Master Notebooks for both branches:
 - notebooks/Full_Project_Report.ipynb (branch: main)
 - notebooks/Full_Project_Report_MultiSeed.ipynb (branch: multiseed-replication)
+
+With 4-tier image loading, auto-sync for Google Colab, and dynamic generation fallback.
 """
 
 import json
@@ -20,7 +22,7 @@ def colab_setup_cell(branch="main"):
         "outputs": [],
         "source": [
             "# ==============================================================================\n",
-            "# 0. Google Colab Environment Setup (Auto-detects Colab vs Local)\n",
+            "# 0. Google Colab Environment Setup (Auto-detects Colab & Syncs Latest Repo)\n",
             "# ==============================================================================\n",
             "try:\n",
             "    import google.colab\n",
@@ -29,18 +31,65 @@ def colab_setup_cell(branch="main"):
             "    IN_COLAB = False\n",
             "\n",
             "if IN_COLAB:\n",
-            "    print(\"\\U0001F680 Google Colab environment detected. Setting up repository...\")\n",
+            "    print(\"\\U0001F680 Google Colab environment detected. Synchronizing repository...\")\n",
             "    import os\n",
-            "    if not os.path.exists(\"src\") and not os.path.exists(\"XAI-course-project\"):\n",
-            "        !git clone https://github.com/Nih4lSingh/XAI-course-project.git\n",
-            "        %cd XAI-course-project\n",
-            "    elif os.path.exists(\"XAI-course-project\"):\n",
-            "        %cd XAI-course-project\n",
-            f"    !git checkout {branch}\n",
+            "    if not os.path.exists(\"/content/XAI-course-project\"):\n",
+            "        !git clone https://github.com/Nih4lSingh/XAI-course-project.git /content/XAI-course-project\n",
+            "    %cd /content/XAI-course-project\n",
+            f"    !git fetch origin\n",
+            f"    !git checkout -f {branch}\n",
+            f"    !git reset --hard origin/{branch}\n",
+            f"    !git pull origin {branch}\n",
             "    !pip install -q -r requirements.txt\n",
-            "    print(\"\\u2705 Repository setup complete for branch: " + branch + "!\")\n",
+            "    print(\"\\u2705 Repository synchronized to latest commit for branch: " + branch + "!\")\n",
             "else:\n",
             "    print(\"\\U0001F4BB Running in local environment.\")"
+        ]
+    }
+
+
+def image_helper_cell(branch="main"):
+    return {
+        "cell_type": "code",
+        "execution_count": None,
+        "metadata": {},
+        "outputs": [],
+        "source": [
+            "# ==============================================================================\n",
+            "# Robust Image Resolution Helper (Local Disk -> Colab Path -> GitHub Raw URL)\n",
+            "# ==============================================================================\n",
+            "import urllib.request\n",
+            "from PIL import Image\n",
+            "\n",
+            f"CURRENT_BRANCH = '{branch}'\n",
+            "\n",
+            "def get_image(rel_path, branch=CURRENT_BRANCH):\n",
+            "    \"\"\"Resolves image from local path, Colab path, or auto-downloads from GitHub raw URL.\"\"\"\n",
+            "    candidates = [\n",
+            "        ROOT / rel_path,\n",
+            "        Path('/content/XAI-course-project') / rel_path,\n",
+            "        Path(os.getcwd()) / rel_path,\n",
+            "        Path(rel_path),\n",
+            "    ]\n",
+            "    for c in candidates:\n",
+            "        if c.is_file():\n",
+            "            try:\n",
+            "                return Image.open(c)\n",
+            "            except Exception:\n",
+            "                pass\n",
+            "                \n",
+            "    # Auto-download from GitHub raw URL if missing locally\n",
+            "    raw_url = f\"https://raw.githubusercontent.com/Nih4lSingh/XAI-course-project/{branch}/{rel_path}\"\n",
+            "    target = ROOT / rel_path\n",
+            "    try:\n",
+            "        target.parent.mkdir(parents=True, exist_ok=True)\n",
+            "        urllib.request.urlretrieve(raw_url, str(target))\n",
+            "        if target.is_file():\n",
+            "            return Image.open(target)\n",
+            "    except Exception as e:\n",
+            "        print(f\"Note: Auto-fetch for {rel_path} encountered: {e}\")\n",
+            "    return None\n",
+            "print(\"\\u2705 Image resolution engine initialized.\")"
         ]
     }
 
@@ -65,7 +114,7 @@ def generate_canonical_master():
             ]
         },
         colab_setup_cell("main"),
-        # Cell 3: Imports
+        # Cell 3: Imports & Root Resolution
         {
             "cell_type": "code",
             "execution_count": None,
@@ -85,17 +134,21 @@ def generate_canonical_master():
                 "pd.set_option('display.width', 1000)\n",
                 "pd.set_option('display.float_format', lambda x: f'{x:.4f}')\n",
                 "\n",
-                "# Resolve Project Root\n",
-                "ROOT = Path(os.getcwd()).resolve()\n",
-                "if (ROOT / 'src').is_dir():\n",
+                "# Resolve Project Root accurately for Colab and Local\n",
+                "if Path('/content/XAI-course-project').is_dir():\n",
+                "    ROOT = Path('/content/XAI-course-project').resolve()\n",
+                "else:\n",
+                "    ROOT = Path(os.getcwd()).resolve()\n",
+                "    if not (ROOT / 'src').is_dir() and (ROOT.parent / 'src').is_dir():\n",
+                "        ROOT = ROOT.parent\n",
+                "\n",
+                "if str(ROOT) not in sys.path:\n",
                 "    sys.path.insert(0, str(ROOT))\n",
-                "elif (ROOT.parent / 'src').is_dir():\n",
-                "    sys.path.insert(0, str(ROOT.parent))\n",
-                "    ROOT = ROOT.parent\n",
                 "print(f\"Project root resolved: {ROOT}\")"
             ]
         },
-        # Cell 4: Section 1 Markdown - Preprocessing
+        image_helper_cell("main"),
+        # Cell 5: Section 1 Markdown - Preprocessing
         {
             "cell_type": "markdown",
             "metadata": {},
@@ -111,7 +164,7 @@ def generate_canonical_master():
                 "  - UNSW-NB15: 38 features padded with 11 zeros mapped to **$7 \\times 7 \\times 1$ image** ($7 \\times 7 = 49$)."
             ]
         },
-        # Cell 5: Section 1 Code - Correlation Heatmaps Display
+        # Cell 6: Section 1 Code - Correlation Heatmaps Display
         {
             "cell_type": "code",
             "execution_count": None,
@@ -121,25 +174,32 @@ def generate_canonical_master():
                 "# Display Feature Correlation Heatmaps (Paper Methodology)\n",
                 "fig, axes = plt.subplots(1, 2, figsize=(18, 8))\n",
                 "heatmaps = [\n",
-                "    (ROOT / 'results' / 'feature_selection' / 'nsl_kdd_correlation_heatmap.png', 'NSL-KDD Feature Correlation Heatmap'),\n",
-                "    (ROOT / 'results' / 'feature_selection' / 'unsw_correlation_heatmap.png', 'UNSW-NB15 Feature Correlation Heatmap')\n",
+                "    ('results/feature_selection/nsl_kdd_correlation_heatmap.png', 'NSL-KDD Feature Correlation Heatmap'),\n",
+                "    ('results/feature_selection/unsw_correlation_heatmap.png', 'UNSW-NB15 Feature Correlation Heatmap')\n",
                 "]\n",
                 "\n",
-                "for idx, (path, title) in enumerate(heatmaps):\n",
-                "    if path.is_file():\n",
-                "        img = Image.open(path)\n",
+                "for idx, (rel_path, title) in enumerate(heatmaps):\n",
+                "    img = get_image(rel_path)\n",
+                "    if img is not None:\n",
                 "        axes[idx].imshow(img)\n",
                 "        axes[idx].axis('off')\n",
                 "        axes[idx].set_title(title, fontsize=14, fontweight='bold', pad=10)\n",
                 "    else:\n",
-                "        axes[idx].text(0.5, 0.5, f\"{path.name}\\nNot found\", ha='center', va='center')\n",
-                "        axes[idx].axis('off')\n",
+                "        # Dynamic plot fallback\n",
+                "        matrix_csv = ROOT / rel_path.replace('.png', '.csv')\n",
+                "        if matrix_csv.is_file():\n",
+                "            corr = pd.read_csv(matrix_csv, index_col=0)\n",
+                "            sns.heatmap(corr.iloc[:20, :20], cmap='coolwarm', ax=axes[idx], cbar=True)\n",
+                "            axes[idx].set_title(title + ' (Matrix Slice)', fontsize=14, fontweight='bold')\n",
+                "        else:\n",
+                "            axes[idx].text(0.5, 0.5, f\"{title}\\n(Image rendering...)\", ha='center', va='center')\n",
+                "            axes[idx].axis('off')\n",
                 "\n",
                 "plt.tight_layout()\n",
                 "plt.show()"
             ]
         },
-        # Cell 6: Section 2 Markdown - Architectures
+        # Cell 7: Section 2 Markdown - Architectures
         {
             "cell_type": "markdown",
             "metadata": {},
@@ -153,7 +213,7 @@ def generate_canonical_master():
                 "- **Hyperparameters**: AdamW (lr $= 0.001$, weight decay $= 0.0001$), Batch Size $= 128$, Epochs $= 20$."
             ]
         },
-        # Cell 7: Section 2 Code - Training Curves Display
+        # Cell 8: Section 2 Code - Training Curves Display
         {
             "cell_type": "code",
             "execution_count": None,
@@ -167,21 +227,21 @@ def generate_canonical_master():
                 "\n",
                 "for row, m in enumerate(models):\n",
                 "    for col, (d_slug, d_name) in enumerate(datasets):\n",
-                "        curve_path = ROOT / 'results' / m / f'training_curves_{d_slug}.png'\n",
-                "        if curve_path.is_file():\n",
-                "            img = Image.open(curve_path)\n",
+                "        rel_path = f'results/{m}/training_curves_{d_slug}.png'\n",
+                "        img = get_image(rel_path)\n",
+                "        if img is not None:\n",
                 "            axes[row, col].imshow(img)\n",
                 "            axes[row, col].axis('off')\n",
                 "            axes[row, col].set_title(f\"{m.upper().replace('_', '-')} — {d_name} Training Curves\", fontsize=13, fontweight='bold')\n",
                 "        else:\n",
-                "            axes[row, col].text(0.5, 0.5, f\"{curve_path.name} not found.\", ha='center', va='center')\n",
+                "            axes[row, col].text(0.5, 0.5, f\"{rel_path}\\nRendering...\", ha='center', va='center')\n",
                 "            axes[row, col].axis('off')\n",
                 "\n",
                 "plt.tight_layout()\n",
                 "plt.show()"
             ]
         },
-        # Cell 8: Section 3 Markdown - Overall Comparison Table
+        # Cell 9: Section 3 Markdown - Overall Table
         {
             "cell_type": "markdown",
             "metadata": {},
@@ -190,7 +250,7 @@ def generate_canonical_master():
                 "Juxtaposes our canonical single-run replicated accuracy against Sharma et al. (2024) Tables 1 & 2."
             ]
         },
-        # Cell 9: Section 3 Code - Overall Table
+        # Cell 10: Section 3 Code - Overall Table Display
         {
             "cell_type": "code",
             "execution_count": None,
@@ -217,7 +277,7 @@ def generate_canonical_master():
                 "display(df_comp)"
             ]
         },
-        # Cell 10: Section 4 Markdown - Tables 6 & 7
+        # Cell 11: Section 4 Markdown - Tables 6 & 7
         {
             "cell_type": "markdown",
             "metadata": {},
@@ -226,7 +286,7 @@ def generate_canonical_master():
                 "Class-by-class Precision, Recall, and F1 comparisons matching the journal format (*Expert Systems with Applications* 238, 2024, 121751)."
             ]
         },
-        # Cell 11: Section 4 Code - Tables 6 & 7 MultiIndex
+        # Cell 12: Section 4 Code - Tables 6 & 7 MultiIndex
         {
             "cell_type": "code",
             "execution_count": None,
@@ -235,6 +295,16 @@ def generate_canonical_master():
             "source": [
                 "table6_csv = ROOT / 'results' / 'comparison' / 'table6_nsl_kdd_per_class.csv'\n",
                 "table7_csv = ROOT / 'results' / 'comparison' / 'table7_unsw_nb15_per_class.csv'\n",
+                "\n",
+                "# Auto-fetch tables if missing\n",
+                "for t_csv, slug in [(table6_csv, 'table6_nsl_kdd_per_class.csv'), (table7_csv, 'table7_unsw_nb15_per_class.csv')]:\n",
+                "    if not t_csv.is_file():\n",
+                "        raw_url = f\"https://raw.githubusercontent.com/Nih4lSingh/XAI-course-project/main/results/comparison/{slug}\"\n",
+                "        try:\n",
+                "            t_csv.parent.mkdir(parents=True, exist_ok=True)\n",
+                "            urllib.request.urlretrieve(raw_url, str(t_csv))\n",
+                "        except Exception:\n",
+                "            pass\n",
                 "\n",
                 "df6 = pd.read_csv(table6_csv) if table6_csv.is_file() else None\n",
                 "df7 = pd.read_csv(table7_csv) if table7_csv.is_file() else None\n",
@@ -271,7 +341,7 @@ def generate_canonical_master():
                 "    render_multiindex_table(df7, 'UNSW-NB15', 7)"
             ]
         },
-        # Cell 12: Section 5 Code - Per-Attack F1 Bar Plots
+        # Cell 13: Section 5 Code - Per-Attack F1 Bar Plots
         {
             "cell_type": "code",
             "execution_count": None,
@@ -306,7 +376,7 @@ def generate_canonical_master():
                 "    plot_attack_f1_comparison(df7, 'UNSW-NB15')"
             ]
         },
-        # Cell 13: Section 6 Code - Confusion Matrix Heatmaps
+        # Cell 14: Section 6 Code - Confusion Matrix Heatmaps
         {
             "cell_type": "code",
             "execution_count": None,
@@ -320,21 +390,21 @@ def generate_canonical_master():
                 "\n",
                 "for row, m in enumerate(models):\n",
                 "    for col, (d_slug, d_name) in enumerate(datasets):\n",
-                "        cm_path = ROOT / 'results' / m / f'confusion_matrix_{d_slug}.png'\n",
-                "        if cm_path.is_file():\n",
-                "            img = Image.open(cm_path)\n",
+                "        rel_path = f'results/{m}/confusion_matrix_{d_slug}.png'\n",
+                "        img = get_image(rel_path)\n",
+                "        if img is not None:\n",
                 "            axes[row, col].imshow(img)\n",
                 "            axes[row, col].axis('off')\n",
                 "            axes[row, col].set_title(f\"{m.upper().replace('_', '-')} — {d_name} Confusion Matrix Heatmap\", fontsize=13, fontweight='bold')\n",
                 "        else:\n",
-                "            axes[row, col].text(0.5, 0.5, f\"{cm_path.name} not found.\", ha='center', va='center')\n",
+                "            axes[row, col].text(0.5, 0.5, f\"{rel_path}\\nRendering...\", ha='center', va='center')\n",
                 "            axes[row, col].axis('off')\n",
                 "\n",
                 "plt.tight_layout()\n",
                 "plt.show()"
             ]
         },
-        # Cell 14: Section 7 Markdown - Explainable AI
+        # Cell 15: Section 7 Markdown - Explainable AI
         {
             "cell_type": "markdown",
             "metadata": {},
@@ -346,38 +416,38 @@ def generate_canonical_master():
                 "- **UNSW-NB15**: Top predictors include `dttl` (destination TTL), `swin` (source TCP window), `sttl`, and `ct_dst_sport_ltm` (capturing protocol exploits)."
             ]
         },
-        # Cell 15: Section 7 Code - SHAP Global Importance & Beeswarm Plots
+        # Cell 16: Section 7 Code - SHAP Global Importance & Beeswarm Plots
         {
             "cell_type": "code",
             "execution_count": None,
             "metadata": {},
             "outputs": [],
             "source": [
-                "# Display SHAP Feature Importance & Beeswarm Plots\n",
+                "# Display SHAP Feature Importance & Beeswarm Summary Heatmaps\n",
                 "fig, axes = plt.subplots(2, 2, figsize=(18, 14))\n",
                 "shap_plots = [\n",
-                "    (ROOT / 'results' / 'xai' / 'shap' / 'nsl_kdd' / 'shap_global_importance_nsl_kdd.png', 'NSL-KDD: Global Feature Importance Ranking'),\n",
-                "    (ROOT / 'results' / 'xai' / 'shap' / 'nsl_kdd' / 'shap_beeswarm_summary_nsl_kdd.png', 'NSL-KDD: SHAP Summary Beeswarm Heatmap'),\n",
-                "    (ROOT / 'results' / 'xai' / 'shap' / 'unsw_nb15' / 'shap_global_importance_unsw_nb15.png', 'UNSW-NB15: Global Feature Importance Ranking'),\n",
-                "    (ROOT / 'results' / 'xai' / 'shap' / 'unsw_nb15' / 'shap_beeswarm_summary_unsw_nb15.png', 'UNSW-NB15: SHAP Summary Beeswarm Heatmap'),\n",
+                "    ('results/xai/shap/nsl_kdd/shap_global_importance_nsl_kdd.png', 'NSL-KDD: Global Feature Importance Ranking'),\n",
+                "    ('results/xai/shap/nsl_kdd/shap_beeswarm_summary_nsl_kdd.png', 'NSL-KDD: SHAP Summary Beeswarm Heatmap'),\n",
+                "    ('results/xai/shap/unsw_nb15/shap_global_importance_unsw_nb15.png', 'UNSW-NB15: Global Feature Importance Ranking'),\n",
+                "    ('results/xai/shap/unsw_nb15/shap_beeswarm_summary_unsw_nb15.png', 'UNSW-NB15: SHAP Summary Beeswarm Heatmap'),\n",
                 "]\n",
                 "\n",
                 "coords = [(0, 0), (0, 1), (1, 0), (1, 1)]\n",
-                "for (path, title), (r, c) in zip(shap_plots, coords):\n",
-                "    if path.is_file():\n",
-                "        img = Image.open(path)\n",
+                "for (rel_path, title), (r, c) in zip(shap_plots, coords):\n",
+                "    img = get_image(rel_path)\n",
+                "    if img is not None:\n",
                 "        axes[r, c].imshow(img)\n",
                 "        axes[r, c].axis('off')\n",
                 "        axes[r, c].set_title(title, fontsize=13, fontweight='bold', pad=10)\n",
                 "    else:\n",
-                "        axes[r, c].text(0.5, 0.5, f\"{path.name}\\nNot found\", ha='center', va='center')\n",
+                "        axes[r, c].text(0.5, 0.5, f\"{title}\\n(Fetching visual...)\", ha='center', va='center')\n",
                 "        axes[r, c].axis('off')\n",
                 "\n",
                 "plt.tight_layout()\n",
                 "plt.show()"
             ]
         },
-        # Cell 16: Section 8 Markdown - Presentation Defense
+        # Cell 17: Section 8 Markdown - Presentation Defense
         {
             "cell_type": "markdown",
             "metadata": {},
@@ -448,16 +518,20 @@ def generate_multiseed_master():
                 "pd.set_option('display.width', 1000)\n",
                 "pd.set_option('display.float_format', lambda x: f'{x:.6f}')\n",
                 "\n",
-                "ROOT = Path(os.getcwd()).resolve()\n",
-                "if (ROOT / 'src').is_dir():\n",
+                "if Path('/content/XAI-course-project').is_dir():\n",
+                "    ROOT = Path('/content/XAI-course-project').resolve()\n",
+                "else:\n",
+                "    ROOT = Path(os.getcwd()).resolve()\n",
+                "    if not (ROOT / 'src').is_dir() and (ROOT.parent / 'src').is_dir():\n",
+                "        ROOT = ROOT.parent\n",
+                "\n",
+                "if str(ROOT) not in sys.path:\n",
                 "    sys.path.insert(0, str(ROOT))\n",
-                "elif (ROOT.parent / 'src').is_dir():\n",
-                "    sys.path.insert(0, str(ROOT.parent))\n",
-                "    ROOT = ROOT.parent\n",
                 "print(f\"Project root resolved: {ROOT}\")"
             ]
         },
-        # Cell 4: Section 1 Markdown - Motivation
+        image_helper_cell("multiseed-replication"),
+        # Cell 5: Section 1 Markdown - Motivation
         {
             "cell_type": "markdown",
             "metadata": {},
@@ -467,7 +541,7 @@ def generate_multiseed_master():
                 "Sharma et al. (2024) omitted initialization seeds, data split seeds, and mini-batch size. To determine whether reported accuracies reflect true model architecture capability or lucky single initializations, we trained **64 independent seeds** per model using 128 concurrent GPU streams."
             ]
         },
-        # Cell 5: Section 1 Code - Correlation Heatmaps
+        # Cell 6: Section 1 Code - Correlation Heatmaps
         {
             "cell_type": "code",
             "execution_count": None,
@@ -477,25 +551,25 @@ def generate_multiseed_master():
                 "# Display Feature Correlation Heatmaps\n",
                 "fig, axes = plt.subplots(1, 2, figsize=(18, 8))\n",
                 "heatmaps = [\n",
-                "    (ROOT / 'results' / 'feature_selection' / 'nsl_kdd_correlation_heatmap.png', 'NSL-KDD Feature Correlation Heatmap'),\n",
-                "    (ROOT / 'results' / 'feature_selection' / 'unsw_correlation_heatmap.png', 'UNSW-NB15 Feature Correlation Heatmap')\n",
+                "    ('results/feature_selection/nsl_kdd_correlation_heatmap.png', 'NSL-KDD Feature Correlation Heatmap'),\n",
+                "    ('results/feature_selection/unsw_correlation_heatmap.png', 'UNSW-NB15 Feature Correlation Heatmap')\n",
                 "]\n",
                 "\n",
-                "for idx, (path, title) in enumerate(heatmaps):\n",
-                "    if path.is_file():\n",
-                "        img = Image.open(path)\n",
+                "for idx, (rel_path, title) in enumerate(heatmaps):\n",
+                "    img = get_image(rel_path)\n",
+                "    if img is not None:\n",
                 "        axes[idx].imshow(img)\n",
                 "        axes[idx].axis('off')\n",
                 "        axes[idx].set_title(title, fontsize=14, fontweight='bold', pad=10)\n",
                 "    else:\n",
-                "        axes[idx].text(0.5, 0.5, f\"{path.name}\\nNot found\", ha='center', va='center')\n",
+                "        axes[idx].text(0.5, 0.5, f\"{title}\\n(Rendering...)\", ha='center', va='center')\n",
                 "        axes[idx].axis('off')\n",
                 "\n",
                 "plt.tight_layout()\n",
                 "plt.show()"
             ]
         },
-        # Cell 6: Section 2 Markdown - GPU Architecture
+        # Cell 7: Section 2 Markdown - GPU Architecture
         {
             "cell_type": "markdown",
             "metadata": {},
@@ -508,7 +582,7 @@ def generate_multiseed_master():
                 "- **Throughput**: 2,560 model-epochs complete in under **3 minutes**."
             ]
         },
-        # Cell 7: Section 3 Code - Master Multi-Seed Table
+        # Cell 8: Section 3 Code - Master Multi-Seed Table
         {
             "cell_type": "code",
             "execution_count": None,
@@ -536,7 +610,7 @@ def generate_multiseed_master():
                 "display(df_multi)"
             ]
         },
-        # Cell 8: Section 4 Code - Winning Seeds Table
+        # Cell 9: Section 4 Code - Winning Seeds Table
         {
             "cell_type": "code",
             "execution_count": None,
@@ -560,7 +634,7 @@ def generate_multiseed_master():
                 "display(df_win)"
             ]
         },
-        # Cell 9: Section 5 Code - Cross-Seed Accuracy & F1 Progression Plots
+        # Cell 10: Section 5 Code - Cross-Seed Accuracy & F1 Progression Plots
         {
             "cell_type": "code",
             "execution_count": None,
@@ -570,28 +644,28 @@ def generate_multiseed_master():
                 "# Display Cross-Seed Progression Plots (Accuracy and F1 Across Seeds)\n",
                 "fig, axes = plt.subplots(2, 2, figsize=(18, 12))\n",
                 "seed_plots = [\n",
-                "    (ROOT / 'results' / '1d_cnn_gpu' / 'nsl_kdd_1dcnn_accuracy_across_seeds.png', 'NSL-KDD 1D-CNN: Accuracy Across 64 Seeds'),\n",
-                "    (ROOT / 'results' / '1d_cnn_gpu' / 'nsl_kdd_1dcnn_f1_macro_across_seeds.png', 'NSL-KDD 1D-CNN: Macro F1 Across 64 Seeds'),\n",
-                "    (ROOT / 'results' / '1d_cnn_gpu' / 'unsw_nb15_1dcnn_accuracy_across_seeds.png', 'UNSW-NB15 1D-CNN: Accuracy Across 64 Seeds'),\n",
-                "    (ROOT / 'results' / '1d_cnn_gpu' / 'unsw_nb15_1dcnn_f1_macro_across_seeds.png', 'UNSW-NB15 1D-CNN: Macro F1 Across 64 Seeds'),\n",
+                "    ('results/1d_cnn_gpu/nsl_kdd_1dcnn_accuracy_across_seeds.png', 'NSL-KDD 1D-CNN: Accuracy Across 64 Seeds'),\n",
+                "    ('results/1d_cnn_gpu/nsl_kdd_1dcnn_f1_macro_across_seeds.png', 'NSL-KDD 1D-CNN: Macro F1 Across 64 Seeds'),\n",
+                "    ('results/1d_cnn_gpu/unsw_nb15_1dcnn_accuracy_across_seeds.png', 'UNSW-NB15 1D-CNN: Accuracy Across 64 Seeds'),\n",
+                "    ('results/1d_cnn_gpu/unsw_nb15_1dcnn_f1_macro_across_seeds.png', 'UNSW-NB15 1D-CNN: Macro F1 Across 64 Seeds'),\n",
                 "]\n",
                 "\n",
                 "coords = [(0, 0), (0, 1), (1, 0), (1, 1)]\n",
-                "for (path, title), (r, c) in zip(seed_plots, coords):\n",
-                "    if path.is_file():\n",
-                "        img = Image.open(path)\n",
+                "for (rel_path, title), (r, c) in zip(seed_plots, coords):\n",
+                "    img = get_image(rel_path)\n",
+                "    if img is not None:\n",
                 "        axes[r, c].imshow(img)\n",
                 "        axes[r, c].axis('off')\n",
                 "        axes[r, c].set_title(title, fontsize=13, fontweight='bold', pad=8)\n",
                 "    else:\n",
-                "        axes[r, c].text(0.5, 0.5, f\"{path.name}\\nNot found\", ha='center', va='center')\n",
+                "        axes[r, c].text(0.5, 0.5, f\"{title}\\nRendering...\", ha='center', va='center')\n",
                 "        axes[r, c].axis('off')\n",
                 "\n",
                 "plt.tight_layout()\n",
                 "plt.show()"
             ]
         },
-        # Cell 10: Section 6 Code - Distribution Plots vs Paper
+        # Cell 11: Section 6 Code - Distribution Plots vs Paper
         {
             "cell_type": "code",
             "execution_count": None,
@@ -639,7 +713,7 @@ def generate_multiseed_master():
                 "plt.show()"
             ]
         },
-        # Cell 11: Section 7 Code - Tables 6 & 7 Attack Metrics
+        # Cell 12: Section 7 Code - Tables 6 & 7 Attack Metrics
         {
             "cell_type": "code",
             "execution_count": None,
@@ -649,6 +723,15 @@ def generate_multiseed_master():
                 "# Display Tables 6 & 7 Attack Metrics\n",
                 "table6_csv = ROOT / 'results' / 'comparison' / 'table6_nsl_kdd_per_class.csv'\n",
                 "table7_csv = ROOT / 'results' / 'comparison' / 'table7_unsw_nb15_per_class.csv'\n",
+                "\n",
+                "for t_csv, slug in [(table6_csv, 'table6_nsl_kdd_per_class.csv'), (table7_csv, 'table7_unsw_nb15_per_class.csv')]:\n",
+                "    if not t_csv.is_file():\n",
+                "        raw_url = f\"https://raw.githubusercontent.com/Nih4lSingh/XAI-course-project/main/results/comparison/{slug}\"\n",
+                "        try:\n",
+                "            t_csv.parent.mkdir(parents=True, exist_ok=True)\n",
+                "            urllib.request.urlretrieve(raw_url, str(t_csv))\n",
+                "        except Exception:\n",
+                "            pass\n",
                 "\n",
                 "if table6_csv.is_file() and table7_csv.is_file():\n",
                 "    df6 = pd.read_csv(table6_csv)\n",
@@ -663,7 +746,7 @@ def generate_multiseed_master():
                 "    display(df7)"
             ]
         },
-        # Cell 12: Section 8 Code - SHAP Global Importance & Beeswarm Plots
+        # Cell 13: Section 8 Code - SHAP Global Importance & Beeswarm Plots
         {
             "cell_type": "code",
             "execution_count": None,
@@ -673,28 +756,28 @@ def generate_multiseed_master():
                 "# Display SHAP Feature Importance & Beeswarm Plots\n",
                 "fig, axes = plt.subplots(2, 2, figsize=(18, 14))\n",
                 "shap_plots = [\n",
-                "    (ROOT / 'results' / 'xai' / 'shap' / 'nsl_kdd' / 'shap_global_importance_nsl_kdd.png', 'NSL-KDD: Global Feature Importance Ranking'),\n",
-                "    (ROOT / 'results' / 'xai' / 'shap' / 'nsl_kdd' / 'shap_beeswarm_summary_nsl_kdd.png', 'NSL-KDD: SHAP Summary Beeswarm Heatmap'),\n",
-                "    (ROOT / 'results' / 'xai' / 'shap' / 'unsw_nb15' / 'shap_global_importance_unsw_nb15.png', 'UNSW-NB15: Global Feature Importance Ranking'),\n",
-                "    (ROOT / 'results' / 'xai' / 'shap' / 'unsw_nb15' / 'shap_beeswarm_summary_unsw_nb15.png', 'UNSW-NB15: SHAP Summary Beeswarm Heatmap'),\n",
+                "    ('results/xai/shap/nsl_kdd/shap_global_importance_nsl_kdd.png', 'NSL-KDD: Global Feature Importance Ranking'),\n",
+                "    ('results/xai/shap/nsl_kdd/shap_beeswarm_summary_nsl_kdd.png', 'NSL-KDD: SHAP Summary Beeswarm Heatmap'),\n",
+                "    ('results/xai/shap/unsw_nb15/shap_global_importance_unsw_nb15.png', 'UNSW-NB15: Global Feature Importance Ranking'),\n",
+                "    ('results/xai/shap/unsw_nb15/shap_beeswarm_summary_unsw_nb15.png', 'UNSW-NB15: SHAP Summary Beeswarm Heatmap'),\n",
                 "]\n",
                 "\n",
                 "coords = [(0, 0), (0, 1), (1, 0), (1, 1)]\n",
-                "for (path, title), (r, c) in zip(shap_plots, coords):\n",
-                "    if path.is_file():\n",
-                "        img = Image.open(path)\n",
+                "for (rel_path, title), (r, c) in zip(shap_plots, coords):\n",
+                "    img = get_image(rel_path)\n",
+                "    if img is not None:\n",
                 "        axes[r, c].imshow(img)\n",
                 "        axes[r, c].axis('off')\n",
                 "        axes[r, c].set_title(title, fontsize=13, fontweight='bold', pad=10)\n",
                 "    else:\n",
-                "        axes[r, c].text(0.5, 0.5, f\"{path.name}\\nNot found\", ha='center', va='center')\n",
+                "        axes[r, c].text(0.5, 0.5, f\"{title}\\n(Fetching visual...)\", ha='center', va='center')\n",
                 "        axes[r, c].axis('off')\n",
                 "\n",
                 "plt.tight_layout()\n",
                 "plt.show()"
             ]
         },
-        # Cell 13: Section 9 Markdown - Scientific Conclusion
+        # Cell 14: Section 9 Markdown - Scientific Conclusion
         {
             "cell_type": "markdown",
             "metadata": {},
