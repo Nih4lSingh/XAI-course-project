@@ -1,0 +1,177 @@
+{
+  "dataset": "UNSW-NB15",
+  "paper_scope_note": "The paper applied LIME and SHAP to its DNN. This reproduction applies the same local explanation class choices to the replicated 2D-CNN.",
+  "selected_run_rule": "closest individual 17-metric profile to the paper",
+  "config_id": "batch032-adamw",
+  "seed": 1349501436,
+  "checkpoint": "C:\\Users\\super\\Desktop\\IIIT_Dharwad\\5th_Semester\\Explainable AI\\Project\\outputs\\unsw_nb15_all_384_concurrent\\checkpoint_latest.pt",
+  "checkpoint_epoch": 20,
+  "stored_test_accuracy": 0.8143258426966292,
+  "verified_test_accuracy": 0.8141745894554884,
+  "accuracy_difference": 0.00015125324114084737,
+  "accuracy_verification_tolerance": 0.0005,
+  "accuracy_verification_note": "The saved weights are extracted from the concurrent checkpoint. A small tolerance allows mixed-precision CUDA kernel-order differences between the original grouped graph and single-replica inference.",
+  "test_rows": 46280,
+  "input_features": 49,
+  "explained_real_features": 38,
+  "excluded_constant_padding_features": 11,
+  "device": "cuda:0",
+  "lime_method": "binary keep-or-training-mean perturbations biased toward the instance, with an exponential locality kernel and weighted ridge surrogate",
+  "lime_samples": 5000,
+  "lime_instances": [
+    {
+      "class": "Normal",
+      "test_position": 0,
+      "source_row_index": 158164,
+      "probability": 1.0,
+      "weighted_r2": 0.04183276734423269,
+      "weighted_rmse": 0.027957432055784624,
+      "weighted_mae": 0.005543932917174545,
+      "plot": "lime_normal.png"
+    },
+    {
+      "class": "Exploits",
+      "test_position": 1,
+      "source_row_index": 137888,
+      "probability": 0.9181996583938599,
+      "weighted_r2": 0.9416549876613415,
+      "weighted_rmse": 0.0770112892710919,
+      "weighted_mae": 0.047460109161814874,
+      "plot": "lime_exploits.png"
+    }
+  ],
+  "shap_method": "model-agnostic Kernel SHAP coalition regression using a training-mean baseline",
+  "shap_samples": 4096,
+  "shap_local": {
+    "class": "Normal",
+    "test_position": 0,
+    "source_row_index": 158164,
+    "base_value": 0.0031866016797721386,
+    "model_probability": 1.0,
+    "reconstructed_probability": 1.0,
+    "efficiency_error": 0.0,
+    "plot": "shap_local_normal.png",
+    "top_features": [
+      {
+        "feature": "sttl",
+        "scaled_value": 0.12156862765550613,
+        "shap_value": 0.2884779927710687
+      },
+      {
+        "feature": "swin",
+        "scaled_value": 1.0,
+        "shap_value": 0.263006782431763
+      },
+      {
+        "feature": "dtcpb",
+        "scaled_value": 0.8550212383270264,
+        "shap_value": 0.19459159464672884
+      },
+      {
+        "feature": "stcpb",
+        "scaled_value": 0.8537415266036987,
+        "shap_value": 0.15163703276466398
+      },
+      {
+        "feature": "ct_state_ttl",
+        "scaled_value": 0.0,
+        "shap_value": 0.12879831101232986
+      },
+      {
+        "feature": "ct_dst_sport_ltm",
+        "scaled_value": 0.0,
+        "shap_value": 0.10322923902360358
+      },
+      {
+        "feature": "ct_dst_src_ltm",
+        "scaled_value": 0.0,
+        "shap_value": -0.08591506598776412
+      },
+      {
+        "feature": "synack",
+        "scaled_value": 0.00015018378326203674,
+        "shap_value": -0.06263438063045926
+      },
+      {
+        "feature": "ct_dst_ltm",
+        "scaled_value": 0.017241379246115685,
+        "shap_value": 0.04277570632261465
+      },
+      {
+        "feature": "dttl",
+        "scaled_value": 0.11417322605848312,
+        "shap_value": 0.03960679249611725
+      }
+    ]
+  },
+  "global_shap": {
+    "instances": 20,
+    "coalitions_per_instance": 768,
+    "test_positions": [
+      36378,
+      2499,
+      38715,
+      21247,
+      16108,
+      34655,
+      13185,
+      19153,
+      29008,
+      7607,
+      42425,
+      12875,
+      20858,
+      38917,
+      25283,
+      37232,
+      35177,
+      45035,
+      43311,
+      26896
+    ],
+    "top_features": [
+      {
+        "feature": "dttl",
+        "mean_absolute_shap": 0.22065055943344727
+      },
+      {
+        "feature": "swin",
+        "mean_absolute_shap": 0.1474226813271741
+      },
+      {
+        "feature": "sttl",
+        "mean_absolute_shap": 0.12938724084886452
+      },
+      {
+        "feature": "dmean",
+        "mean_absolute_shap": 0.09208504107541873
+      },
+      {
+        "feature": "ct_dst_src_ltm",
+        "mean_absolute_shap": 0.07993564633203765
+      },
+      {
+        "feature": "ct_srv_src",
+        "mean_absolute_shap": 0.07637831076012877
+      },
+      {
+        "feature": "ct_dst_sport_ltm",
+        "mean_absolute_shap": 0.07514825433424344
+      },
+      {
+        "feature": "smean",
+        "mean_absolute_shap": 0.06890800667536334
+      },
+      {
+        "feature": "ct_state_ttl",
+        "mean_absolute_shap": 0.061906791276651815
+      },
+      {
+        "feature": "service",
+        "mean_absolute_shap": 0.053711505979285756
+      }
+    ]
+  },
+  "random_seed": 20270925,
+  "background_rows": 2048
+}

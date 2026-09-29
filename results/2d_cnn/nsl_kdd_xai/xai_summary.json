@@ -1,0 +1,177 @@
+{
+  "dataset": "NSL-KDD",
+  "paper_scope_note": "The paper applied LIME and SHAP to its DNN. This reproduction applies the same local explanation class choices to the replicated 2D-CNN.",
+  "selected_run_rule": "closest individual 17-metric profile to the paper",
+  "config_id": "batch032-zero_pad-adam_l2",
+  "seed": 1414324351,
+  "checkpoint": "C:\\Users\\super\\Desktop\\IIIT_Dharwad\\5th_Semester\\Explainable AI\\Project\\outputs\\nsl_kdd_all_768_concurrent\\checkpoint_latest.pt",
+  "checkpoint_epoch": 20,
+  "stored_test_accuracy": 0.9920302279799328,
+  "verified_test_accuracy": 0.9921572362989776,
+  "accuracy_difference": 0.0001270083190447746,
+  "accuracy_verification_tolerance": 0.0005,
+  "accuracy_verification_note": "The saved weights are extracted from the concurrent checkpoint. A small tolerance allows mixed-precision CUDA kernel-order differences between the original grouped graph and single-replica inference.",
+  "test_rows": 31494,
+  "input_features": 36,
+  "explained_real_features": 35,
+  "excluded_constant_padding_features": 1,
+  "device": "cuda:0",
+  "lime_method": "binary keep-or-training-mean perturbations biased toward the instance, with an exponential locality kernel and weighted ridge surrogate",
+  "lime_samples": 5000,
+  "lime_instances": [
+    {
+      "class": "Normal",
+      "test_position": 0,
+      "source_row_index": 85021,
+      "probability": 0.9999979734420776,
+      "weighted_r2": 0.27124912669237966,
+      "weighted_rmse": 0.007953282022263048,
+      "weighted_mae": 0.003095234597852846,
+      "plot": "lime_normal.png"
+    },
+    {
+      "class": "DoS",
+      "test_position": 4,
+      "source_row_index": 112152,
+      "probability": 0.9999009370803833,
+      "weighted_r2": 0.8701388051335462,
+      "weighted_rmse": 0.09629357285158645,
+      "weighted_mae": 0.05202209409371662,
+      "plot": "lime_dos.png"
+    }
+  ],
+  "shap_method": "model-agnostic Kernel SHAP coalition regression using a training-mean baseline",
+  "shap_samples": 4096,
+  "shap_local": {
+    "class": "DoS",
+    "test_position": 4,
+    "source_row_index": 112152,
+    "base_value": 0.001074881642125547,
+    "model_probability": 0.9999009370803833,
+    "reconstructed_probability": 0.9999009370803834,
+    "efficiency_error": 1.1102230246251565e-16,
+    "plot": "shap_local_dos.png",
+    "top_features": [
+      {
+        "feature": "serror_rate",
+        "scaled_value": 1.0,
+        "shap_value": 0.7516772277048989
+      },
+      {
+        "feature": "service",
+        "scaled_value": 0.11594203114509583,
+        "shap_value": -0.09363712927688667
+      },
+      {
+        "feature": "dst_host_count",
+        "scaled_value": 1.0,
+        "shap_value": 0.08488601375820526
+      },
+      {
+        "feature": "logged_in",
+        "scaled_value": 0.0,
+        "shap_value": 0.0803814223066342
+      },
+      {
+        "feature": "flag",
+        "scaled_value": 0.5,
+        "shap_value": 0.05538938162502638
+      },
+      {
+        "feature": "dst_host_same_src_port_rate",
+        "scaled_value": 0.0,
+        "shap_value": 0.04503810649308541
+      },
+      {
+        "feature": "same_srv_rate",
+        "scaled_value": 0.07999999821186066,
+        "shap_value": -0.04345937881281552
+      },
+      {
+        "feature": "dst_host_same_srv_rate",
+        "scaled_value": 0.07000000029802322,
+        "shap_value": 0.034971590160855624
+      },
+      {
+        "feature": "dst_host_srv_diff_host_rate",
+        "scaled_value": 0.0,
+        "shap_value": 0.03261427525626261
+      },
+      {
+        "feature": "dst_host_rerror_rate",
+        "scaled_value": 0.0,
+        "shap_value": 0.02061866157544605
+      }
+    ]
+  },
+  "global_shap": {
+    "instances": 20,
+    "coalitions_per_instance": 768,
+    "test_positions": [
+      1295,
+      26555,
+      910,
+      24594,
+      5788,
+      21020,
+      17657,
+      5480,
+      5200,
+      9546,
+      28767,
+      21812,
+      22140,
+      8084,
+      18824,
+      22699,
+      5678,
+      7131,
+      13055,
+      1520
+    ],
+    "top_features": [
+      {
+        "feature": "dst_host_same_src_port_rate",
+        "mean_absolute_shap": 0.1952766499144663
+      },
+      {
+        "feature": "serror_rate",
+        "mean_absolute_shap": 0.12265314129186342
+      },
+      {
+        "feature": "dst_host_same_srv_rate",
+        "mean_absolute_shap": 0.09060912858317381
+      },
+      {
+        "feature": "dst_host_count",
+        "mean_absolute_shap": 0.08817508838741209
+      },
+      {
+        "feature": "logged_in",
+        "mean_absolute_shap": 0.06716695762499353
+      },
+      {
+        "feature": "wrong_fragment",
+        "mean_absolute_shap": 0.0641195174196114
+      },
+      {
+        "feature": "dst_host_srv_count",
+        "mean_absolute_shap": 0.05355137430004907
+      },
+      {
+        "feature": "diff_srv_rate",
+        "mean_absolute_shap": 0.05026490772323263
+      },
+      {
+        "feature": "dst_host_rerror_rate",
+        "mean_absolute_shap": 0.04200900965583602
+      },
+      {
+        "feature": "dst_host_srv_diff_host_rate",
+        "mean_absolute_shap": 0.041465095856462686
+      }
+    ]
+  },
+  "random_seed": 20260925,
+  "background_rows": 2048
+}
