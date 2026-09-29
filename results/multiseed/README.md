@@ -100,7 +100,11 @@ Consolidated cross-model artifacts:
 
 ## 6. 64-Seed GPU Empirical Replication (1D-CNN & DNN)
 
-Using `Sharma_2024_1D_CNN_Replication_GPU_128concurrent.py` (which ports the model matrix across 64 seeds concurrently on GPU streams), the empirical distribution across 64 independent weight initializations is:
+Using the concurrent multi-stream GPU replication runners:
+- **DNN**: `Sharma_2024_DNN_Replication_GPU_128concurrent.py` (also in `experiments/dnn/`)
+- **1D-CNN**: `Sharma_2024_1D_CNN_Replication_GPU_128concurrent.py` (also in `experiments/1d_cnn/`)
+
+Each runner instantiates two vectorized banks of 64 independent models concurrently (128 models total) across dedicated CUDA streams, completing 20 epochs across all 64 seeds in under 3 minutes on modern GPUs (with automated CPU fallback when CUDA is not present).
 
 | Architecture | Dataset | Paper Target | 64-Seed Mean ± Std | 95% Confidence Interval | Best Matching Seed | Best Seed Accuracy | Match at Printed Precision? |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
