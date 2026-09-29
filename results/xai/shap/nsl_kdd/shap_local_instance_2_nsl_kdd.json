@@ -1,0 +1,70 @@
+{
+  "instance_id": 2,
+  "dataset": "nsl_kdd",
+  "actual_class": "Normal",
+  "predicted_class": "Normal",
+  "base_value": 0.6180867101608354,
+  "prediction_probability": 0.9999996423721313,
+  "feature_contributions": [
+    {
+      "feature": "logged_in",
+      "value": 1.0,
+      "shap_contribution": 0.08842310610173555,
+      "direction": "positive"
+    },
+    {
+      "feature": "serror_rate",
+      "value": 0.0,
+      "shap_contribution": 0.07424750759608173,
+      "direction": "positive"
+    },
+    {
+      "feature": "count",
+      "value": 0.003913894295692444,
+      "shap_contribution": 0.04406638397843834,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_srv_count",
+      "value": 1.0,
+      "shap_contribution": 0.043511545846014237,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_same_srv_rate",
+      "value": 1.0,
+      "shap_contribution": 0.034855754063768236,
+      "direction": "positive"
+    },
+    {
+      "feature": "num_file_creations",
+      "value": 0.0,
+      "shap_contribution": 0.02561529018003937,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_count",
+      "value": 0.007843137718737125,
+      "shap_contribution": 0.02010692399015951,
+      "direction": "positive"
+    },
+    {
+      "feature": "dst_host_same_src_port_rate",
+      "value": 0.5,
+      "shap_contribution": 0.018017844960896905,
+      "direction": "positive"
+    },
+    {
+      "feature": "diff_srv_rate",
+      "value": 0.0,
+      "shap_contribution": 0.01773752495170245,
+      "direction": "positive"
+    },
+    {
+      "feature": "protocol_type",
+      "value": 0.5,
+      "shap_contribution": 0.015331050542459682,
+      "direction": "positive"
+    }
+  ]
+}

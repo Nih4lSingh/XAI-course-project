@@ -1,0 +1,70 @@
+{
+  "instance_id": 5,
+  "dataset": "unsw_nb15",
+  "actual_class": "Exploits",
+  "predicted_class": "Exploits",
+  "base_value": 0.1710931601372557,
+  "prediction_probability": 0.5120730996131897,
+  "feature_contributions": [
+    {
+      "feature": "swin",
+      "value": 0.0,
+      "shap_contribution": 0.12715945331422937,
+      "direction": "positive"
+    },
+    {
+      "feature": "dttl",
+      "value": 0.0,
+      "shap_contribution": -0.09613665781972758,
+      "direction": "negative"
+    },
+    {
+      "feature": "smean",
+      "value": 0.05135134980082512,
+      "shap_contribution": 0.0661992021244913,
+      "direction": "positive"
+    },
+    {
+      "feature": "ct_state_ttl",
+      "value": 0.3333333432674408,
+      "shap_contribution": 0.05466740929143554,
+      "direction": "positive"
+    },
+    {
+      "feature": "service",
+      "value": 0.0,
+      "shap_contribution": 0.05119475106852343,
+      "direction": "positive"
+    },
+    {
+      "feature": "synack",
+      "value": 0.0,
+      "shap_contribution": 0.03687191877717688,
+      "direction": "positive"
+    },
+    {
+      "feature": "dinpkt",
+      "value": 0.0,
+      "shap_contribution": 0.03493137098529351,
+      "direction": "positive"
+    },
+    {
+      "feature": "spkts",
+      "value": 9.394082007929683e-05,
+      "shap_contribution": 0.0291518350947861,
+      "direction": "positive"
+    },
+    {
+      "feature": "dpkts",
+      "value": 0.0,
+      "shap_contribution": 0.021266190873409436,
+      "direction": "positive"
+    },
+    {
+      "feature": "sload",
+      "value": 0.04453350603580475,
+      "shap_contribution": 0.01567446576631599,
+      "direction": "positive"
+    }
+  ]
+}

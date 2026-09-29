@@ -1,0 +1,241 @@
+{
+  "dataset": "nsl_kdd",
+  "target_class_index": 0,
+  "target_class_name": "DoS",
+  "sampling_strategy": "seed-controlled random sample of 50 test instances",
+  "num_test_samples": 50,
+  "test_sample_indices": [
+    15645,
+    26535,
+    6933,
+    5934,
+    1109,
+    17917,
+    6291,
+    10949,
+    28209,
+    13361,
+    9791,
+    26609,
+    28180,
+    7261,
+    28868,
+    30262,
+    19683,
+    24525,
+    22098,
+    25979,
+    26974,
+    4168,
+    5556,
+    17859,
+    22975,
+    14544,
+    9152,
+    20034,
+    28593,
+    6334,
+    23106,
+    24178,
+    14181,
+    2867,
+    2932,
+    20326,
+    25787,
+    2308,
+    24751,
+    20575,
+    9303,
+    25542,
+    9093,
+    12082,
+    11710,
+    2903,
+    7793,
+    10515,
+    2949,
+    23798
+  ],
+  "feature_importance_ranking": [
+    {
+      "rank": 1,
+      "feature": "serror_rate",
+      "mean_abs_shap": 0.12886281696380553
+    },
+    {
+      "rank": 2,
+      "feature": "logged_in",
+      "mean_abs_shap": 0.0674047010885622
+    },
+    {
+      "rank": 3,
+      "feature": "dst_host_same_src_port_rate",
+      "mean_abs_shap": 0.043169060399785825
+    },
+    {
+      "rank": 4,
+      "feature": "dst_host_srv_count",
+      "mean_abs_shap": 0.029397187071176063
+    },
+    {
+      "rank": 5,
+      "feature": "protocol_type",
+      "mean_abs_shap": 0.028029623789405312
+    },
+    {
+      "rank": 6,
+      "feature": "count",
+      "mean_abs_shap": 0.025207681689204054
+    },
+    {
+      "rank": 7,
+      "feature": "dst_host_rerror_rate",
+      "mean_abs_shap": 0.02344995730199861
+    },
+    {
+      "rank": 8,
+      "feature": "difficulty_level",
+      "mean_abs_shap": 0.018543913102202148
+    },
+    {
+      "rank": 9,
+      "feature": "wrong_fragment",
+      "mean_abs_shap": 0.014502373104449484
+    },
+    {
+      "rank": 10,
+      "feature": "flag",
+      "mean_abs_shap": 0.012540893129109347
+    },
+    {
+      "rank": 11,
+      "feature": "dst_host_same_srv_rate",
+      "mean_abs_shap": 0.01106738161061984
+    },
+    {
+      "rank": 12,
+      "feature": "srv_count",
+      "mean_abs_shap": 0.010731178108310585
+    },
+    {
+      "rank": 13,
+      "feature": "dst_host_count",
+      "mean_abs_shap": 0.008875827361713587
+    },
+    {
+      "rank": 14,
+      "feature": "same_srv_rate",
+      "mean_abs_shap": 0.00803292834960953
+    },
+    {
+      "rank": 15,
+      "feature": "rerror_rate",
+      "mean_abs_shap": 0.007140955117783141
+    },
+    {
+      "rank": 16,
+      "feature": "num_compromised",
+      "mean_abs_shap": 0.00511790008186592
+    },
+    {
+      "rank": 17,
+      "feature": "diff_srv_rate",
+      "mean_abs_shap": 0.0045394639883200045
+    },
+    {
+      "rank": 18,
+      "feature": "land",
+      "mean_abs_shap": 0.0037443156083005304
+    },
+    {
+      "rank": 19,
+      "feature": "service",
+      "mean_abs_shap": 0.0037226519160878987
+    },
+    {
+      "rank": 20,
+      "feature": "dst_host_srv_diff_host_rate",
+      "mean_abs_shap": 0.0036840038329436437
+    },
+    {
+      "rank": 21,
+      "feature": "src_bytes",
+      "mean_abs_shap": 0.003588473574475012
+    },
+    {
+      "rank": 22,
+      "feature": "dst_host_diff_srv_rate",
+      "mean_abs_shap": 0.0033232576534707
+    },
+    {
+      "rank": 23,
+      "feature": "dst_bytes",
+      "mean_abs_shap": 0.0030625906742022483
+    },
+    {
+      "rank": 24,
+      "feature": "duration",
+      "mean_abs_shap": 0.002780107551927892
+    },
+    {
+      "rank": 25,
+      "feature": "srv_diff_host_rate",
+      "mean_abs_shap": 0.002297679932309187
+    },
+    {
+      "rank": 26,
+      "feature": "num_file_creations",
+      "mean_abs_shap": 0.0013676645849855734
+    },
+    {
+      "rank": 27,
+      "feature": "is_guest_login",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "rank": 28,
+      "feature": "is_host_login",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "rank": 29,
+      "feature": "num_shells",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "rank": 30,
+      "feature": "num_access_files",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "rank": 31,
+      "feature": "num_outbound_cmds",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "rank": 32,
+      "feature": "urgent",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "rank": 33,
+      "feature": "su_attempted",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "rank": 34,
+      "feature": "hot",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "rank": 35,
+      "feature": "num_failed_logins",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "rank": 36,
+      "feature": "root_shell",
+      "mean_abs_shap": 0.0
+    }
+  ]
+}
