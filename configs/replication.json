@@ -1,0 +1,18 @@
+{
+  "seed": 42,
+  "train_fraction": 0.60,
+  "validation_fraction": 0.15,
+  "test_fraction": 0.25,
+  "epochs": 20,
+  "batch_size": 32,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "dropout_rate": 0.01,
+  "correlation_threshold": 0.95,
+  "unsw_normal_generic_cap": 50000,
+  "phase2_test_explanations_per_dataset": 300,
+  "phase2_training_reference_explanations_per_predicted_class": 100,
+  "phase2_neighbors": 10,
+  "lime_perturbation_samples": 1000,
+  "faithfulness_top_k": 5
+}

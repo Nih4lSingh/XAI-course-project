@@ -1,0 +1,37 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Raw and processed datasets
+/data/
+/datasets/
+/work/datasets/
+**/KDDTrain+*
+**/KDDTest+*
+**/UNSW_NB15_*.csv
+*.npz
+*.parquet
+*.pkl
+*.pickle
+*.joblib
+
+# Model weights and checkpoints
+*.keras
+*.h5
+*.hdf5
+*.weights
+*.weights.h5
+*.ckpt
+*.ckpt.*
+*.pb
+
+# Generated experiment outputs, temporary files, and local reports
+/work/results/
+/work/tmp/
+/outputs/
+*.log
+*.zip
